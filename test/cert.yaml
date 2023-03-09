@@ -9,5 +9,5 @@ spec:
   dnsNames:
     - test.wavecat.net
   issuerRef:
-    name: selfsigned
+    name: letsencrypt
     kind: ClusterIssuer
