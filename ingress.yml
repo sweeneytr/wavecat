@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    ...
+    solvers:
+    - selector:
+        dnsZones:
+          - "wavecat.net"
+      dns01:
+        route53:
+          region: eu-east-1
+          accessKeyID: AKIA4N3G6C6L3LUBM5QM
+          secretAccessKeySecretRef:
+            name: route53-credentials-secret
+            key: secret-access-key
