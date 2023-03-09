@@ -1,0 +1,8 @@
+# helm repo add traefik https://helm.traefik.io/traefik
+# helm install traefik traefik/traefik -n traefik -f values.yaml --create-namespace
+
+dashboard:
+ enabled: true
+ domain: traefik.wavecat.net
+rbac:
+ enabled: true
