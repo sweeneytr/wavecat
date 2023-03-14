@@ -19,7 +19,7 @@ spec:
       dns01:
         route53:
           region: eu-east-1
-          accessKeyID: AKIA4N3G6C6L3LUBM5QM
+          accessKeyID: AKIA4N3G6C6LYJS6ZU5P
           secretAccessKeySecretRef:
             name: route53-credentials-secret
             key: secret-access-key
