@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: radarr
+  namespace: argocd
+  
+spec:
+  project: media-server
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: 'https://k8s-at-home.com/charts/'
+    targetRevision: 16.3.2
+    helm:
+      values: |-
+        ingress:
+          main:
+            enabled: yes
+            ingressClassName: traefik
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt
+              traefik.ingress.kubernetes.io/router.tls: "true"
+            hosts:
+            - host: radarr.wavecat.net
+              paths:
+              - path: "/"
+                pathType: Prefix
+            tls:
+            - hosts:
+              - radarr.wavecat.net
+              secretName: radarr.wavecat.net
+        persistance:
+          media:
+            enabled: yes
+            retain: yes
+            type: pvc
+            accessMode: ReadWriteMany
+            existingClaim: radarr-pvc
+            mountPath: /data
+    chart: radarr
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: media-server
