@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: radarr
+  name: plex
   namespace: argocd
   
 spec:
@@ -17,13 +17,13 @@ spec:
     namespace: media-server
   source:
     repoURL: 'https://k8s-at-home.com/charts/'
-    targetRevision: 16.3.2
-    chart: radarr
+    targetRevision: 6.4.3
+    chart: plex
     helm:
-      releaseName: radarr
+      releaseName: plex
       values: |-
         image:
-          repository: lscr.io/linuxserver/radarr
+          repository: lscr.io/linuxserver/plex
           tag: latest
         env:
           TZ: America/New_York
@@ -39,14 +39,14 @@ spec:
               cert-manager.io/cluster-issuer: letsencrypt
               traefik.ingress.kubernetes.io/router.tls: "true"
             hosts:
-            - host: radarr.wavecat.net
+            - host: plex.wavecat.net
               paths:
               - path: "/"
                 pathType: Prefix
             tls:
             - hosts:
-              - radarr.wavecat.net
-              secretName: radarr.wavecat.net
+              - plex.wavecat.net
+              secretName: plex.wavecat.net
         persistence:
           config:
             enabled: yes
@@ -54,7 +54,7 @@ spec:
             accessMode: ReadWriteMany
             existingClaim: config-pvc
             mountPath: /config
-            subPath: radarr/config
+            subPath: plex/config
 
           media:
             enabled: yes

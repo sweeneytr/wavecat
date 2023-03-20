@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: radarr
+  name: prowlarr
   namespace: argocd
   
 spec:
@@ -17,13 +17,13 @@ spec:
     namespace: media-server
   source:
     repoURL: 'https://k8s-at-home.com/charts/'
-    targetRevision: 16.3.2
-    chart: radarr
+    targetRevision: 4.5.2
+    chart: prowlarr
     helm:
-      releaseName: radarr
+      releaseName: prowlarr
       values: |-
         image:
-          repository: lscr.io/linuxserver/radarr
+          repository: lscr.io/linuxserver/prowlarr
           tag: latest
         env:
           TZ: America/New_York
@@ -39,14 +39,14 @@ spec:
               cert-manager.io/cluster-issuer: letsencrypt
               traefik.ingress.kubernetes.io/router.tls: "true"
             hosts:
-            - host: radarr.wavecat.net
+            - host: prowlarr.wavecat.net
               paths:
               - path: "/"
                 pathType: Prefix
             tls:
             - hosts:
-              - radarr.wavecat.net
-              secretName: radarr.wavecat.net
+              - prowlarr.wavecat.net
+              secretName: prowlarr.wavecat.net
         persistence:
           config:
             enabled: yes
@@ -54,11 +54,4 @@ spec:
             accessMode: ReadWriteMany
             existingClaim: config-pvc
             mountPath: /config
-            subPath: radarr/config
-
-          media:
-            enabled: yes
-            retain: yes
-            accessMode: ReadWriteMany
-            existingClaim: media-pvc
-            mountPath: /data
+            subPath: prowlarr/config

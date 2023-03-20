@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: media-volume
+  name: config-volume
   namespace: media-server
 spec:
   capacity:
@@ -9,4 +9,4 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: /srv/mrgfs_movies
+    path: /srv/mrgfs_configs

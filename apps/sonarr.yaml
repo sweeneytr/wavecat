@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: radarr
+  name: sonarr
   namespace: argocd
   
 spec:
@@ -18,12 +18,12 @@ spec:
   source:
     repoURL: 'https://k8s-at-home.com/charts/'
     targetRevision: 16.3.2
-    chart: radarr
+    chart: sonarr
     helm:
-      releaseName: radarr
+      releaseName: sonarr
       values: |-
         image:
-          repository: lscr.io/linuxserver/radarr
+          repository: lscr.io/linuxserver/sonarr
           tag: latest
         env:
           TZ: America/New_York
@@ -39,14 +39,14 @@ spec:
               cert-manager.io/cluster-issuer: letsencrypt
               traefik.ingress.kubernetes.io/router.tls: "true"
             hosts:
-            - host: radarr.wavecat.net
+            - host: sonarr.wavecat.net
               paths:
               - path: "/"
                 pathType: Prefix
             tls:
             - hosts:
-              - radarr.wavecat.net
-              secretName: radarr.wavecat.net
+              - sonarr.wavecat.net
+              secretName: sonarr.wavecat.net
         persistence:
           config:
             enabled: yes
@@ -54,7 +54,7 @@ spec:
             accessMode: ReadWriteMany
             existingClaim: config-pvc
             mountPath: /config
-            subPath: radarr/config
+            subPath: sonarr/config
 
           media:
             enabled: yes

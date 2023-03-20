@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: media-server
+  name: jellyfin
   namespace: argocd
 spec:
   clusterResourceWhitelist:

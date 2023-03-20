@@ -6,3 +6,29 @@ dashboard:
  domain: traefik.wavecat.net
 rbac:
  enabled: true
+
+providers:
+  kubernetesCRD:
+    enabled: true
+    allowCrossNamespace: false
+    allowExternalNameServices: false
+    allowEmptyServices: false
+    # ingressClass: traefik-internal
+    # labelSelector: environment=production,method=traefik
+    namespaces: []
+      # - "default"
+
+  kubernetesIngress:
+    enabled: true
+    allowExternalNameServices: false
+    allowEmptyServices: false
+    # ingressClass: traefik-internal
+    # labelSelector: environment=production,method=traefik
+    namespaces: []
+      # - "default"
+    # IP used for Kubernetes Ingress endpoints
+    publishedService:
+      enabled: true # custom
+      # Published Kubernetes Service to copy status from. Format: namespace/servicename
+      # By default this Traefik service
+      # pathOverride: ""

@@ -1,0 +1,109 @@
+# 8436199974987930
+# USplJbXAemdAKletkGKUbxy6+TYkYKY6IrcwLGHUKF0=
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: qbittorrent
+  namespace: argocd
+spec:
+  destination:
+    namespace: media-server
+    server: "https://kubernetes.default.svc"
+  project: media-server
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: "https://k8s-at-home.com/charts/"
+    chart: qbittorrent
+    targetRevision: 13.5.2
+    helm:
+      releaseName: qbittorrent
+      values: |-
+        image:
+          repository: lscr.io/linuxserver/qbittorrent
+          tag: latest
+        podSecurityContext:
+          fsGroup: 100
+          fsGroupChangePolicy: "OnRootMismatch"
+        addons:
+          vpn:
+            enabled: true
+            type: wireguard
+            securityContext:
+              runAsUser: 568
+              runAsGroup: 568
+            configFile: |-
+              [Interface]
+              PrivateKey = 0IbhFQTaV7BdEYx7GiVyaNYbxc02wTBLx5wRCYHaYHg=
+              Address = 10.67.104.231/32,fc00:bbbb:bbbb:bb01::4:68e6/128
+              DNS = 10.64.0.1
+              PostUp = /config/up.sh %i
+              PreDown = /config/down.sh %i
+              [Peer]
+              PublicKey = q2ZZPfumPaRVl4DJfzNdQF/GHfe6BYAzQ2GZZHb6rmI=
+              AllowedIPs = 0.0.0.0/0,::0/0
+              Endpoint = 185.65.135.67:51820
+            scripts:
+              up: |-
+                #!/bin/bash
+                echo "connected" > /shared/vpnstatus
+              down: |-
+                #!/bin/bash
+                echo "disconnected" > /shared/vpnstatus
+        dnsPolicy: "None"
+        dnsConfig:
+          nameservers:
+            - 10.64.0.1
+        env:
+          PUID: 1000
+          PGID: 100
+          WAIT_FOR_VPN: "true"
+          TZ: America/New_York
+          QBT_Preferences__Downloads__SavePath: /data/downloads/
+          QBT_Preferences__Downloads__TempPath: /data/downloads/temp/
+          QBT_BitTorrent__Session__DefaultSavePath: /data/downloads/
+          QBT_BitTorrent__Session__TempPath: /data/downloads/temp/
+        ingress:
+          main:
+            enabled: true
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt
+            hosts:
+              - host: qbittorrent.wavecat.net
+                paths:
+                  - backend:
+                      service:
+                        name: qbittorrent
+                        port:
+                          number: 8080
+                    path: /
+                    pathType: Prefix
+            tls:
+            - hosts:
+              - qbittorrent.wavecat.net
+              secretName: qbittorrent.wavecat.net
+        persistence:
+          config:
+            enabled: yes
+            retain: yes
+            accessMode: ReadWriteMany
+            existingClaim: config-pvc
+            mountPath: /config
+            subPath: qbittorrent/config
+
+          media:
+            enabled: yes
+            retain: yes
+            accessMode: ReadWriteMany
+            existingClaim: media-pvc
+            mountPath: /data
+             
+          shared:
+            enabled: true
+            type: emptyDir
+            mountPath: /shared
+            medium: Memory

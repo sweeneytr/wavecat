@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: radarr
+  name: nzbhydra2
   namespace: argocd
   
 spec:
@@ -17,13 +17,13 @@ spec:
     namespace: media-server
   source:
     repoURL: 'https://k8s-at-home.com/charts/'
-    targetRevision: 16.3.2
-    chart: radarr
+    targetRevision: 10.4.2
+    chart: nzbhydra2
     helm:
-      releaseName: radarr
+      releaseName: nzbhydra2
       values: |-
         image:
-          repository: lscr.io/linuxserver/radarr
+          repository: lscr.io/linuxserver/nzbhydra2
           tag: latest
         env:
           TZ: America/New_York
@@ -39,14 +39,14 @@ spec:
               cert-manager.io/cluster-issuer: letsencrypt
               traefik.ingress.kubernetes.io/router.tls: "true"
             hosts:
-            - host: radarr.wavecat.net
+            - host: nzbhydra2.wavecat.net
               paths:
               - path: "/"
                 pathType: Prefix
             tls:
             - hosts:
-              - radarr.wavecat.net
-              secretName: radarr.wavecat.net
+              - nzbhydra2.wavecat.net
+              secretName: nzbhydra2.wavecat.net
         persistence:
           config:
             enabled: yes
@@ -54,11 +54,11 @@ spec:
             accessMode: ReadWriteMany
             existingClaim: config-pvc
             mountPath: /config
-            subPath: radarr/config
-
-          media:
-            enabled: yes
-            retain: yes
-            accessMode: ReadWriteMany
-            existingClaim: media-pvc
-            mountPath: /data
+            subPath: nzbhydra2/config
+        probes:
+          startup:
+            enabled: no
+          readiness:
+            enabled: no
+          liveness:
+            enabled: no
