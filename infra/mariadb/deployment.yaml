@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: nextcloud-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb
+        image: lscr.io/linuxserver/mariadb
+        env:
+        - name: PUID
+          value: '100'
+        - name: PGID
+          value: '1000'
+        - name: TZ
+          value: America/New_York
+        - name: MYSQL_ROOT_PASSWORD
+          value: criscross
+        - name: MYSQL_DATABASE
+          value: nextcloud
+        - name: MYSQL_USER
+          value: nextcloud
+        - name: MYSQL_PASSWORD
+          value: applesauce
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: config-pv
+          mountPath: /config
+          subPath: mariadb/config
+      volumes:
+      - name: config-pv
+        persistentVolumeClaim:
+          claimName: nextcloud-config-pvc
