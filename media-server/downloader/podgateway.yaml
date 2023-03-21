@@ -1,0 +1,27 @@
+# 8436199974987930
+# USplJbXAemdAKletkGKUbxy6+TYkYKY6IrcwLGHUKF0=
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: qbittorrent
+  namespace: argocd
+spec:
+  destination:
+    namespace: media-server
+    server: "https://kubernetes.default.svc"
+  project: media-server
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: "https://k8s-at-home.com/charts/"
+    chart:  pod-gateway
+    targetRevision: 2.0.0
+    helm:
+      releaseName: pod-gateway
+      values: |-
+        routed_namespaces:
+        - vpn
