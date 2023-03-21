@@ -37,7 +37,6 @@ spec:
           vpn:
             enabled: true
             type: wireguard
-            wireguard:
             configFileSecret: wireguard-secret
 
             livenessProbe:
