@@ -2,7 +2,8 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: vpn-namespace
+  name: media-server-netpol
+  namespace: meadia-server-vpn
 spec:
   podSelector: {}
   ingress:
