@@ -5,6 +5,7 @@ metadata:
   name: nextcloud
   namespace: nextcloud-server
   annotations:
+    kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
