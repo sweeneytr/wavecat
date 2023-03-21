@@ -37,6 +37,11 @@ spec:
           vpn:
             enabled: true
             type: wireguard
+            wireguard:
+              image:
+                pullPolicy: IfNotPresent
+                image: ghcr.io/k8s-at-home/wireguard
+                tag: v1.0.20210914
             configFileSecret: wireguard-secret
 
             livenessProbe:
