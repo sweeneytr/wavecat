@@ -1,5 +1,3 @@
-# 8436199974987930
-# USplJbXAemdAKletkGKUbxy6+TYkYKY6IrcwLGHUKF0=
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -25,3 +23,37 @@ spec:
       values: |-
         routed_namespaces:
         - vpn
+        settings: 
+          # tun0 for openvpn, wg0 for wireguard
+          VPN_INTERFACE: wg0
+          # Prevent non VPN traffic to leave the gateway
+          VPN_BLOCK_OTHER_TRAFFIC: true
+          # If VPN_BLOCK_OTHER_TRAFFIC is true, allow VPN traffic over this port
+          VPN_TRAFFIC_PORT: 443
+          # Traffic to these IPs will be send through the K8S gateway
+          # change if your K8S cluster or home network uses a different CIDR
+          VPN_LOCAL_CIDRS: "10.0.0.0/8 192.168.0.0/16"
+        addons:
+          vpn:
+            enabled: true
+            type: wireguard
+            configFile: |-
+              [Interface]
+              PrivateKey = 0IbhFQTaV7BdEYx7GiVyaNYbxc02wTBLx5wRCYHaYHg=
+              Address = 10.67.104.231/32,fc00:bbbb:bbbb:bb01::4:68e6/128
+              DNS = 10.64.0.1
+              [Peer]
+              PublicKey = q2ZZPfumPaRVl4DJfzNdQF/GHfe6BYAzQ2GZZHb6rmI=
+              AllowedIPs = 0.0.0.0/0,::0/0
+              Endpoint = 185.65.135.67:51820
+
+            livenessProbe:
+              exec:
+                # In the example bellow the VPN output is in Sweden (SE) - change appropiatly
+                command:
+                  - sh
+                  - -c
+                  - if [ $(wget -q -O- https://ipinfo.io/country) == 'SE' ]; then exit 0; else exit $?; fi
+              initialDelaySeconds: 30
+              periodSeconds: 60
+              failureThreshold: 1
