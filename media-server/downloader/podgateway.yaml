@@ -38,15 +38,7 @@ spec:
             enabled: true
             type: wireguard
             wireguard:
-            configFile: |-
-              [Interface]
-              PrivateKey = 0IbhFQTaV7BdEYx7GiVyaNYbxc02wTBLx5wRCYHaYHg=
-              Address = 10.67.104.231/32,fc00:bbbb:bbbb:bb01::4:68e6/128
-              DNS = 10.64.0.1
-              [Peer]
-              PublicKey = q2ZZPfumPaRVl4DJfzNdQF/GHfe6BYAzQ2GZZHb6rmI=
-              AllowedIPs = 0.0.0.0/0,::0/0
-              Endpoint = 185.65.135.67:51820
+            configFileSecret: wireguard-secret
 
             livenessProbe:
               exec:
