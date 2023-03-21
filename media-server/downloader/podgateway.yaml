@@ -22,7 +22,7 @@ spec:
       releaseName: pod-gateway
       values: |-
         routed_namespaces:
-        - vpn
+        - media-server-vpn
         settings: 
           # tun0 for openvpn, wg0 for wireguard
           VPN_INTERFACE: wg0
