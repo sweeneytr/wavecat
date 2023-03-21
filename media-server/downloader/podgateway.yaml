@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: media-server-vpn
+    namespace: media-server # note not in the vpn namespace!
     server: "https://kubernetes.default.svc"
   project: media-server
   syncPolicy:
