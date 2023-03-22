@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+  namespace: media-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      containers:
+      - name: qbittorrent
+        image: dyonr/qbittorrentvpn
+        env:
+        - name: PUID
+          value: '100'
+        - name: PGID
+          value: '1000'
+        - name: VPN_ENABLED
+          value: 'yes'
+        - name: VPN_TYPE
+          value: wireguard
+        - name: LAN_NETWORK
+          value: 192.168.0.0/26
+        ports:
+        - containerPort: 8080
+          name: http
+        volumeMounts:
+        - name: config-pv
+          mountPath: /config
+          subPath: qbittorrent/config
+        - name: data-pv
+          mountPath: /data
+        - name: wireguard-config
+          mountPath: /config/wireguard
+      volumes:
+      - name: config-pv
+        persistentVolumeClaim:
+          claimName: config-pvc
+      - name: data-pv
+        persistentVolumeClaim:
+          claimName: data-pvc
+      - name: wireguard-config
+        secret:
+          secretName: wireguard-config-secret
