@@ -47,7 +47,7 @@ spec:
               PreDown = /config/down.sh %i
               [Peer]
               PublicKey = q2ZZPfumPaRVl4DJfzNdQF/GHfe6BYAzQ2GZZHb6rmI=
-              AllowedIPs = 0.0.0.0/0
+              AllowedIPs = 0.0.0.0/0,::0/0
               Endpoint = 185.65.135.67:51820
             scripts:
               up: |-
