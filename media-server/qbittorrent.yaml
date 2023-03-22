@@ -37,7 +37,7 @@ spec:
               runAsGroup: 568
             # env:
               # Enable a killswitch that kills all trafic when the VPN is not connected
-              # KILLSWITCH: "true"
+              KILLSWITCH: "true"
             configFile: |-
               [Interface]
               PrivateKey = 0IbhFQTaV7BdEYx7GiVyaNYbxc02wTBLx5wRCYHaYHg=
