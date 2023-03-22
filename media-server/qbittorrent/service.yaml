@@ -5,8 +5,8 @@ metadata:
   namespace: media-server
 spec:
   ports:
-  - name: https
-    port: 443
-    targetPort: https
+  - name: http
+    port: 80
+    targetPort: http
   selector:
     app: qbittorrent
