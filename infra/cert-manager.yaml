@@ -1,5 +1,3 @@
-# https://trash-guides.info/Bazarr/Setup-Guide/
-# kubectl create secret generic --namespace cert-manager route53-credentials-secret --from-literal=secret-access-key=${AWS_KEY}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
