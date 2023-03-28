@@ -9,7 +9,6 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
-  ingressClassName: traefik
   rules:
   - host: nextcloud.wavecat.net
     http:
