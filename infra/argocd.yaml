@@ -1,3 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: argocd.wavecat.net
+  namespace: argocd
+spec:
+  dnsNames:
+    - argocd.wavecat.net
+  secretName: argocd.wavecat.net
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
