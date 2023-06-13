@@ -47,9 +47,6 @@ spec:
             - hosts:
               - plex.wavecat.net
               secretName: plex.wavecat.net
-        service:
-          main:
-            type: "LoadBalancer"
         persistence:
           config:
             enabled: yes
