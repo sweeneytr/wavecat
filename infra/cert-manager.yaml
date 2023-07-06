@@ -14,6 +14,11 @@ spec:
     targetRevision: v1.11.0
     helm:
       releaseName: cert-manager
+      values: |
+        dns01RecursiveNameservers:
+          - 8.8.8.8:53
+          - 1.1.1.1:53
+        dns01RecursiveNameserversOnly: True
   syncPolicy:
     automated:
       prune: true
