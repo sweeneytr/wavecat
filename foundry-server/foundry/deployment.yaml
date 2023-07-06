@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foundry-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foundry
+  template:
+    metadata:
+      labels:
+        app: foundry
+    spec:
+      containers:
+        - name: foundry
+          image: felddy/foundryvtt:release
+          env:
+            - name: FOUNDRY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: foundry-secrets
+                  key: foundry-password
+            - name: FOUNDRY_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: foundry-secrets
+                  key: foundry-username
+            - name: FOUNDRY_ADMIN_KEY
+              value: "atropos"
+          ports:
+            - containerPort: 30000
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+      volumes:
+        - name: data-volume
+          emptyDir: {}
