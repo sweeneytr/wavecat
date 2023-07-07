@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: foundry
+  namespace: foundry-server
+spec:
+  destination:
+    namespace: foundry-server
+    server: https://kubernetes.default.svc
+  project: foundry-server
+  source:
+    path: foundry-server/foundry
+    repoURL:  https://github.com/sweeneytr/wavecat.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
