@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: foundry
   name: foundry-deployment
 spec:
   replicas: 1
@@ -20,14 +21,17 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: foundry-secrets
-                  key: foundry-password
+                  key: password
             - name: FOUNDRY_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: foundry-secrets
-                  key: foundry-username
+                  key: username
             - name: FOUNDRY_ADMIN_KEY
-              value: "atropos"
+              valueFrom:
+                secretKeyRef:
+                  name: foundry-secrets
+                  key: admin
           ports:
             - containerPort: 30000
           volumeMounts:
