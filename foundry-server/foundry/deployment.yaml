@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: foundry
+  namespace: foundry-server
   name: foundry-deployment
 spec:
   replicas: 1
