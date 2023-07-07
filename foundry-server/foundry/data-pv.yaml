@@ -9,4 +9,4 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: /srv/mrgfs_foundry
+    path: /srv/mrgfs_configs/foundry
