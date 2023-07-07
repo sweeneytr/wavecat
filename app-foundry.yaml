@@ -17,7 +17,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: media-server-apps
+  name: foundry-server-apps
   namespace: argocd
 spec:
   destination:
