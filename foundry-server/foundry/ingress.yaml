@@ -19,7 +19,7 @@ spec:
           service:
             name: foundry-svc
             port:
-              name: https
+              name: http
   tls:
   - hosts:
     - foundry.wavecat.net

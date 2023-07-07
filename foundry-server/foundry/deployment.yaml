@@ -34,6 +34,7 @@ spec:
                   key: admin
           ports:
             - containerPort: 30000
+              name: http
           volumeMounts:
             - name: data-volume
               mountPath: /data
