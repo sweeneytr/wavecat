@@ -4,5 +4,5 @@ kubectl create secret generic \
     --from-file=./foundry-secrets.secret \
     --dry-run=client -o json \
 | kubeseal \
-    --namespace foundry \
+    --namespace foundry-server \
     > foundry-secrets.json
