@@ -40,4 +40,5 @@ spec:
               mountPath: /data
       volumes:
         - name: data-volume
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: foundry-data-pvc
