@@ -61,7 +61,7 @@ spec:
             enabled: yes
             retain: yes
             accessMode: ReadWriteMany
-            existingClaim: media-pvc
+            existingClaim: media-pvc-2
             mountPath: /data
   syncPolicy:
     automated:
