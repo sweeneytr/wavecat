@@ -1,0 +1,11 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: wavecat
+allowVolumeExpansion: true
+parameters:
+  shared: "yes" # Lets a PV be mountable-many
+  fstype: "zfs" # Default is ext4
+  poolname: "wavecat/k8s"
+provisioner: zfs.csi.openebs.io
