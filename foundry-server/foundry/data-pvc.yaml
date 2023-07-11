@@ -8,7 +8,7 @@ metadata:
   namespace: foundry-server
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 250Gi
