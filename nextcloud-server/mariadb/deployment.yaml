@@ -18,9 +18,9 @@ spec:
         image: lscr.io/linuxserver/mariadb
         env:
         - name: PUID
-          value: '100'
-        - name: PGID
           value: '1000'
+        - name: PGID
+          value: '100'
         - name: TZ
           value: America/New_York
         - name: MYSQL_ROOT_PASSWORD
