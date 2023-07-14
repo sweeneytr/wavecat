@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: media-pvc
+  labels:
+    app.kubernetes.io/instance: plex
+    app.kubernetes.io/name: plex
+  name: media-pvc-2
   namespace: media-server
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 16Ti
-  storageClassName: ""
-  volumeMode: Filesystem
-  volumeName: media-volume
+      storage: 10Ti
+  storageClassName: wavecat

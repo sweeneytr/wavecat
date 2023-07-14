@@ -46,7 +46,7 @@ spec:
           claimName: config-pvc
       - name: data-pv
         persistentVolumeClaim:
-          claimName: media-pvc
+          claimName: media-pvc-2
       - name: wireguard-config
         secret:
           secretName: wireguard-config-secret
