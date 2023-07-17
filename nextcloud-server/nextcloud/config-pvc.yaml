@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  app.kubernetes.io/instance: nextcloud
+  app.kubernetes.io/name: nextcloud
+  name: nextcloud-config
+  namespace: nextcloud-server
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 250Gi
+  storageClassName: wavecat

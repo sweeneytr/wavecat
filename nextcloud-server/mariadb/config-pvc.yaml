@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  app.kubernetes.io/instance: mariadb
+  app.kubernetes.io/name: mariadb
+  name: mariadb-config
+  namespace: nextcloud-server
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 250Gi
+  storageClassName: wavecat

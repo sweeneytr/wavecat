@@ -36,7 +36,7 @@ spec:
       volumes:
       - name: config-pv
         persistentVolumeClaim:
-          claimName: nextcloud-config-pvc
+          claimName: nextcloud-config
       - name: data-pv
         persistentVolumeClaim:
           claimName: nextcloud-data-pvc

@@ -41,4 +41,4 @@ spec:
       volumes:
       - name: config-pv
         persistentVolumeClaim:
-          claimName: nextcloud-config-pvc
+          claimName: mariadb-config
