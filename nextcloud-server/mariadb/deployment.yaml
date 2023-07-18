@@ -4,7 +4,7 @@ metadata:
   name: mariadb
   namespace: nextcloud-server
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: mariadb
@@ -37,7 +37,6 @@ spec:
         volumeMounts:
         - name: config-pv
           mountPath: /config
-          subPath: mariadb/config
       volumes:
       - name: config-pv
         persistentVolumeClaim:

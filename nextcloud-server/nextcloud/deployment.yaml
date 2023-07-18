@@ -4,7 +4,7 @@ metadata:
   name: nextcloud
   namespace: nextcloud-server
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: nextcloud
@@ -30,7 +30,6 @@ spec:
         volumeMounts:
         - name: config-pv
           mountPath: /config
-          subPath: nextcloud/config
         - name: data-pv
           mountPath: /data
       volumes:
