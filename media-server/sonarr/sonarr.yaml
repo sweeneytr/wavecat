@@ -1,0 +1,64 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sonarr
+  namespace: argocd
+  
+spec:
+  project: media-server
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: media-server
+  source:
+    repoURL: 'https://k8s-at-home.com/charts/'
+    targetRevision: 16.3.2
+    chart: sonarr
+    helm:
+      releaseName: sonarr
+      values: |-
+        image:
+          repository: lscr.io/linuxserver/sonarr
+          tag: latest
+        env:
+          TZ: America/New_York
+          PGID: 100
+        controller.replicas: 0
+        podSecurityContext:
+          fsGroup: 100
+          fsGroupChangePolicy: "OnRootMismatch"
+        ingress:
+          main:
+            enabled: yes
+            ingressClassName: traefik
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt
+              traefik.ingress.kubernetes.io/router.tls: "true"
+            hosts:
+            - host: sonarr.wavecat.net
+              paths:
+              - path: "/"
+                pathType: Prefix
+            tls:
+            - hosts:
+              - sonarr.wavecat.net
+              secretName: sonarr.wavecat.net
+        persistence:
+          config:
+            enabled: yes
+            retain: yes
+            accessMode: ReadWriteOnce
+            existingClaim: sonarr-config
+            mountPath: /config
+
+          media:
+            enabled: yes
+            retain: yes
+            accessMode: ReadWriteMany
+            existingClaim: media-pvc-2
+            mountPath: /data

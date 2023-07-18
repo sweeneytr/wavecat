@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  app.kubernetes.io/instance: sonarr
+  app.kubernetes.io/name: sonarr
+  name: sonarr-config
+  namespace: media-server
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 250Gi
+  storageClassName: wavecat

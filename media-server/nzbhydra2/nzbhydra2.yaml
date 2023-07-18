@@ -1,0 +1,64 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nzbhydra2
+  namespace: argocd
+  
+spec:
+  project: media-server
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: media-server
+  source:
+    repoURL: 'https://k8s-at-home.com/charts/'
+    targetRevision: 10.4.2
+    chart: nzbhydra2
+    helm:
+      releaseName: nzbhydra2
+      values: |-
+        image:
+          repository: lscr.io/linuxserver/nzbhydra2
+          tag: latest
+        controller.replicas: 0
+        env:
+          TZ: America/New_York
+          PGID: 100
+        podSecurityContext:
+          fsGroup: 100
+          fsGroupChangePolicy: "OnRootMismatch"
+        ingress:
+          main:
+            enabled: yes
+            ingressClassName: traefik
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt
+              traefik.ingress.kubernetes.io/router.tls: "true"
+            hosts:
+            - host: nzbhydra2.wavecat.net
+              paths:
+              - path: "/"
+                pathType: Prefix
+            tls:
+            - hosts:
+              - nzbhydra2.wavecat.net
+              secretName: nzbhydra2.wavecat.net
+        persistence:
+          config:
+            enabled: yes
+            retain: yes
+            accessMode: ReadWriteOnce
+            existingClaim: nzbhydra2-config
+            mountPath: /config
+        probes:
+          startup:
+            enabled: no
+          readiness:
+            enabled: no
+          liveness:
+            enabled: no

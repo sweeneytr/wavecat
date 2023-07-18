@@ -3,55 +3,16 @@ kind: Application
 metadata:
   name: overseerr
   namespace: argocd
-  
 spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
   project: media-server
+  source:
+    path: media-server/overseerr
+    repoURL:  https://github.com/sweeneytr/wavecat.git
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-  destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: media-server
-  source:
-    repoURL: 'https://k8s-at-home.com/charts/'
-    targetRevision: 5.4.2
-    chart: overseerr
-    helm:
-      releaseName: overseerr
-      values: |-
-        image:
-          repository: lscr.io/linuxserver/overseerr
-          tag: 1.32.5
-        env:
-          TZ: America/New_York
-          PGID: 100
-        podSecurityContext:
-          fsGroup: 100
-          fsGroupChangePolicy: "OnRootMismatch"
-        ingress:
-          main:
-            enabled: yes
-            ingressClassName: traefik
-            annotations:
-              cert-manager.io/cluster-issuer: letsencrypt
-              traefik.ingress.kubernetes.io/router.tls: "true"
-            hosts:
-            - host: overseerr.wavecat.net
-              paths:
-              - path: "/"
-                pathType: Prefix
-            tls:
-            - hosts:
-              - overseerr.wavecat.net
-              secretName: overseerr.wavecat.net
-        persistence:
-          config:
-            enabled: yes
-            retain: yes
-            accessMode: ReadWriteMany
-            existingClaim: config-pvc
-            mountPath: /config  
-            subPath: overseerr/config

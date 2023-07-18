@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prowlarr
+  namespace: argocd
+  
+spec:
+  project: media-server
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: media-server
+  source:
+    repoURL: 'https://k8s-at-home.com/charts/'
+    targetRevision: 4.5.2
+    chart: prowlarr
+    helm:
+      releaseName: prowlarr
+      values: |-
+        image:
+          repository: lscr.io/linuxserver/prowlarr
+          tag: latest
+        controller.replicas: 0
+        env:
+          TZ: America/New_York
+          PGID: 100
+        podSecurityContext:
+          fsGroup: 100
+          fsGroupChangePolicy: "OnRootMismatch"
+        ingress:
+          main:
+            enabled: yes
+            ingressClassName: traefik
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt
+              traefik.ingress.kubernetes.io/router.tls: "true"
+            hosts:
+            - host: prowlarr.wavecat.net
+              paths:
+              - path: "/"
+                pathType: Prefix
+            tls:
+            - hosts:
+              - prowlarr.wavecat.net
+              secretName: prowlarr.wavecat.net
+        persistence:
+          config:
+            enabled: yes
+            retain: yes
+            accessMode: ReadWriteMany
+            existingClaim: prowlarr-config
+            mountPath: /config

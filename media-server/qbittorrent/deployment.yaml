@@ -4,7 +4,7 @@ metadata:
   name: qbittorrent
   namespace: media-server
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: qbittorrent
@@ -35,7 +35,6 @@ spec:
         volumeMounts:
         - name: config-pv
           mountPath: /config
-          subPath: qbittorrent/config
         - name: data-pv
           mountPath: /data
         - name: wireguard-config
@@ -43,7 +42,7 @@ spec:
       volumes:
       - name: config-pv
         persistentVolumeClaim:
-          claimName: config-pvc
+          claimName: qbittorrent-config
       - name: data-pv
         persistentVolumeClaim:
           claimName: media-pvc-2
