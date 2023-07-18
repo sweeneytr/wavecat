@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nzbhydra2
+  name: nzbhydra2-helm
   namespace: argocd
   
 spec:
