@@ -28,7 +28,8 @@ spec:
         env:
           TZ: America/New_York
           PGID: 100
-        controller.replicas: 0
+        controller:
+          replicas: 0
         podSecurityContext:
           fsGroup: 100
           fsGroupChangePolicy: "OnRootMismatch"

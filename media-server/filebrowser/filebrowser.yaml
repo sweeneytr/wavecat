@@ -20,7 +20,8 @@ spec:
           tag: v2.23.0
         env:
           TZ: America/New_York
-        controller.replicas: 0
+        controller:
+          replicas: 0
         config: |
           {
             "port": 80,

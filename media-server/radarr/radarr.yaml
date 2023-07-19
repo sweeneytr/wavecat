@@ -25,7 +25,8 @@ spec:
         image:
           repository: lscr.io/linuxserver/radarr
           tag: latest
-        controller.replicas: 0
+        controller:
+          replicas: 0
         env:
           TZ: America/New_York
           PGID: 100
