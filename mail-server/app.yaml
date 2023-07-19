@@ -39,9 +39,6 @@ spec:
           password: chang3m3!
           username: mailadmin
         logLevel: INFO
-        mail:
-          authRatelimit: 100/minute;3600/hour
-          messageSizeLimitInMegabytes: 200
         persistence:
           size: 100Gi
           storageClass: wavecat
