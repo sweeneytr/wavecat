@@ -4,7 +4,6 @@ metadata:
   name: qbittorrent
   namespace: media-server
 spec:
-  replicas: 0
   selector:
     matchLabels:
       app: qbittorrent
