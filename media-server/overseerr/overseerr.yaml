@@ -52,5 +52,5 @@ spec:
             enabled: yes
             retain: yes
             accessMode: ReadWriteOnce
-            existingClaim: overseer-config
+            existingClaim: overseerr-config
             mountPath: /config 
