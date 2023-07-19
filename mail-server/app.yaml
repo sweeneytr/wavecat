@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mail-server-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: mail-server
+    server: "https://kubernetes.default.svc"
+  project: mail-server
+  source:
+    repoURL: https://mailu.github.io/helm-charts/
+    chart: mailu
+    targetRevision: 1.2.0
+    helm:
+      releaseName: mailu
+      values: |-
+        domain: mail.wavecat.net
+        hostnames:
+          - mail.wavecat.net
+        initialAccount:
+          domain: mail.wavecat.net
+          password: chang3m3!
+          username: mailadmin
+        logLevel: INFO
+        mail:
+          authRatelimit: 100/minute;3600/hour
+          messageSizeLimitInMegabytes: 200
+        persistence:
+          size: 100Gi
+          storageClass: wavecat
+        secretKey: chang3m3!
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
