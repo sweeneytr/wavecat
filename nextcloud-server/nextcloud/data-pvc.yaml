@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  app.kubernetes.io/instance: nextcloud
-  app.kubernetes.io/name: nextcloud
   name: nextcloud-data
   namespace: nextcloud-server
+  labels:
+    app.kubernetes.io/instance: nextcloud
+    app.kubernetes.io/name: nextcloud
 spec:
   accessModes:
     - ReadWriteOnce
