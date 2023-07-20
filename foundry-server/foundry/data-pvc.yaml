@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: foundry-data-pvc
+  namespace: foundry-server
   labels:
     app.kubernetes.io/instance: foundry
     app.kubernetes.io/name: foundry
-  name: foundry-data-pvc
-  namespace: foundry-server
 spec:
   accessModes:
     - ReadWriteOnce
