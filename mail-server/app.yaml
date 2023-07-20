@@ -35,6 +35,7 @@ spec:
         hostnames:
           - mail.wavecat.net
         initialAccount:
+          enabled: yes
           domain: mail.wavecat.net
           password: chang3m3!
           username: mailadmin
@@ -43,6 +44,14 @@ spec:
           size: 100Gi
           storageClass: wavecat
         secretKey: chang3m3!
+        front:
+          externalService:
+            enabled: true
+            type: LoadBalancer
+        ingress:
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt
+            traefik.ingress.kubernetes.io/router.tls: "true"
   syncPolicy:
     automated:
       prune: true

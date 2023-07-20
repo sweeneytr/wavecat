@@ -1,0 +1,11 @@
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: mail-mxrecord
+spec:
+  endpoints:
+    - dnsName: wavecat.net
+      recordTTL: 180
+      recordType: MX
+      targets:
+        - 10 mail.wavecat.net
