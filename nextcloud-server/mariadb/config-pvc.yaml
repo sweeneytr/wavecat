@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  app.kubernetes.io/instance: mariadb
-  app.kubernetes.io/name: mariadb
   name: mariadb-config
   namespace: nextcloud-server
+  labels:
+    app.kubernetes.io/instance: mariadb
+    app.kubernetes.io/name: mariadb
 spec:
   accessModes:
     - ReadWriteOnce

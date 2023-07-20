@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  app.kubernetes.io/instance: nzbhydra2
-  app.kubernetes.io/name: nzbhydra2
   name: nzbhydra2-config
   namespace: media-server
+  labels:
+    app.kubernetes.io/instance: nzbhydra2
+    app.kubernetes.io/name: nzbhydra2
 spec:
   accessModes:
     - ReadWriteOnce
