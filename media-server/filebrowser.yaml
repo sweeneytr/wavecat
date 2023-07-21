@@ -8,10 +8,63 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   project: media-server
-  source:
-    path: media-server/filebrowser
-    repoURL:  https://github.com/sweeneytr/wavecat.git
-    targetRevision: HEAD
+  sources:
+    - repoURL: "https://k8s-at-home.com/charts/"
+      chart: filebrowser
+      targetRevision: 1.4.2
+      helm:
+        releaseName: filebrowser
+        values: |-
+          image:
+            # https://github.com/filebrowser/filebrowser
+            tag: v2.23.0
+          env:
+            TZ: America/New_York
+          config: |
+            {
+              "port": 80,
+              "baseURL": "",
+              "address": "",
+              "log": "stdout",
+              "database": "/config/database.db",
+              "root": "/data"
+            }
+          ingress:
+            main:
+              enabled: true
+              annotations:
+                cert-manager.io/cluster-issuer: letsencrypt
+              hosts:
+                - host: filebrowser.wavecat.net
+                  paths:
+                    - backend:
+                        service:
+                          name: filebrowser
+                          port:
+                            number: 80
+                      path: /
+                      pathType: Prefix
+              tls:
+                - secretName: filebrowser-tls
+                  hosts:
+                    - filebrowser.wavecat.net
+          persistence:
+            config:
+              enabled: yes
+              retain: yes
+              accessMode: ReadWriteOnce
+              existingClaim: filebrowser-config
+              mountPath: /config
+
+            media:
+              enabled: yes
+              retain: yes
+              accessMode: ReadWriteMany
+              existingClaim: media-pvc-2
+              mountPath: /data
+    - path: media-server/filebrowser
+      repoURL:  https://github.com/sweeneytr/wavecat.git
+    
   syncPolicy:
     automated:
       prune: true

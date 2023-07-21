@@ -8,10 +8,48 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   project: media-server
-  source:
-    path: media-server/prowlarr
-    repoURL:  https://github.com/sweeneytr/wavecat.git
-    targetRevision: HEAD
+  sources:
+    - repoURL: "https://k8s-at-home.com/charts/"
+      targetRevision: 4.5.2
+      chart: prowlarr
+      helm:
+        releaseName: prowlarr
+        values: |-
+          image:
+            repository: lscr.io/linuxserver/prowlarr
+            tag: latest
+          env:
+            TZ: America/New_York
+            PGID: 100
+          podSecurityContext:
+            fsGroup: 100
+            fsGroupChangePolicy: "OnRootMismatch"
+          ingress:
+            main:
+              enabled: yes
+              ingressClassName: traefik
+              annotations:
+                cert-manager.io/cluster-issuer: letsencrypt
+                traefik.ingress.kubernetes.io/router.tls: "true"
+              hosts:
+              - host: prowlarr.wavecat.net
+                paths:
+                - path: "/"
+                  pathType: Prefix
+              tls:
+              - hosts:
+                - prowlarr.wavecat.net
+                secretName: prowlarr.wavecat.net
+          persistence:
+            config:
+              enabled: yes
+              retain: yes
+              accessMode: ReadWriteMany
+              existingClaim: prowlarr-config
+              mountPath: /config
+    - path: media-server/prowlarr
+      repoURL: https://github.com/sweeneytr/wavecat.git
+
   syncPolicy:
     automated:
       prune: true

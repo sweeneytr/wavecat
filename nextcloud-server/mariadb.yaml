@@ -11,7 +11,7 @@ spec:
   source:
     path: nextcloud-server/mariadb
     repoURL:  https://github.com/sweeneytr/wavecat.git
-    targetRevision: HEAD
+    
   syncPolicy:
     automated:
       prune: true

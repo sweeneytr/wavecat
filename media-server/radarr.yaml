@@ -8,10 +8,56 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   project: media-server
-  source:
-    path: media-server/radarr
-    repoURL:  https://github.com/sweeneytr/wavecat.git
-    targetRevision: HEAD
+  sources:
+    - repoURL: "https://k8s-at-home.com/charts/"
+      targetRevision: 16.3.2
+      chart: radarr
+      helm:
+        releaseName: radarr
+        values: |-
+          image:
+            repository: lscr.io/linuxserver/radarr
+            tag: latest
+          env:
+            TZ: America/New_York
+            PGID: 100
+          podSecurityContext:
+            fsGroup: 100
+            fsGroupChangePolicy: "OnRootMismatch"
+          ingress:
+            main:
+              enabled: yes
+              ingressClassName: traefik
+              annotations:
+                cert-manager.io/cluster-issuer: letsencrypt
+                traefik.ingress.kubernetes.io/router.tls: "true"
+              hosts:
+              - host: radarr.wavecat.net
+                paths:
+                - path: "/"
+                  pathType: Prefix
+              tls:
+              - hosts:
+                - radarr.wavecat.net
+                secretName: radarr.wavecat.net
+          persistence:
+            config:
+              enabled: yes
+              retain: yes
+              accessMode: ReadWriteOnce
+              existingClaim: radarr-config
+              mountPath: /config
+
+            media:
+              enabled: yes
+              retain: yes
+              accessMode: ReadWriteMany
+              existingClaim: media-pvc-2
+              mountPath: /data
+
+    - path: media-server/radarr
+      repoURL: https://github.com/sweeneytr/wavecat.git
+
   syncPolicy:
     automated:
       prune: true

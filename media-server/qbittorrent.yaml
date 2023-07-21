@@ -11,7 +11,7 @@ spec:
   source:
     path: media-server/qbittorrent
     repoURL:  https://github.com/sweeneytr/wavecat.git
-    targetRevision: HEAD
+    
   syncPolicy:
     automated:
       prune: true

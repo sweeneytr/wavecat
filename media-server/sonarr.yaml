@@ -8,10 +8,56 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   project: media-server
-  source:
-    path: media-server/sonarr
-    repoURL:  https://github.com/sweeneytr/wavecat.git
-    targetRevision: HEAD
+  sources:
+    - repoURL: "https://k8s-at-home.com/charts/"
+      targetRevision: 16.3.2
+      chart: sonarr
+      helm:
+        releaseName: sonarr
+        values: |-
+          image:
+            repository: lscr.io/linuxserver/sonarr
+            tag: latest
+          env:
+            TZ: America/New_York
+            PGID: 100
+          podSecurityContext:
+            fsGroup: 100
+            fsGroupChangePolicy: "OnRootMismatch"
+          ingress:
+            main:
+              enabled: yes
+              ingressClassName: traefik
+              annotations:
+                cert-manager.io/cluster-issuer: letsencrypt
+                traefik.ingress.kubernetes.io/router.tls: "true"
+              hosts:
+              - host: sonarr.wavecat.net
+                paths:
+                - path: "/"
+                  pathType: Prefix
+              tls:
+              - hosts:
+                - sonarr.wavecat.net
+                secretName: sonarr.wavecat.net
+          persistence:
+            config:
+              enabled: yes
+              retain: yes
+              accessMode: ReadWriteOnce
+              existingClaim: sonarr-config
+              mountPath: /config
+
+            media:
+              enabled: yes
+              retain: yes
+              accessMode: ReadWriteMany
+              existingClaim: media-pvc-2
+              mountPath: /data
+
+    - path: media-server/sonarr
+      repoURL: https://github.com/sweeneytr/wavecat.git
+      
   syncPolicy:
     automated:
       prune: true

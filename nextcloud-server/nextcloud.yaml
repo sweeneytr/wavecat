@@ -11,7 +11,7 @@ spec:
   source:
     path: nextcloud-server/nextcloud
     repoURL:  https://github.com/sweeneytr/wavecat.git
-    targetRevision: HEAD
+    
   syncPolicy:
     automated:
       prune: true
