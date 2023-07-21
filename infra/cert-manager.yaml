@@ -8,41 +8,20 @@ spec:
     namespace: cert-manager
     server: "https://kubernetes.default.svc"
   project: infra
-  source:
-    repoURL: https://charts.jetstack.io
-    chart: cert-manager
-    targetRevision: v1.12.2
-    helm:
-      releaseName: cert-manager
-      values: |
-        dns01RecursiveNameservers: 8.8.8.8:53,1.1.1.1:53
-        dns01RecursiveNameserversOnly: True
+  sources:
+    - repoURL: https://charts.jetstack.io
+      chart: cert-manager
+      targetRevision: v1.12.2
+      helm:
+        releaseName: cert-manager
+        values: |
+          dns01RecursiveNameservers: 8.8.8.8:53,1.1.1.1:53
+          dns01RecursiveNameserversOnly: True
+    - repoURL: https://github.com/sweeneytr/wavecat.git
+      path: infra/metallb
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
----
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: letsencrypt
-  namespace: cert-manager
-spec:
-  acme:
-    email: sweeneytri@gmail.com
-    server: https://acme-v02.api.letsencrypt.org/directory
-    privateKeySecretRef:
-      name: issuer-account-key
-    solvers:
-    - selector:
-        dnsZones:
-          - "wavecat.net"
-      dns01:
-        route53:
-          region: eu-east-1
-          accessKeyID: AKIA4N3G6C6LXIP4CQGW
-          secretAccessKeySecretRef:
-            name: route53-credentials-secret
-            key: secret-access-key
