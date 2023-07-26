@@ -3,7 +3,7 @@ kind: Application
 metadata:
   name: traefik-helm
   namespace: argocd
-  
+
 spec:
   project: infra
   syncPolicy:
@@ -13,7 +13,7 @@ spec:
     syncOptions:
       - CreateNamespace=true
   destination:
-    server: 'https://kubernetes.default.svc'
+    server: "https://kubernetes.default.svc"
     namespace: infra
   source:
     repoURL: https://helm.traefik.io/traefik
@@ -21,7 +21,7 @@ spec:
     chart: traefik
     helm:
       releaseName: traefik
-      values: |-        
+      values: |-
         dashboard:
           enabled: true
           domain: traefik.wavecat.net
@@ -43,3 +43,6 @@ spec:
             namespaces: []
             publishedService:
               enabled: true
+
+        additionalArguments: 
+          - --serversTransport.insecureSkipVerify=true
