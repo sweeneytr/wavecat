@@ -1,0 +1,26 @@
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nzbhydra2
+  namespace: media-server
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  rules:
+  - host: nzbhydra2.wavecat.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nzbhydra2
+            port:
+              name: http
+  tls:
+  - hosts:
+    - nzbhydra2.wavecat.net
+    secretName: nzbhydra2.wavecat.net

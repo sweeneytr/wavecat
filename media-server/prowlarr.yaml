@@ -24,22 +24,6 @@ spec:
           podSecurityContext:
             fsGroup: 100
             fsGroupChangePolicy: "OnRootMismatch"
-          ingress:
-            main:
-              enabled: yes
-              ingressClassName: traefik
-              annotations:
-                cert-manager.io/cluster-issuer: letsencrypt
-                traefik.ingress.kubernetes.io/router.tls: "true"
-              hosts:
-              - host: prowlarr.wavecat.net
-                paths:
-                - path: "/"
-                  pathType: Prefix
-              tls:
-              - hosts:
-                - prowlarr.wavecat.net
-                secretName: prowlarr.wavecat.net
           persistence:
             config:
               enabled: yes

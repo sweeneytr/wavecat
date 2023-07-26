@@ -1,0 +1,26 @@
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sonarr
+  namespace: media-server
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  rules:
+  - host: sonarr.wavecat.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sonarr
+            port:
+              name: http
+  tls:
+  - hosts:
+    - sonarr.wavecat.net
+    secretName: sonarr.wavecat.net
