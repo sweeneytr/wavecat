@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jackett
+  namespace: media-server
+spec:
+  selector:
+    matchLabels:
+      app: jackett
+  template:
+    metadata:
+      labels:
+        app: jackett
+    spec:
+      containers:
+        - name: jackett
+          image: lscr.io/linuxserver/jackett:0.21.541
+          env:
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: America/New_York
+          ports:
+            - containerPort: 8080
+              name: http
+          volumeMounts:
+            - name: config-pv
+              mountPath: /config
+      securityContext:
+        allowPrivilegeEscalation: false
+        fsGroup: 100
+        fsGroupChangePolicy: "OnRootMismatch"
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: config-pv
+          persistentVolumeClaim:
+            accessMode: ReadWriteOnce
+            claimName: jackett-config

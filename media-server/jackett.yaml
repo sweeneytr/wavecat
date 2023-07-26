@@ -9,33 +9,9 @@ spec:
     server: https://kubernetes.default.svc
   project: media-server
   sources:
-    - repoURL: "https://k8s-at-home.com/charts/"
-      targetRevision: 11.7.2
-      chart: jackett
-      helm:
-        releaseName: jackett
-        values: |-
-          image:
-            repository: lscr.io/linuxserver/jackett
-            tag: latest
-          env:
-            TZ: America/New_York
-            PGID: 100
-          podSecurityContext:
-            fsGroup: 100
-            fsGroupChangePolicy: "OnRootMismatch"
-          persistence:
-            config:
-              enabled: yes
-              retain: yes
-              accessMode: ReadWriteOnce
-              existingClaim: jackett-config
-              mountPath: /config
-
     - path: media-server/jackett
       repoURL: https://github.com/sweeneytr/wavecat.git
-
-  syncPolicy:
+  syncPolcy:
     automated:
       prune: true
       selfHeal: true
