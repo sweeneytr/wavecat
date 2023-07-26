@@ -27,7 +27,6 @@ spec:
             - name: config-pv
               mountPath: /config
       securityContext:
-        allowPrivilegeEscalation: false
         fsGroup: 100
         fsGroupChangePolicy: "OnRootMismatch"
         seccompProfile:
@@ -35,5 +34,4 @@ spec:
       volumes:
         - name: config-pv
           persistentVolumeClaim:
-            accessMode: ReadWriteOnce
             claimName: jackett-config
