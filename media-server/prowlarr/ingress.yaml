@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jackett
+  name: prowlarr
   namespace: media-server
   annotations:
     kubernetes.io/ingress.class: traefik
@@ -10,17 +10,17 @@ metadata:
     traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   rules:
-  - host: jackett.wavecat.net
+  - host: prowlarr.wavecat.net
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: jackett
+            name: prowlarr
             port:
               name: http
   tls:
   - hosts:
-    - jackett.wavecat.net
-    secretName: jackett.wavecat.net
+    - prowlarr.wavecat.net
+    secretName: prowlarr.wavecat.net
