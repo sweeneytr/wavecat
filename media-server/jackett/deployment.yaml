@@ -21,7 +21,7 @@ spec:
             - name: TZ
               value: America/New_York
           ports:
-            - containerPort: 8080
+            - containerPort: 9117
               name: http
           volumeMounts:
             - name: config-pv
