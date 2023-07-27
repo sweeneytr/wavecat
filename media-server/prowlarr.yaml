@@ -18,19 +18,6 @@ spec:
           image:
             repository: lscr.io/linuxserver/prowlarr
             tag: latest
-          env:
-            TZ: America/New_York
-            PGID: 100
-          podSecurityContext:
-            fsGroup: 100
-            fsGroupChangePolicy: "OnRootMismatch"
-          persistence:
-            config:
-              enabled: yes
-              retain: yes
-              accessMode: ReadWriteMany
-              existingClaim: prowlarr-config
-              mountPath: /config
     - path: media-server/prowlarr
       repoURL: https://github.com/sweeneytr/wavecat.git
 
