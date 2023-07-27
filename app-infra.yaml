@@ -26,10 +26,9 @@ spec:
   source:
     path: infra
     repoURL: https://github.com/sweeneytr/wavecat.git
-    
   syncPolicy:
     automated:
-      prune: false
+      prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true

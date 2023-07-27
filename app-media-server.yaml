@@ -25,11 +25,10 @@ spec:
   project: media-server
   source:
     path: media-server
-    repoURL: https://github.com/sweeneytr/wavecat.git
-    
+    repoURL: https://github.com/sweeneytr/wavecat.git 
   syncPolicy:
     automated:
-      prune: false
+      prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
