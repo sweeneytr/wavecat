@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+spec:
+  project: infra
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: infra
+  sources:
+    - repoURL: https://helm.traefik.io/traefik
+      targetRevision: 23.1.0
+      chart: traefik
+      helm:
+        releaseName: traefik
+        values: |-
+          dashboard:
+            enabled: true
+            domain: traefik.wavecat.net
+          rbac:
+            enabled: true
+
+          providers:
+            kubernetesCRD:
+              enabled: true
+              allowCrossNamespace: false
+              allowExternalNameServices: false
+              allowEmptyServices: false
+              namespaces: []
+
+            kubernetesIngress:
+              enabled: true
+              allowExternalNameServices: false
+              allowEmptyServices: false
+              namespaces: []
+              publishedService:
+                enabled: true
+
+          additionalArguments: 
+            - --serversTransport.insecureSkipVerify=true
+    - repoURL: https://github.com/sweeneytr/wavecat.git
+      path: infra/traefik
