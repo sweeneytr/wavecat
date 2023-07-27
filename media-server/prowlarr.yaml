@@ -9,15 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: media-server
   sources:
-    - repoURL: "https://k8s-at-home.com/charts/"
-      targetRevision: 4.5.2
-      chart: prowlarr
-      helm:
-        releaseName: prowlarr
-        values: |-
-          image:
-            repository: lscr.io/linuxserver/prowlarr
-            tag: latest
     - path: media-server/prowlarr
       repoURL: https://github.com/sweeneytr/wavecat.git
 
