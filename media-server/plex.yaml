@@ -9,39 +9,8 @@ spec:
     server: https://kubernetes.default.svc
   project: media-server
   sources:
-    - repoURL: "https://k8s-at-home.com/charts/"
-      targetRevision: 6.4.3
-      chart: plex
-      helm:
-        releaseName: plex
-        values: |-
-          image:
-            repository: lscr.io/linuxserver/plex
-            tag: latest
-          env:
-            TZ: America/New_York
-            PGID: 100
-          podSecurityContext:
-            fsGroup: 100
-            fsGroupChangePolicy: "OnRootMismatch"
-          persistence:
-            config:
-              enabled: yes
-              retain: yes
-              accessMode: ReadWriteOnce
-              existingClaim: plex-config
-              mountPath: /config
-
-            media:
-              enabled: yes
-              retain: yes
-              accessMode: ReadWriteMany
-              existingClaim: media-pvc-2
-              mountPath: /data
-
     - path: media-server/plex
       repoURL: https://github.com/sweeneytr/wavecat.git
-
   syncPolicy:
     automated:
       prune: true

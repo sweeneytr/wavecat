@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: plex
+  namespace: media-server
+spec:
+  ports:
+  - name: http
+    port: 32400
+    targetPort: http
+  selector:
+    app: plex
