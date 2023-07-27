@@ -9,36 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: media-server
   sources:
-    - repoURL: "https://k8s-at-home.com/charts/"
-      targetRevision: 10.4.2
-      chart: nzbhydra2
-      helm:
-        releaseName: nzbhydra2
-        values: |-
-          image:
-            repository: lscr.io/linuxserver/nzbhydra2
-            tag: latest
-          env:
-            TZ: America/New_York
-            PGID: 100
-          podSecurityContext:
-            fsGroup: 100
-            fsGroupChangePolicy: "OnRootMismatch"
-          persistence:
-            config:
-              enabled: yes
-              retain: yes
-              accessMode: ReadWriteOnce
-              existingClaim: nzbhydra2-config
-              mountPath: /config
-          probes:
-            startup:
-              enabled: no
-            readiness:
-              enabled: no
-            liveness:
-              enabled: no
-
     - path: media-server/nzbhydra2
       repoURL: https://github.com/sweeneytr/wavecat.git
 
