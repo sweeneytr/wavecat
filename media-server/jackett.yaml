@@ -11,7 +11,7 @@ spec:
   sources:
     - path: media-server/jackett
       repoURL: https://github.com/sweeneytr/wavecat.git
-  syncPolcy:
+  syncPolicy:
     automated:
       prune: true
       selfHeal: true
