@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: readarr
+  namespace: media-server
+spec:
+  selector:
+    matchLabels:
+      app: readarr
+  template:
+    metadata:
+      labels:
+        app: readarr
+    spec:
+      containers:
+        - name: readarr
+          image: lscr.io/linuxserver/readarr:0.2.4
+          env:
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: America/New_York
+          ports:
+            - containerPort: 8787
+              name: http
+          volumeMounts:
+            - name: config-pv
+              mountPath: /config
+      securityContext:
+        fsGroup: 100
+        fsGroupChangePolicy: "OnRootMismatch"
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: config-pv
+          persistentVolumeClaim:
+            claimName: readarr-config
