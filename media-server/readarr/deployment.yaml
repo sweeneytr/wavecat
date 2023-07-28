@@ -26,6 +26,8 @@ spec:
           volumeMounts:
             - name: config-pv
               mountPath: /config
+            - name: data-pv
+              mountPath: /data
       securityContext:
         fsGroup: 100
         fsGroupChangePolicy: "OnRootMismatch"
@@ -35,3 +37,6 @@ spec:
         - name: config-pv
           persistentVolumeClaim:
             claimName: readarr-config
+        - name: data-pv
+          persistentVolumeClaim:
+            claimName: media-pvc-2
