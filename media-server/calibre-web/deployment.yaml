@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calibre-web
+  namespace: media-server
+spec:
+  selector:
+    matchLabels:
+      app: calibre-web
+  template:
+    metadata:
+      labels:
+        app: calibre-web
+    spec:
+      containers:
+        - name: calibre-web
+          image: lscr.io/linuxserver/calibre-web:0.6.20
+          env:
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: America/New_York
+            - name: DOCKER_MODS
+              value: linuxserver/mods:universal-calibre
+          ports:
+            - containerPort: 8083
+              name: http
+          volumeMounts:
+            - name: config-pv
+              mountPath: /config
+            - name: data-pv
+              subPath: Books
+              mountPath: /books
+      securityContext:
+        fsGroup: 100
+        fsGroupChangePolicy: "OnRootMismatch"
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: config-pv
+          persistentVolumeClaim:
+            claimName: calibre-web-config
+        - name: data-pv
+          persistentVolumeClaim:
+            claimName: media-pvc-2
