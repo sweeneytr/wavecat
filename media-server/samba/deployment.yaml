@@ -14,13 +14,10 @@ spec:
     spec:
       containers:
       - name: samba
-        image: dperson/samba
+        image: servercontainers/samba
         env:
-        - name: PERMISSIONS 
-          value: "0777"     
-        args:
-        - "-s"
-        - "share;/smbshare/;yes;yes;yes;all;none"
+        - name: SAMBA_VOLUME_CONFIG_share 
+          value: /smbshare/;yes;yes;yes;all;none
         ports:
         - containerPort: 445
           name: samba
