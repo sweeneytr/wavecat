@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: samba
   namespace: media-server
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.129.8
+    metallb.universe.tf/ip-allocated-from-pool: first-pool
 spec:
   ports:
   - name: samba
@@ -10,3 +13,4 @@ spec:
     targetPort: samba
   selector:
     app: samba
+  type: LoadBalancer
