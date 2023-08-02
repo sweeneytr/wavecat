@@ -17,7 +17,7 @@ spec:
         image: servercontainers/samba
         env:
         - name: SAMBA_VOLUME_CONFIG_share 
-          value: path = /smbshare/;browsable = yes; read only = yes; guest ok = yes; read list = guest nobody
+          value: path = /smbshare/;browsable = yes; read only = yes; guest ok = yes; read list = guest nobody; comment = Media
         ports:
         - containerPort: 445
           name: samba
