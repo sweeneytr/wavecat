@@ -20,7 +20,7 @@ spec:
           value: "0777"     
         args:
         - "-s"
-        - "share;/smbshare/;yes;yes;yes;none;none"
+        - "share;/smbshare/;yes;yes;yes;all;none"
         ports:
         - containerPort: 445
           name: samba
