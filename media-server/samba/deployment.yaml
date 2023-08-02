@@ -23,6 +23,7 @@ spec:
         - "share;/smbshare/;yes;yes;yes;none;none"
         ports:
         - containerPort: 445
+          name: samba
         volumeMounts:
         - mountPath: /smbshare
           name: data-pv
