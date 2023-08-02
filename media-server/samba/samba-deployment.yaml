@@ -26,9 +26,7 @@ spec:
         volumeMounts:
         - mountPath: /smbshare
           name: data-pv
-      volumeMounts:
-        - name: data-pv
-          mountPath: /smbshare
+      volumes:
         - name: data-pv
           persistentVolumeClaim:
             claimName: media-pvc-2
