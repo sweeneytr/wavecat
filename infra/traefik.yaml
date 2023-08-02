@@ -43,6 +43,11 @@ spec:
               publishedService:
                 enabled: true
 
+          service:
+            annotations:
+              metallb.universe.tf/loadBalancerIPs: 192.168.129.0
+              metallb.universe.tf/ip-allocated-from-pool: first-pool
+
           additionalArguments: 
             - --serversTransport.insecureSkipVerify=true
     - repoURL: https://github.com/sweeneytr/wavecat.git
