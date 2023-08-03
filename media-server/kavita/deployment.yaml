@@ -28,7 +28,13 @@ spec:
               mountPath: /config
             - name: data-pv
               subPath: Books
-              mountPath: /media
+              mountPath: /books
+            - name: data-pv
+              subPath: Comics
+              mountPath: /comics
+            - name: data-pv
+              subPath: Audiobooks
+              mountPath: /audiobooks
       securityContext:
         fsGroup: 100
         fsGroupChangePolicy: "OnRootMismatch"
