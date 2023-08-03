@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: readarr-audio-config
+  namespace: media-server
+  labels:
+    app.kubernetes.io/instance: readarr-audio
+    app.kubernetes.io/name: readarr-audio
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 250Gi
+  storageClassName: wavecat

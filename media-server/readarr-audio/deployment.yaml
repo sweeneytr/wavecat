@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: readarr-audio
+  namespace: media-server
+spec:
+  selector:
+    matchLabels:
+      app: readarr-audio
+  template:
+    metadata:
+      labels:
+        app: readarr-audio
+    spec:
+      containers:
+        - name: readarr-audio
+          image: lscr.io/linuxserver/readarr:0.2.4-nightly
+          env:
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: America/New_York
+          ports:
+            - containerPort: 8787
+              name: http
+          volumeMounts:
+            - name: config-pv
+              mountPath: /config
+            - name: data-pv
+              mountPath: /data
+      securityContext:
+        fsGroup: 100
+        fsGroupChangePolicy: "OnRootMismatch"
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: config-pv
+          persistentVolumeClaim:
+            claimName: readarr-audio-config
+        - name: data-pv
+          persistentVolumeClaim:
+            claimName: media-pvc-2
