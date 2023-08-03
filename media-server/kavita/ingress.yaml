@@ -1,0 +1,26 @@
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kavita
+  namespace: media-server
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  rules:
+  - host: kavita.wavecat.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kavita
+            port:
+              name: http
+  tls:
+  - hosts:
+    - kavita.wavecat.net
+    secretName: kavita.wavecat.net

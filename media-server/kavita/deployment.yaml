@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kavita
+  namespace: media-server
+spec:
+  selector:
+    matchLabels:
+      app: kavita
+  template:
+    metadata:
+      labels:
+        app: kavita
+    spec:
+      containers:
+        - name: kavita
+          image: kavita/kavita:latest
+          env:
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: America/New_York
+          ports:
+            - containerPort: 5000
+              name: http
+          volumeMounts:
+            - name: config-pv
+              mountPath: /config
+            - name: data-pv
+              subPath: Books
+              mountPath: /media
+      securityContext:
+        fsGroup: 100
+        fsGroupChangePolicy: "OnRootMismatch"
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: config-pv
+          persistentVolumeClaim:
+            claimName: kavita-config
+        - name: data-pv
+          persistentVolumeClaim:
+            claimName: media-pvc-2
