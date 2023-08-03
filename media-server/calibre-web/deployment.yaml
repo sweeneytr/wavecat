@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: calibre-web
-          image: lscr.io/linuxserver/calibre-web:0.6.20
+          image: lscr.io/linuxserver/calibre-web:5.33.2
           env:
             - name: PGID
               value: "100"
