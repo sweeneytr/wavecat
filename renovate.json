@@ -14,6 +14,10 @@
       "matchUpdateTypes": ["patch", "pin", "digest"],
       "automerge": true,
       "ignoreTests": true
+    },
+    {
+      "matchPackageNames": ["lscr.io/linuxserver/calibre-web", "lscr.io/linuxserver/overseerr"],
+      "allowedVersions": "<50"
     }
   ]
 }
