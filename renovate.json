@@ -18,6 +18,10 @@
     {
       "matchPackageNames": ["lscr.io/linuxserver/calibre-web", "lscr.io/linuxserver/overseerr"],
       "allowedVersions": "<50"
+    },
+    {
+      "matchPackageNames": ["lscr.io/linuxserver/calibre-web"],
+      "allowedVersions": "<2"
     }
   ]
 }
