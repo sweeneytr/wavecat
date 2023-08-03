@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: kavita
-          image: kavita/kavita:latest
+          image: kizaing/kavita:latest
           env:
             - name: PGID
               value: "100"
