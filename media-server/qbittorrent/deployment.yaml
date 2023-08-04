@@ -7,6 +7,8 @@ spec:
   selector:
     matchLabels:
       app: qbittorrent
+  strategy:
+    type: Recreate # This makes sure only one instance is running at a time
   template:
     metadata:
       labels:

@@ -8,6 +8,8 @@ spec:
   selector:
     matchLabels:
       app: mariadb
+  strategy:
+    type: Recreate # This makes sure only one instance is running at a time
   template:
     metadata:
       labels:
@@ -41,3 +43,4 @@ spec:
       - name: config-pv
         persistentVolumeClaim:
           claimName: mariadb-config
+          

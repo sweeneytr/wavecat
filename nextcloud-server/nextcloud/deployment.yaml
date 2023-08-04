@@ -8,6 +8,8 @@ spec:
   selector:
     matchLabels:
       app: nextcloud
+  strategy:
+    type: Recreate # This makes sure only one instance is running at a time
   template:
     metadata:
       labels:
@@ -16,7 +18,6 @@ spec:
       containers:
       - name: nextcloud
         image: lscr.io/linuxserver/nextcloud:27.0.1
-        
         env:
         - name: PUID
           value: '1000'
