@@ -65,9 +65,9 @@ spec:
                 secretKeyRef:
                   name: readarr-audio
                   key: apikey
-            - name: UN_READAR_1_PATHS_0
+            - name: UN_READARR_1_PATHS_0
               value: /data/downloads/readarr-audio/
-            - name: UN_READAR_1_URL
+            - name: UN_READARR_1_URL
               value: "https://readarr-audio.wavecat.net"
           volumeMounts:
             - name: data-pv
