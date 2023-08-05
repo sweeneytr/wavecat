@@ -18,6 +18,8 @@ spec:
         - name: plex
           image: lscr.io/linuxserver/plex:1.32.5
           env:
+            - name: PUID
+              value: "100"
             - name: PGID
               value: "100"
             - name: TZ

@@ -18,6 +18,8 @@ spec:
         - name: readarr-audio
           image: lscr.io/linuxserver/readarr:0.3.1-nightly
           env:
+            - name: PUID
+              value: "100"
             - name: PGID
               value: "100"
             - name: TZ

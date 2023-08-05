@@ -18,6 +18,8 @@ spec:
         - name: kavita
           image: kizaing/kavita:latest
           env:
+            - name: PUID
+              value: "100"
             - name: PGID
               value: "100"
             - name: TZ

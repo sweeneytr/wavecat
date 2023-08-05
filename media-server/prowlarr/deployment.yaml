@@ -18,6 +18,8 @@ spec:
         - name: prowlarr
           image: lscr.io/linuxserver/prowlarr:1.8.1259
           env:
+            - name: PUID
+              value: "100"
             - name: PGID
               value: "100"
             - name: TZ

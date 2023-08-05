@@ -18,6 +18,8 @@ spec:
         - name: nzbhydra2
           image: lscr.io/linuxserver/nzbhydra2:5.1.10
           env:
+            - name: PUID
+              value: "100"
             - name: PGID
               value: "100"
             - name: TZ

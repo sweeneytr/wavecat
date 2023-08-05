@@ -18,6 +18,8 @@ spec:
         - name: jackett
           image: lscr.io/linuxserver/jackett:0.21.541
           env:
+            - name: PUID
+              value: "100"
             - name: PGID
               value: "100"
             - name: TZ

@@ -18,6 +18,8 @@ spec:
         - name: calibre
           image: lscr.io/linuxserver/calibre:6.24.0
           env:
+            - name: PUID
+              value: "100"
             - name: PGID
               value: "100"
             - name: TZ

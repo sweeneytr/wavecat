@@ -18,6 +18,8 @@ spec:
         - name: radarr
           image: lscr.io/linuxserver/radarr:4.6.4
           env:
+            - name: PUID
+              value: "100"
             - name: PGID
               value: "100"
             - name: TZ

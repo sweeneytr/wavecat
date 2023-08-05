@@ -18,6 +18,8 @@ spec:
         - name: sonarr
           image: lscr.io/linuxserver/sonarr:3.0.10
           env:
+            - name: PUID
+              value: "100"
             - name: PGID
               value: "100"
             - name: TZ

@@ -18,6 +18,8 @@ spec:
         - name: overseerr
           image: lscr.io/linuxserver/overseerr:1.33.2
           env:
+            - name: PUID
+              value: "100"
             - name: PGID
               value: "100"
             - name: TZ

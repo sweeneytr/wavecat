@@ -18,8 +18,10 @@ spec:
       - name: qbittorrent
         image: dyonr/qbittorrentvpn
         env:
+        - name: PUID
+          value: "100"
         - name: PGID
-          value: '1000'
+          value: '100'
         - name: VPN_ENABLED
           value: 'yes'
         - name: VPN_TYPE

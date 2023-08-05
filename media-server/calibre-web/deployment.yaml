@@ -18,6 +18,8 @@ spec:
         - name: calibre-web
           image: lscr.io/linuxserver/calibre-web:0.6.20
           env:
+            - name: PUID
+              value: "100"
             - name: PGID
               value: "100"
             - name: TZ
