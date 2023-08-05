@@ -1,0 +1,21 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "readarr",
+    "namespace": "media-server",
+    "creationTimestamp": null
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "readarr",
+        "namespace": "media-server",
+        "creationTimestamp": null
+      }
+    },
+    "encryptedData": {
+      "apikey": "AgAphEfExM+pGGP6+KspfRTGM2lx0HkdiKRh02hbNmib0qRySdVTbVO5t8gWGGyWt9L9qwViurKZ1oTBMcLGbA8QDdT1f7r+miiQOzpEGBT+Qs+cAIlCg7QO4k581Nb43VHktJKphvimIxnKgfFlXhqlaCzPIW60A6JRfU6phff/qjmCiJT1rSsW89ZOaSjgJLZGKauv5AFrFP8xEyS6WlDx1rlcWsScTSkqe/HSRjw487LHVZOgmq71APpyq/TCVxo9Twu/kT10zFgmKT2tC9mBpB1McaBi9escyfTThiHKUZQJKLpyvwos2dqCm9+KuVD6pV/tx1p/kGTRtf7p0MuDS7EQpKGm26HINiYtEPeS8u3FC44HBRXXauxdOnf5Gz6zL621MH0CvFHRZfVdtiAhTZvLdVr/x5Q73DYlrjg5D3ZQeG65H4sxmAp26CQSaMwZ/WUZpj4aqJTrBVf3A5ry2xpl/Mmai64/0zsrWZx7QWct+7TQHHluhwGeS8sGeqh1h8kwYDNLEh1/VKM2s3OrJvzYmCNC70IrigB8nMI97eqkEbfUpeDrqPWfX9awfnSWSehwZJ2k8EYa1an8O+LWuR5UMJtURlpPP/kBjuGTdwgox5bOer4mawgfSvNitGv9MoBbHfrDfgQKxriBIZedn+0rh0P9m99Dtku9hOFplg0XONqahLQ0jNep0LkR8jqJ8pXwnKuOC6LvWyD9b2RHbIgWkacqTAdVsNQAys0S1uc="
+    }
+  }
+}

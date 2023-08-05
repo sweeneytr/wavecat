@@ -1,0 +1,21 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "readarr-audio",
+    "namespace": "media-server",
+    "creationTimestamp": null
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "readarr-audio",
+        "namespace": "media-server",
+        "creationTimestamp": null
+      }
+    },
+    "encryptedData": {
+      "apikey": "AgA6v/AePY6eIZZFYLY4cMn7W8GvpH0jiwns+V0olvgmSsAOYynzJUzgvklTJZ25fjdfBZl/nabM67loNADY5VZg5dNmfT/X2dh4O8nR2Pa6f739K6GPdX3g9K4HIskiaCQNOr7klZ5olawLOUD8Te+BvL9tLXV48FDbnhoK5SxFjNyKNCA9JJD8jdcWSLrz/d6W0hmVcCjT+ujkhH8nchkiA+/SZgdTxIHp5o9wJooxg7AEayPi/sVeweCIVRT3fjRLQ8TCN3UvXRMWZy6pqT255rhbDyqbx2Eqkg2iO1ZNiQkgQdaj3IYiAJ4miwmKH2vTFFYi7d4GsJJb6lKeH5qbupvIpSd0F/idYz7tLlF3rv0qnsF7US4GxXvSUdmbIaowPuYNPew2FSa2j0vYSkmta/abPUUZ9qVoQV0R4JklQVNNujLPSJzNqCYLxR+cbm3twr2r8XInxtWcLKXVmt0ltHiMHdYD5GapgH4CuTroAleexJ+w5a6yUeNjfwCBHl18JH2+Adq9dRoGOBPsjHRAmXYvLAQT80Ho7HF+IkkK9Z3ugw6tDLpWgqOXcH3A+E4cgAVoEKwZzUikqoEZdJ00Xf7fau3l/QPpek00rzUTC727a5xRTDr2XNwvnnSw25GLgrcVZ9nr/sAYVGB6EOtK+mESxNX0wTsWsH5ZIX9bJE3anGu5fQpsgB6JmG7RCZCrh37WIYVFe/tLpberfBprYJxkLit+zoPlR2UQNbhuGsQ="
+    }
+  }
+}

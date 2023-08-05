@@ -1,0 +1,21 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "radarr",
+    "namespace": "media-server",
+    "creationTimestamp": null
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "radarr",
+        "namespace": "media-server",
+        "creationTimestamp": null
+      }
+    },
+    "encryptedData": {
+      "apikey": "AgBalEi+mLGdT8RVWPxrdCSFWbP2x4MCEx99SARU9rFbW19svcNMNSdlS0i6VTJLdD8ixm00PMuE/oRILicw+JrnWZI5v6+g1ximVIRfNeioxPOLiKZB7LeKeBEYcOCu2NSCkp2CyxwcXOTk/m/zSvSaGXvvpRCSpwfoUW9X6BFcLiU6xf3GfdKc70WUSl10WfSG6xmjKEIWnShZguQlvPyn7tGfQynXGkaUTNOibR7fB3AFudxYuALPVLlibC2h2X6oB92rdMs0SVmApJ8IY+WbFK1IIO3ULCth2pV1NuM8kPLOwK4XJ6SWSlQHyxHD7g30IJFoDHR8SSU5g5folDLiuc+TUgA4mEGSWwyJYn5n0YBAtIOA72w1QDEZ0AV0AtjKZGGKIQ0mWz+B+AH0mxZNqcg7dErMLZZP8lHi4V1YVk0VhhpKXUiSlbPKgrqHVNgomEoJlDsxSUgSItgn4ZeVmsFxkCDhkfpdhEsNiXnC2aNPMjQ80w2eXz6IT3TNo5fnpN3/LrWfBVu7XBxU/CeM/aEly8AiEEr/18q3tBpmF4H/DpIdYcbK9/XlbGfonbuC+AqxLB5BVSDxbpoRIRjPrrSGKHN6gBWQn7Jb8tnzayjeXnDAYA5ikpCax3OOv+k1ekRmUVqCa8n6qGUoIcutyAkua4SmkeWx/h7gQAq8ZCKmsig0xPD7L3aaZMkhaAtTx2EVwCZh0A/V/wIT3emV65dWWKoaumNDzn5HnmhzCV4="
+    }
+  }
+}
