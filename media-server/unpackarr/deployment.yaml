@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: unpackerr
-          image: "ghcr.io/onedr0p/unpackerr:0.12.0"
+          image: "golift/unpackerr:0.12.0"
           env:
             - name: PGID
               value: "100"
