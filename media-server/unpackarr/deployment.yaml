@@ -46,7 +46,7 @@ spec:
                   name: sonarr
                   key: apikey
             - name: UN_SONARR_0_PATHS_0
-              value: /data/downloads/sonarr-tb/
+              value: /data/downloads/sonarr-tv/
             - name: UN_SONARR_0_URL
               value: "https://sonarr.wavecat.net"
 
