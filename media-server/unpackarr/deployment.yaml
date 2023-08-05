@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: unpackerr
+    app.kubernetes.io/name: unpackerr
+  name: unpackerr
+  namespace: media-server
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: unpackerr
+      app.kubernetes.io/name: unpackerr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: unpackerr
+        app.kubernetes.io/name: unpackerr
+    spec:
+      containers:
+        - name: unpackerr
+          image: "ghcr.io/onedr0p/unpackerr:0.12.0"
+          env:
+            - name: PGID
+              value: "100"
+            - name: PUID
+              value: "100"
+            - name: TZ
+              value: America/New_York
+
+            - name: UN_RADARR_0_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: radarr
+                  key: apikey
+            - name: UN_RADARR_0_PATHS_0
+              value: /data/downloads/radarr/
+            - name: UN_RADARR_0_URL
+              value: "https://radarr.wavecat.net"
+
+            - name: UN_SONARR_0_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sonarr
+                  key: apikey
+            - name: UN_SONARR_0_PATHS_0
+              value: /data/downloads/sonarr-tb/
+            - name: UN_SONARR_0_URL
+              value: "https://sonarr.wavecat.net"
+
+            - name: UN_READARR_0_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: readarr
+                  key: apikey
+            - name: UN_READARR_0_PATHS_0
+              value: /data/downloads/readarr/
+            - name: UN_READARR_0_URL
+              value: "https://readarr.wavecat.net"
+              
+            - name: UN_READARR_1_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: readar-audio
+                  key: apikey
+            - name: UN_READAR_1_PATHS_0
+              value: /data/downloads/readarr-audio/
+            - name: UN_READAR_1_URL
+              value: "https://readarr-audio.wavecat.net"
+          volumeMounts:
+            - name: data-pv
+              mountPath: /data
+      volumes:
+        - name: data-pv
+          persistentVolumeClaim:
+            claimName: media-pvc-2
