@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: unpackerr
-          image: "golift/unpackerr:0.12.0"
+          image: "hotio/unpackerr:0.12.0"
           env:
             - name: PGID
               value: "100"
