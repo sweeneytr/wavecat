@@ -26,18 +26,18 @@ spec:
             autoscaleEnabled: false
           global:
             logAsJson: true
-    - repoURL: "https://istio-release.storage.googleapis.com/charts"
-      chart: gateway
-      targetRevision: 1.18.2
-      helm:
-        values: |
-          autoscaling:
-            enabled: false
-          imagePullPolicy: IfNotPresent
-          service:
-            annotations:
-              metallb.universe.tf/loadBalancerIPs: 192.168.129.42
-              metallb.universe.tf/ip-allocated-from-pool: first-pool
+    # - repoURL: "https://istio-release.storage.googleapis.com/charts"
+    #   chart: gateway
+    #   targetRevision: 1.18.2
+    #   helm:
+    #     values: |
+    #       autoscaling:
+    #         enabled: false
+    #       imagePullPolicy: IfNotPresent
+    #       service:
+    #         annotations:
+    #           metallb.universe.tf/loadBalancerIPs: 192.168.129.42
+    #           metallb.universe.tf/ip-allocated-from-pool: first-pool
   ignoreDifferences:
     # The webhook failure policy will be updated by Istio to 'Fail' once initial testing passed
     - group: admissionregistration.k8s.io
