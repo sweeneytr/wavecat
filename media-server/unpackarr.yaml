@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ubpackarr
+  name: unpackarr
   namespace: argocd
 spec:
   destination:
