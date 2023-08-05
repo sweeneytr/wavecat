@@ -38,6 +38,9 @@ spec:
     #         annotations:
     #           metallb.universe.tf/loadBalancerIPs: 192.168.129.42
     #           metallb.universe.tf/ip-allocated-from-pool: first-pool
+    
+    - repoURL: https://github.com/sweeneytr/wavecat.git
+      path: infra/istio
   ignoreDifferences:
     # The webhook failure policy will be updated by Istio to 'Fail' once initial testing passed
     - group: admissionregistration.k8s.io
