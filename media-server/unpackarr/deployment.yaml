@@ -38,7 +38,7 @@ spec:
             - name: UN_RADARR_0_PATHS_0
               value: /data/downloads/radarr/
             - name: UN_RADARR_0_URL
-              value: "https://radarr.wavecat.net"
+              value: "http://radarr"
 
             - name: UN_SONARR_0_API_KEY
               valueFrom:
@@ -48,7 +48,7 @@ spec:
             - name: UN_SONARR_0_PATHS_0
               value: /data/downloads/sonarr-tv/
             - name: UN_SONARR_0_URL
-              value: "https://sonarr.wavecat.net"
+              value: "http://sonarr"
 
             - name: UN_READARR_0_API_KEY
               valueFrom:
@@ -58,7 +58,7 @@ spec:
             - name: UN_READARR_0_PATHS_0
               value: /data/downloads/readarr/
             - name: UN_READARR_0_URL
-              value: "https://readarr.wavecat.net"
+              value: "http://readarr"
               
             - name: UN_READARR_1_API_KEY
               valueFrom:
@@ -68,7 +68,7 @@ spec:
             - name: UN_READARR_1_PATHS_0
               value: /data/downloads/readarr-audio/
             - name: UN_READARR_1_URL
-              value: "https://readarr-audio.wavecat.net"
+              value: "http://readarr-audio"
           volumeMounts:
             - name: data-pv
               mountPath: /data
