@@ -72,6 +72,11 @@ spec:
           volumeMounts:
             - name: data-pv
               mountPath: /data
+      securityContext:
+        fsGroup: 100
+        fsGroupChangePolicy: "OnRootMismatch"
+        seccompProfile:
+          type: RuntimeDefault
       volumes:
         - name: data-pv
           persistentVolumeClaim:
