@@ -1,0 +1,22 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "sonarr-anime",
+    "namespace": "media-server",
+    "creationTimestamp": null
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "sonarr-anime",
+        "namespace": "media-server",
+        "creationTimestamp": null
+      },
+      "type": "Opaque"
+    },
+    "encryptedData": {
+      "apikey": "AgAT8VyUCC5cgzb9Yiyz8xj7c/yb3KK5X0NcuIjM9sMenGvpxhLj7M54QDOIHMotMdNSn2iwP/SEAU8LNulNY7XDaAKEWG2N/1GblmApyIEls2mALBiaTTvdznCww+dr12okK8nT4xhXOrfHhOhmAXDhlS35EJipeUV8fIZMUdJJtiyq3XTqlW71x8y/ncBfZD+Xi7RCWzVN+XERd5i7f4bQbuj6ugW7yVWke3vtrtbaf63dS+D5QsEbPEiYcAcM0Ep7fVfKZfMUN968rk89RjtISP39x8zuWlxt1lHtpDYF6jakheVzh32MTs0BpWWJ9jskpt1/B+IKZFt6FBvc1UPEf2J9dgUoR+mOVfyPpsXFkpW/psHJdbNxqHdy2pH0JbcHW3hIVbvXIMsmy5yhNjJNEbNvQBSDdCd4khSuurkKTW9ssbbIlm11ucX1tNjnTu+L8Iqjej1sSsMWBtiSGlRLeDZI8L5dlRSCKeMgxnxGUEkpae6w4/uRmizd5cg95c4beM9kJSGbIgq7YyIFQi70+bcNRCzeyN2O9xex+KpcNnZ70l4TpPG89oTaA/DJ5bz86URzwIp6SZPmf9XV3s4ez6ftJsmq42EcgrFfiNmr2T4EbYfNs43nexERM4ZwO/d1SyXBoH8xmdHKvIHgaD0FxIVfNfSc0ekRmrosWim5m2UNE5aMPn0xOqtE3Gh10UCsKhgbvYVaPKZU1F64u823tBosQ30pMoxDKVKI+lN08Q=="
+    }
+  }
+}
