@@ -4,6 +4,9 @@ metadata:
   name: mesh-default
   namespace: istio-system
 spec:
+  selector:
+  matchExpressions:
+    - { key: istio-ignore, operator: DoesNotExist }
   accessLogging:
     - providers:
       - name: envoy
