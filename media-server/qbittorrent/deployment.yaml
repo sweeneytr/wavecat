@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         app: qbittorrent
-        istio-ignore: yes
+        istio-ignore: 'yes'
     spec:
       containers:
       - name: qbittorrent
