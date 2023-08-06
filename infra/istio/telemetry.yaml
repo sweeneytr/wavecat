@@ -7,6 +7,6 @@ spec:
   selector:
     matchLabels:
       do-istio: please
-#  accessLogging:
-#    - providers:
-#      - name: envoy
+  accessLogging:
+    - providers:
+      - name: envoy

@@ -9,23 +9,23 @@ spec:
     server: "https://kubernetes.default.svc"
   project: infra
   sources:
-    - repoURL: "https://istio-release.storage.googleapis.com/charts"
-      chart: base
-      targetRevision: 1.18.2
-      helm:
-        values: |
-          global:
-            istiod:
-              enableAnalysis: true
-    - repoURL: "https://istio-release.storage.googleapis.com/charts"
-      chart: istiod
-      targetRevision: 1.18.2
-      helm:
-        values: |
-          pilot:
-            autoscaleEnabled: false
-          global:
-            logAsJson: true
+    # - repoURL: "https://istio-release.storage.googleapis.com/charts"
+    #   chart: base
+    #   targetRevision: 1.18.2
+    #   helm:
+    #     values: |
+    #       global:
+    #         istiod:
+    #           enableAnalysis: true
+    # - repoURL: "https://istio-release.storage.googleapis.com/charts"
+    #   chart: istiod
+    #   targetRevision: 1.18.2
+    #   helm:
+    #     values: |
+    #       pilot:
+    #         autoscaleEnabled: false
+    #       global:
+    #         logAsJson: true
     # - repoURL: "https://istio-release.storage.googleapis.com/charts"
     #   chart: gateway
     #   targetRevision: 1.18.2
