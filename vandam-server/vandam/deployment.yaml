@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vandam
+  namespace: vandam-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vandam
+  strategy:
+    type: Recreate # This makes sure only one instance is running at a time
+  template:
+    metadata:
+      labels:
+        app: vandam
+    spec:
+      containers:
+      - name: vandam
+        image: ghcr.io/floppy/van_dam:0.50.0
+        env:
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds
+              key: password
+        - name: DATABASE_URL
+          value: postgresql://postgres:$DATABASE_PASSWORD@postgres/postgres
+        - name: SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              name: vandam-creds
+              key: password
+        - name: REDIS_URL
+          value: redis://redis/1
+        ports:
+        - containerPort: 3214
+          name: http
+        volumeMounts:
+        - name: data-pv
+          mountPath: /libraries
+      volumes:
+      - name: data-pv
+        persistentVolumeClaim:
+          claimName: vandam-data
+          

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vandam-data
+  namespace: vandam-server
+  labels:
+    app.kubernetes.io/instance: vandam
+    app.kubernetes.io/name: vandam
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 250Gi
+  storageClassName: wavecat
