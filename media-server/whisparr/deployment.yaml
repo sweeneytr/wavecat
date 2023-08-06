@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whisparr
+  namespace: media-server
+spec:
+  selector:
+    matchLabels:
+      app: whisparr
+  strategy:
+    type: Recreate # This makes sure only one instance is running at a time
+  template:
+    metadata:
+      labels:
+        app: whisparr
+    spec:
+      containers:
+        - name: whisparr
+          image: lscr.io/linuxserver/whisparr:3.0.10
+          env:
+            - name: PUID
+              value: "100"
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: America/New_York
+          ports:
+            - containerPort: 6969
+              name: http
+          volumeMounts:
+            - name: config-pv
+              mountPath: /config
+            - name: data-pv
+              mountPath: /data
+      securityContext:
+        fsGroup: 100
+        fsGroupChangePolicy: "OnRootMismatch"
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: config-pv
+          persistentVolumeClaim:
+            claimName: whisparr-config
+        - name: data-pv
+          persistentVolumeClaim:
+            claimName: media-pvc-2
