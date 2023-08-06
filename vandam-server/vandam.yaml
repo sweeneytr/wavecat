@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: argocd
+    namespace:  vandam-server
     server: https://kubernetes.default.svc
   project: vandam-server
   source:
