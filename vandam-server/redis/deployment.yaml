@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: vandam-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  strategy:
+    type: Recreate # This makes sure only one instance is running at a time
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7.0.12
+        env:
+        - name: redis_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-creds
+              key: password
+        command: ["sh", "-c", "redis redis-server --save 60 1 --loglevel warning"]
+        ports:
+        - containerPort: 6379
+          name: redis
+        volumeMounts:
+        - name: data-pv
+          mountPath: /data
+      volumes:
+      - name: data-pv
+        persistentVolumeClaim:
+          claimName: redis-data
+          
