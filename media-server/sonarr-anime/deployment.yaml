@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: sonarr-anime
-          image: lscr.io/linuxserver/sonarr-anime:3.0.10
+          image: lscr.io/linuxserver/sonarr:3.0.10
           env:
             - name: PUID
               value: "100"
