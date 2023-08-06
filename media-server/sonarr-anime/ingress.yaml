@@ -1,0 +1,26 @@
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sonarr-anime
+  namespace: media-server
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  rules:
+  - host: sonarr-anime.wavecat.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sonarr-anime
+            port:
+              name: http
+  tls:
+  - hosts:
+    - sonarr-anime.wavecat.net
+    secretName: sonarr-anime.wavecat.net
