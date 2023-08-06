@@ -5,8 +5,8 @@ metadata:
   namespace: istio-system
 spec:
   selector:
-  matchExpressions:
-    - { key: istio-ignore, operator: DoesNotExist }
+    matchExpressions:
+      - { key: istio-ignore, operator: DoesNotExist }
   accessLogging:
     - providers:
       - name: envoy
