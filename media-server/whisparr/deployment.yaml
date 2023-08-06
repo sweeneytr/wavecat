@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: whisparr
-          image: lscr.io/linuxserver/whisparr:3.0.10
+          image: hotio/whisparr:nightly-2.0.0.241
           env:
             - name: PUID
               value: "100"
