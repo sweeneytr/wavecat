@@ -17,7 +17,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: nextcloud-svc
+            name: nextcloud
             port:
               name: https
   tls:

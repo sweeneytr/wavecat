@@ -17,7 +17,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: vandam-svc
+            name: vandam
             port:
               name: https
   tls:
