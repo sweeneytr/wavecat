@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: foundry
-          image: felddy/foundryvtt:11.306.0
+          image: felddy/foundryvtt:11.307.0
           env:
             - name: FOUNDRY_PASSWORD
               valueFrom:
