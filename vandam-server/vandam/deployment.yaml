@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
       - name: vandam
-        image: ghcr.io/floppy/van_dam:0.50.0
+        image: busybox
+        command: ["sh", '-c', 'echo $DATABASE_PASSWORD $DATABASE_URL']
         env:
         - name: DATABASE_PASSWORD
           valueFrom:
