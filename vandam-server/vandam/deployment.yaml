@@ -25,7 +25,7 @@ spec:
               name: postgres-creds
               key: password
         - name: DATABASE_URL
-          value: postgresql://postgres:$(DATABASE_PASSWORD)@postgres/postgres
+          value: postgresql://postgres:$(DATABASE_PASSWORD)@postgres:5432/postgres
         - name: SECRET_KEY_BASE
           valueFrom:
             secretKeyRef:
