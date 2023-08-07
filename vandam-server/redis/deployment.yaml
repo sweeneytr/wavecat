@@ -18,13 +18,6 @@ spec:
       containers:
       - name: redis
         image: redis:7.0.12
-        env:
-        - name: redis_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: redis-creds
-              key: password
-        command: ["sh", "-c", "redis redis-server --save 60 1 --loglevel warning"]
         ports:
         - containerPort: 6379
           name: redis
