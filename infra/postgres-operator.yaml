@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres-operator
+  namespace: argocd
+spec:
+  project: infra
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: infra
+  sources:
+    - repoURL: https://opensource.zalando.com/postgres-operator/charts/postgres-operator 
+      targetRevision: 1.10.0
+      chart: postgres-operator
+      helm:
+        releaseName: postgres-operator
