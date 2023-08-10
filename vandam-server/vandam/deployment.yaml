@@ -22,10 +22,10 @@ spec:
         - name: DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: postgres-creds
+              name: vandam-user.vandam-cluster.credentials.postgresql.acid.zalan.do
               key: password
         - name: DATABASE_URL
-          value: postgresql://postgres:$(DATABASE_PASSWORD)@postgres:5432/postgres
+          value: postgresql://vandam-user:$(DATABASE_PASSWORD)@vandam-cluster:5432/vandam
         - name: SECRET_KEY_BASE
           valueFrom:
             secretKeyRef:
