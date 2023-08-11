@@ -15,7 +15,7 @@ spec:
     - createdb
 
   databases:
-    radarr-main: radarr_owner
-    radarr-log: radarr_owner
+    radarr_main: radarr_owner
+    radarr_log: radarr_owner
   postgresql:
     version: "15"
