@@ -46,7 +46,6 @@ spec:
       containers:
         - name: lidarr
           image: lscr.io/linuxserver/lidarr:1.2.6
-          command: ["sleep", "infinity"]
           env:
             - name: PUID
               value: "100"
