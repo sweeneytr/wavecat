@@ -85,3 +85,6 @@ spec:
         - name: data-pv
           persistentVolumeClaim:
             claimName: media-pvc-2
+        - name: configmap-volume
+          configMap:
+            name: readarr-config
