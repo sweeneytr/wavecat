@@ -13,8 +13,20 @@ spec:
     radarr_owner:
     - superuser
     - createdb
-
+    lidarr_owner:
+    - superuser
+    - createdb
+    readarr_owner:
+    - superuser
+    - createdb
+    readarr_audio_owner:
+    - superuser
+    - createdb
+    prowlarr_owner:
+    - superuser
+    - createdb
   patroni:
+    # Needed for non-local non-ssl connections, needed for pgloader
     pg_hba:
       - local     all  all  trust
       - host      all  all  0.0.0.0/0   md5
@@ -22,5 +34,15 @@ spec:
   databases:
     radarr_main: radarr_owner
     radarr_log: radarr_owner
+    lidarr_main: lidarr_owner
+    lidarr_log: lidarr_owner
+    readarr_main: readarr_owner
+    readarr_log: readarr_owner
+    readarr_cache: readarr_owner
+    radarr_audio_main: readarr_audio_owner
+    radarr_audio_log: readarr_audio_owner
+    radarr_audio_cache: readarr_audio_owner
+    prowlarr_main: prowlarr_owner
+    prowlarr_log: prowlarr_owner
   postgresql:
     version: "15"
