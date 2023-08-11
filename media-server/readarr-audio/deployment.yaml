@@ -46,7 +46,6 @@ spec:
       containers:
         - name: readarr-audio
           image: lscr.io/linuxserver/readarr:0.3.1-nightly
-          command: ['sleep', "infinity"]
           env:
             - name: PUID
               value: "100"
