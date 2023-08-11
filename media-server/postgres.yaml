@@ -39,9 +39,9 @@ spec:
     readarr_main: readarr_owner
     readarr_log: readarr_owner
     readarr_cache: readarr_owner
-    radarr_audio_main: readarr_audio_owner
-    radarr_audio_log: readarr_audio_owner
-    radarr_audio_cache: readarr_audio_owner
+    readarr_audio_main: readarr_audio_owner
+    readarr_audio_log: readarr_audio_owner
+    readarr_audio_cache: readarr_audio_owner
     prowlarr_main: prowlarr_owner
     prowlarr_log: prowlarr_owner
   postgresql:
