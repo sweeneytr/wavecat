@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: radarr-config
+data:
+  config.template.xml: |
+    <Config>
+      <LogLevel>info</LogLevel>
+      <UrlBase />
+      <Branch>master</Branch>
+      <ApiKey>${API_KEY}</ApiKey>
+      <AuthenticationMethod>None</AuthenticationMethod>
+      <Port>8080</Port>
+      <BindAddress>*</BindAddress>
+      <LaunchBrowser>False</LaunchBrowser>
+      <EnableSsl>False</EnableSsl>
+      <SslPort>8443</SslPort>
+      <SslCertPath />
+      <SslCertPassword />
+      <UpdateMechanism>Docker</UpdateMechanism>
+      <PostgresUser>${POSTGRES_USER}</PostgresUser>
+      <PostgresPassword>${POSTGRES_PASSWORD}</PostgresPassword>
+      <PostgresPort>${POSTGRES_PORT}</PostgresPort>
+      <PostgresHost>${POSTGRES_HOST}</PostgresHost>
+      <InstanceName>Radarr</InstanceName>
+    </Config>

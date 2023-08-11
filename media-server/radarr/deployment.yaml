@@ -14,6 +14,35 @@ spec:
       labels:
         app: radarr
     spec:
+      initContainers:
+        - name: init-config
+          image: busybox:1.28
+          command: ['sh', '-c', "envsubst < /tmp/config/config.template.xml > /config/config.xml"]
+          env:
+            - name: POSTGRES_HOST
+              value: 'media-server-cluster'
+            - name: POSTGRES_PORT
+              value: '5432'
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: radarr-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: radarr-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
+                  key: password
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: radarr-apikey
+                  key: apikey
+          volumeMounts:
+            - name: configmap-volume
+              mountPath: /tmp/config
+            - name: config-pv
+              mountPath: /config
       containers:
         - name: radarr
           image: lscr.io/linuxserver/radarr:4.6.4
@@ -44,3 +73,6 @@ spec:
         - name: data-pv
           persistentVolumeClaim:
             claimName: media-pvc-2
+        - name: configmap-volume
+          configMap:
+            name: radarr-config
