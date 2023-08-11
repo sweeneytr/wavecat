@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lidarr-config
+  namespace: media-server
+data:
+  config.template.xml: |
+    <Config>
+      <InstanceName>Lidarr</InstanceName>
+      <LogLevel>info</LogLevel>
+      <UpdateMechanism>Docker</UpdateMechanism>
+      <Branch>master</Branch>
+      <LaunchBrowser>False</LaunchBrowser>
+
+      <UrlBase />
+      <ApiKey>${API_KEY}</ApiKey>
+      <AuthenticationMethod>None</AuthenticationMethod>
+      <Port>8080</Port>
+      <BindAddress>*</BindAddress>
+
+      <EnableSsl>False</EnableSsl>
+      <SslPort>8443</SslPort>
+      <SslCertPath />
+      <SslCertPassword />
+
+      <PostgresUser>${POSTGRES_USER}</PostgresUser>
+      <PostgresPassword>${POSTGRES_PASSWORD}</PostgresPassword>
+      <PostgresPort>${POSTGRES_PORT}</PostgresPort>
+      <PostgresHost>${POSTGRES_HOST}</PostgresHost>
+
+      <PostgresMainDb>lidarr_main</PostgresMainDb>
+      <PostgresLogDb>lidarr_log</PostgresLogDb>
+    </Config>

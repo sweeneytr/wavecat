@@ -14,6 +14,35 @@ spec:
       labels:
         app: lidarr
     spec:
+      initContainers:
+        - name: init-config
+          image: dibi/envsubst:1
+          command: ['sh', '-c', "envsubst < /tmp/config/config.template.xml > /config/config.xml"]
+          env:
+            - name: POSTGRES_HOST
+              value: 'media-server-cluster'
+            - name: POSTGRES_PORT
+              value: '5432'
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: lidarr-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lidarr-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
+                  key: password
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: lidarr-apikey
+                  key: apikey
+          volumeMounts:
+            - name: configmap-volume
+              mountPath: /tmp/config
+            - name: config-pv
+              mountPath: /config
       containers:
         - name: lidarr
           image: lscr.io/linuxserver/lidarr:1.2.6
@@ -24,6 +53,18 @@ spec:
               value: "100"
             - name: TZ
               value: America/New_York
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: prowlarr-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: prowlarr-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
+                  key: password
+            - name: POSTGRES_URL
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@media-server-cluster:5432/prowlarr_main"
           ports:
             - containerPort: 8686
               name: http
@@ -44,3 +85,7 @@ spec:
         - name: data-pv
           persistentVolumeClaim:
             claimName: media-pvc-2
+        - name: configmap-volume
+          configMap:
+            name: lidarr-config
+
