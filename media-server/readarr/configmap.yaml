@@ -1,23 +1,23 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: radarr-config
+  name: readarr-config
   namespace: media-server
 data:
   config.template.xml: |
     <Config>
-      <InstanceName>Radarr</InstanceName>
+      <InstanceName>Readarr</InstanceName>
       <LogLevel>info</LogLevel>
       <UpdateMechanism>Docker</UpdateMechanism>
       <Branch>master</Branch>
       <LaunchBrowser>False</LaunchBrowser>
 
+      <UrlBase />
       <ApiKey>${API_KEY}</ApiKey>
       <AuthenticationMethod>None</AuthenticationMethod>
-      <UrlBase />
       <Port>8080</Port>
       <BindAddress>*</BindAddress>
-      
+
       <EnableSsl>False</EnableSsl>
       <SslPort>8443</SslPort>
       <SslCertPath />
@@ -28,6 +28,7 @@ data:
       <PostgresPort>${POSTGRES_PORT}</PostgresPort>
       <PostgresHost>${POSTGRES_HOST}</PostgresHost>
 
-      <PostgresMainDb>radarr_main</PostgresMainDb>
-      <PostgresLogDb>radarr_log</PostgresLogDb>
+      <PostgresMainDb>readarr_main</PostgresMainDb>
+      <PostgresLogDb>readarr_log</PostgresLogDb>
+      <PostgresCacheDb>readarr_cache</PostgresCacheDb>
     </Config>
