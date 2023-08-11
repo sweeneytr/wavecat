@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: init-config
-          image: busybox:1.28
+          image: dibi/envsubst:1
           command: ['sh', '-c', "envsubst < /tmp/config/config.template.xml > /config/config.xml"]
           env:
             - name: POSTGRES_HOST
