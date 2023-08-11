@@ -66,7 +66,7 @@ spec:
             - name: POSTGRES_URL
               value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@media-server-cluster:5432/lidarr_main"
           ports:
-            - containerPort: 8686
+            - containerPort: 8080
               name: http
           volumeMounts:
             - name: config-pv
