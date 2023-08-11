@@ -7,6 +7,9 @@ metadata:
     app.kubernetes.io/instance: vandam-redis
     app.kubernetes.io/component: middleware
 spec:
+  kubernetesConfig:
+    image: quay.io/opstree/redis:v6.2
+    imagePullPolicy: IfNotPresent
   storage:
     volumeClaimTemplate:
       spec:
