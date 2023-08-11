@@ -37,7 +37,7 @@ spec:
               name: vandam-creds
               key: password
         - name: REDIS_URL
-          value: redis://redis/1
+          value: redis://vandam-redis/1
         ports:
         - containerPort: 3214
           name: http
