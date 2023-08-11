@@ -46,6 +46,7 @@ spec:
       containers:
         - name: radarr
           image: lscr.io/linuxserver/radarr:4.6.4
+          command: ['sleep', 'infinity']
           env:
             - name: PUID
               value: "100"
