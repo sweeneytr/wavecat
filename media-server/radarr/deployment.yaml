@@ -46,7 +46,6 @@ spec:
       containers:
         - name: radarr
           image: lscr.io/linuxserver/radarr:4.6.4
-          command: ['sleep', 'infinity']
           env:
             - name: PUID
               value: "100"
@@ -67,7 +66,7 @@ spec:
             - name: POSTGRES_URL
               value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@media-server-cluster:5432/radarr_main"
           ports:
-            - containerPort: 7878
+            - containerPort: 8080
               name: http
           volumeMounts:
             - name: config-pv
