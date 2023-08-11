@@ -22,12 +22,12 @@ spec:
         - name: DATABASE_USER
           valueFrom:
             secretKeyRef:
-              name: vandam-user.vandam-cluster.credentials.postgresql.acid.zalan.do
+              name: vandam-owner.vandam-cluster.credentials.postgresql.acid.zalan.do
               key: username
         - name: DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: vandam-user.vandam-cluster.credentials.postgresql.acid.zalan.do
+              name: vandam-owner.vandam-cluster.credentials.postgresql.acid.zalan.do
               key: password
         - name: DATABASE_URL
           value: postgresql://$(DATABASE_USER):$(DATABASE_PASSWORD)@vandam-cluster:5432/vandam
