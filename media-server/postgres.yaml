@@ -1,21 +1,20 @@
 apiVersion: "acid.zalan.do/v1"
 kind: postgresql
 metadata:
-  name: vandam-cluster
+  name: media-server-cluster
 spec:
-  teamId: "vandam"
+  teamId: "media"
   volume:
     size: 1Gi
     storageClass: wavecat
   numberOfInstances: 1
   users:
-    vandam_owner:
+    radarr_owner:
     - superuser
     - createdb
 
-    vandam_user: 
-
   databases:
-    vandam: vandam_owner
+    radarr-main: radarr_owner
+    radarr-log: radarr_owner
   postgresql:
     version: "15"
