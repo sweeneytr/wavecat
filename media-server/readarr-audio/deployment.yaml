@@ -14,6 +14,35 @@ spec:
       labels:
         app: readarr-audio
     spec:
+      initContainers:
+        - name: init-config
+          image: dibi/envsubst:1
+          command: ['sh', '-c', "envsubst < /tmp/config/config.template.xml > /config/config.xml"]
+          env:
+            - name: POSTGRES_HOST
+              value: 'media-server-cluster'
+            - name: POSTGRES_PORT
+              value: '5432'
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: readarr-audio-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: readarr-audio-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
+                  key: password
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: readarr-audio-apikey
+                  key: apikey
+          volumeMounts:
+            - name: configmap-volume
+              mountPath: /tmp/config
+            - name: config-pv
+              mountPath: /config
       containers:
         - name: readarr-audio
           image: lscr.io/linuxserver/readarr:0.3.1-nightly
@@ -37,7 +66,7 @@ spec:
             - name: POSTGRES_URL
               value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@media-server-cluster:5432/readarr_audio_main"
           ports:
-            - containerPort: 8787
+            - containerPort: 8080
               name: http
           volumeMounts:
             - name: config-pv
@@ -56,3 +85,6 @@ spec:
         - name: data-pv
           persistentVolumeClaim:
             claimName: media-pvc-2
+        - name: configmap-volume
+          configMap:
+            name: readarr-audio-config
