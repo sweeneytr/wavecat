@@ -23,7 +23,7 @@ data:
       <PostgresPassword>${POSTGRES_PASSWORD}</PostgresPassword>
       <PostgresPort>${POSTGRES_PORT}</PostgresPort>
       <PostgresHost>${POSTGRES_HOST}</PostgresHost>
-      <PostgresMainDb>Radar_main</PostgresMainDb>
-      <PostgresLogDb>Radar_log</PostgresLogDb>
+      <PostgresMainDb>radarr_main</PostgresMainDb>
+      <PostgresLogDb>radarr_log</PostgresLogDb>
       <InstanceName>Radarr</InstanceName>
     </Config>
