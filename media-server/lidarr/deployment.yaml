@@ -57,15 +57,15 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: prowlarr-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
+                  name: lidarr-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
                   key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: prowlarr-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
+                  name: lidarr-owner.media-server-cluster.credentials.postgresql.acid.zalan.do
                   key: password
             - name: POSTGRES_URL
-              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@media-server-cluster:5432/prowlarr_main"
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@media-server-cluster:5432/lidarr_main"
           ports:
             - containerPort: 8686
               name: http
