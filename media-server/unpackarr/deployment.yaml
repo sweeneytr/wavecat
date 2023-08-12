@@ -73,7 +73,7 @@ spec:
             - name: UN_READARR_1_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: readarr-audio
+                  name: readarr-audio-apikey
                   key: apikey
             - name: UN_READARR_1_PATHS_0
               value: /data/downloads/readarr-audio/
