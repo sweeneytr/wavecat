@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: booksonic-air-config
+  namespace: media-server
+  labels:
+    app.kubernetes.io/instance: booksonic-air
+    app.kubernetes.io/name: booksonic-air
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 250Gi
+  storageClassName: wavecat

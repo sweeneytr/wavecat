@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: booksonic-air
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: media-server
+  sources:
+    - path: media-server/booksonic-air
+      repoURL: https://github.com/sweeneytr/wavecat.git
+  syncPolicy:
+    automated: {}
+      # prune: true
+      # selfHeal: true
