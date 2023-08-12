@@ -33,7 +33,7 @@ spec:
             - name: UN_RADARR_0_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: radarr
+                  name: radarr-apikey
                   key: apikey
             - name: UN_RADARR_0_PATHS_0
               value: /data/downloads/radarr/
@@ -43,17 +43,27 @@ spec:
             - name: UN_SONARR_0_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: sonarr
+                  name: sonarr-apikey
                   key: apikey
             - name: UN_SONARR_0_PATHS_0
               value: /data/downloads/sonarr-tv/
             - name: UN_SONARR_0_URL
               value: "https://sonarr.wavecat.net"
+              
+            - name: UN_SONARR_1_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sonarr-anime-apikey
+                  key: apikey
+            - name: UN_SONARR_1_PATHS_0
+              value: /data/downloads/sonarr-anime/
+            - name: UN_SONARR_1_URL
+              value: "https://sonarr-anime.wavecat.net"
 
             - name: UN_READARR_0_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: readarr
+                  name: readarr-apikey
                   key: apikey
             - name: UN_READARR_0_PATHS_0
               value: /data/downloads/readarr/
@@ -69,6 +79,16 @@ spec:
               value: /data/downloads/readarr-audio/
             - name: UN_READARR_1_URL
               value: "https://readarr-audio.wavecat.net"
+              
+            - name: UN_LIDARR_0_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: lidarr-apikey
+                  key: apikey
+            - name: UN_LIDARR_0_PATHS_0
+              value: /data/downloads/lidarr/
+            - name: UN_LIDARR_0_URL
+              value: "https://lidarr.wavecat.net"
           volumeMounts:
             - name: data-pv
               mountPath: /data
