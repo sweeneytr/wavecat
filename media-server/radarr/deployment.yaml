@@ -45,7 +45,7 @@ spec:
               mountPath: /config
       containers:
         - name: radarr
-          image: lscr.io/linuxserver/radarr:4.6.4
+          image: lscr.io/linuxserver/radarr:4.7.5
           env:
             - name: PUID
               value: "100"
