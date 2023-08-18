@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: mylar
-          image: lscr.io/linuxserver/mylar3:0.7.3
+          image: lscr.io/linuxserver/mylar3:0.7.4
           env:
             - name: PUID
               value: "100"
