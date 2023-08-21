@@ -22,6 +22,14 @@
     {
       "matchPackageNames": ["lscr.io/linuxserver/calibre-web"],
       "allowedVersions": "<2"
+    },
+    {
+      "matchPackageNames": ["lscr.io/linuxserver/mylar3"],
+      "allowedVersions": "<50"
+    },
+    {
+      "matchPackageNames": ["lscr.io/linuxserver/lidarr"],
+      "allowedVersions": "<3"
     }
   ]
 }
