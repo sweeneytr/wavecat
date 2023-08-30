@@ -27,7 +27,7 @@ spec:
   source:
     repoURL: https://mailu.github.io/helm-charts/
     chart: mailu
-    targetRevision: 1.2.0
+    targetRevision: 1.4.0
     helm:
       releaseName: mailu
       values: |-
