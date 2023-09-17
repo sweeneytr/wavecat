@@ -45,7 +45,7 @@ spec:
               mountPath: /config
       containers:
         - name: readarr-audio
-          image: lscr.io/linuxserver/readarr:0.3.4-nightly
+          image: lscr.io/linuxserver/readarr:0.3.5-nightly
           env:
             - name: PUID
               value: "100"
