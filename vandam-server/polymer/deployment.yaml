@@ -16,6 +16,7 @@ spec:
       containers:
       - name: polymer
         image: ghcr.io/sweeneytr/polymer:edge
+        imagePullPolicy: Always
         env:
         # Needed to construct DB_URL below
         - name: DATABASE_USER
