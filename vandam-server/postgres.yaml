@@ -2,6 +2,7 @@ apiVersion: "acid.zalan.do/v1"
 kind: postgresql
 metadata:
   name: vandam-cluster
+  namespace: vandam-server
 spec:
   teamId: "vandam"
   volume:
