@@ -41,13 +41,13 @@ spec:
         - name: PASSWORD
           valueFrom:
             secretKeyRef:
-              name: polymer-owner.vandam-cluster.credentials.postgresql.acid.zalan.do
-              key: username
+              name: polymer-secrets
+              key: password
         - name: APIKEY
           valueFrom:
             secretKeyRef:
-              name: polymer-owner.vandam-cluster.credentials.postgresql.acid.zalan.do
-              key: username
+              name: polymer-secrets
+              key: apikey
         ports:
         - containerPort: 8080
           name: http
