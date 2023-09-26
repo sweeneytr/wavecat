@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: polymer
+  namespace: vandam-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: polymer
+  strategy:
+    type: Recreate # This makes sure only one instance is running at a time
+  template:
+    metadata:
+      labels:
+        app: polymer
+    spec:
+      containers:
+      - name: polymer
+        image: ghcr.io/sweeneytr/polymer:edge
+        env:
+        # Needed to construct DB_URL below
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: polymer-owner.vandam-cluster.credentials.postgresql.acid.zalan.do
+              key: username
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: polymer-owner.vandam-cluster.credentials.postgresql.acid.zalan.do
+              key: password
+
+        - name: DB_URL
+          value: postgresql://$(DATABASE_USER):$(DATABASE_PASSWORD)@vandam-cluster:5432/polymer
+        - name: EMAIL
+          value: sweeneytri@gmail.com
+        - name: NICKNAME
+          value: calcifer242
+        - name: DOWNLOAD_DIR
+          value: /libraries
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: polymer-owner.vandam-cluster.credentials.postgresql.acid.zalan.do
+              key: username
+        - name: APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: polymer-owner.vandam-cluster.credentials.postgresql.acid.zalan.do
+              key: username
+        ports:
+        - containerPort: 3214
+          name: http
+        volumeMounts:
+        - name: data-pv
+          mountPath: /libraries
+      volumes:
+      - name: data-pv
+        persistentVolumeClaim:
+          claimName: polymer-data
+          

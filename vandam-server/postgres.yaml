@@ -12,10 +12,16 @@ spec:
     vandam_owner:
     - superuser
     - createdb
+    
+    polymer_owner:
+    - superuser
+    - createdb
+
 
     vandam_user: 
 
   databases:
     vandam: vandam_owner
+    polymer: polymer_owner
   postgresql:
     version: "15"
