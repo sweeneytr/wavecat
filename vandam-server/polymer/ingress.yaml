@@ -17,6 +17,13 @@ spec:
         pathType: Prefix
         backend:
           service:
+            name: polymer-web
+            port:
+              name: http
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
             name: polymer
             port:
               name: http

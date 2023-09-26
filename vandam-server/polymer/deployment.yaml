@@ -8,8 +8,6 @@ spec:
   selector:
     matchLabels:
       app: polymer
-  strategy:
-    type: Recreate # This makes sure only one instance is running at a time
   template:
     metadata:
       labels:
@@ -50,7 +48,7 @@ spec:
               name: polymer-owner.vandam-cluster.credentials.postgresql.acid.zalan.do
               key: username
         ports:
-        - containerPort: 3214
+        - containerPort: 8080
           name: http
         volumeMounts:
         - name: data-pv

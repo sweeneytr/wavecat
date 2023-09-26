@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: polymer-web
+  namespace: vandam-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: polymer-web
+  template:
+    metadata:
+      labels:
+        app: polymer-web
+    spec:
+      containers:
+      - name: polymer-web
+        image: ghcr.io/sweeneytr/polymer-web:edge
+        ports:
+        - containerPort: 8080
+          name: http
