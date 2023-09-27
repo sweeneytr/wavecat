@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: polymer-web
-        image: ghcr.io/sweeneytr/polymer-web:edge
+        image: ghcr.io/sweeneytr/polymer-web:main
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

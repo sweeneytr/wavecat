@@ -17,7 +17,7 @@ spec:
         fsGroup: 8675
       containers:
       - name: polymer
-        image: ghcr.io/sweeneytr/polymer:edge
+        image: ghcr.io/sweeneytr/polymer:main
         imagePullPolicy: Always
         env:
         # Needed to construct DB_URL below
