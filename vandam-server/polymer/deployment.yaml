@@ -13,6 +13,8 @@ spec:
       labels:
         app: polymer
     spec:
+      securityContext:
+        fsGroup: 8675
       containers:
       - name: polymer
         image: ghcr.io/sweeneytr/polymer:edge
