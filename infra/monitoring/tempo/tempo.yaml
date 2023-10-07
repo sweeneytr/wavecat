@@ -1,0 +1,34 @@
+usage_report:
+  reporting_enabled: false
+compactor:
+  compaction:
+    block_retention: 24h
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: "0.0.0.0:4317"
+        http:
+          endpoint: "0.0.0.0:4318"
+server:
+  http_listen_port: 8080
+storage:
+  trace:
+    backend: local
+    local:
+      path: /data/traces
+    wal:
+      path: /data/wal
+
+metrics_generator:
+  storage:
+    remote_write:
+      - url: http://mimir/api/v1/push
+        headers:
+          X-Scope-OrgID: vanguard
+
+overrides:
+  metrics_generator_processors:
+    - service-graphs
+    - span-metrics

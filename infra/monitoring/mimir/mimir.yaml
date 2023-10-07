@@ -1,0 +1,56 @@
+usage_stats:
+  enabled: false
+
+limits:
+  compactor_blocks_retention_period: 1y
+
+blocks_storage:
+  bucket_store:
+    sync_dir: /data/tsdb-sync
+  filesystem:
+    dir: /data/data/tsdb
+  tsdb:
+    dir: /data/tsdb
+
+alertmanager:
+  sharding_ring:
+    kvstore:
+      store: inmemory
+    replication_factor: 1
+
+alertmanager_storage:
+  filesystem:
+    dir: /data/alertmanager
+
+compactor:
+  data_dir: /data/compactor
+  sharding_ring:
+    kvstore:
+      store: inmemory
+
+distributor:
+  ring:
+    kvstore:
+      store: inmemory
+
+ingester:
+  ring:
+    kvstore:
+      store: inmemory
+    replication_factor: 1
+
+ruler:
+  rule_path: /data/data-ruler
+
+ruler_storage:
+  filesystem:
+    dir: /data/rules
+
+store_gateway:
+  sharding_ring:
+    kvstore:
+      store: inmemory
+    replication_factor: 1
+
+activity_tracker:
+  filepath: /data/metrics-activity.log

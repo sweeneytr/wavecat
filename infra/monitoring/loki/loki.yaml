@@ -1,0 +1,34 @@
+analytics:
+  reporting_enabled: false
+
+common:
+  path_prefix: /data
+  storage:
+    filesystem:
+      chunks_directory: /data/chunks
+      rules_directory: /data/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+
+compactor:
+  retention_enabled: true
+
+limits_config:
+  retention_period: 168h # 7 days
+  ingestion_rate_mb: 8
+  ingestion_burst_size_mb: 32
+
+schema_config:
+  configs:
+    - from: 2020-01-01
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+# TODO: figure out if this is needed and what it should be set to
+# ruler:
+#   alertmanager_url: http://localhost:9093

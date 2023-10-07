@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - service-account.yaml
+  - service.yaml
+  - statefulset.yaml
+
+configMapGenerator:
+  - name: mimir
+    options:
+      disableNameSuffixHash: true
+      labels:
+        app.kubernetes.io/name: mimir
+    files:
+      - mimir.yaml

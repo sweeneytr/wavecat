@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: tempo
+  name: tempo
+spec:
+  serviceName: tempo
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tempo
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tempo
+    spec:
+      serviceAccountName: tempo
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: tempo
+          image: docker.io/grafana/tempo:2.2.3@sha256:fbf0dea05b736ced1694fde8bd63e9236a49359c94ec24efcad5a7d2047e4d9a
+          args:
+            - -config.file=/config/tempo.yaml
+            - -mem-ballast-size-mbs=1024
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: grpc
+              containerPort: 9095
+            - name: otlp-grpc
+              containerPort: 4317
+            - name: otlp-http
+              containerPort: 4318
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          # readinessProbe:
+          #   httpGet:
+          #     path: /ready
+          #     port: http
+          #   initialDelaySeconds: 30
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: data
+              mountPath: /data
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: tempo
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        labels:
+          app.kubernetes.io/name: tempo
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: rpool-unsafe
+        resources:
+          requests:
+            storage: 10Gi
