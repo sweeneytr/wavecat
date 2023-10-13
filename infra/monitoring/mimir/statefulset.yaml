@@ -25,7 +25,7 @@ spec:
         runAsUser: 10001
       containers:
         - name: mimir
-          image: "docker.io/grafana/mimir:2.10.1@sha256:5288593943a1552f5346cdeab2218d523528e7e2b65542acb30b51c4bc80d7ec"
+          image: "docker.io/grafana/mimir:2.10.2@sha256:99d330901d921dd2a8554b52a8461d8ce6c051beb290c20f0859f845f1e8f6c4"
           args:
             - -config.file=/config/mimir.yaml
           ports:
