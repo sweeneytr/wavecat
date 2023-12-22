@@ -65,7 +65,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: rpool-unsafe
+        storageClassName: wavecat
         resources:
           requests:
             storage: 10Gi
