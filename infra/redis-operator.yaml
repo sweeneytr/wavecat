@@ -1,22 +1,22 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: redis-operator
-  namespace: argocd
-spec:
-  project: infra
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: infra
-  sources:
-    - repoURL: https://ot-container-kit.github.io/helm-charts
-      targetRevision: 0.15.9
-      chart: redis-operator
-      helm:
-        releaseName: redis-operator
+#apiVersion: argoproj.io/v1alpha1
+#kind: Application
+#metadata:
+#  name: redis-operator
+#  namespace: argocd
+#spec:
+#  project: infra
+#  syncPolicy:
+#    automated:
+#      prune: true
+#      selfHeal: true
+#    syncOptions:
+#      - CreateNamespace=true
+#  destination:
+#    server: "https://kubernetes.default.svc"
+#    namespace: infra
+#  sources:
+#    - repoURL: https://ot-container-kit.github.io/helm-charts
+#      targetRevision: 0.15.9
+#      chart: redis-operator
+#      helm:
+#        releaseName: redis-operator
