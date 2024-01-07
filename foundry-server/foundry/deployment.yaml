@@ -18,6 +18,7 @@ spec:
       containers:
         - name: foundry
           image: felddy/foundryvtt:11.315.1
+          command: ['tail', '-f', '/dev/null']
           env:
             - name: FOUNDRY_PASSWORD
               valueFrom:
