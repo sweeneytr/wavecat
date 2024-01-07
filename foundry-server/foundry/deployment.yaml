@@ -19,29 +19,29 @@ spec:
         - name: foundry
           image: felddy/foundryvtt:11.315.1
           command: ['tail', '-f', '/dev/null']
-          imagePullPolicy: Always
-          env:
-            - name: FOUNDRY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: foundry-secrets
-                  key: password
-            - name: FOUNDRY_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: foundry-secrets
-                  key: username
-            - name: FOUNDRY_ADMIN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: foundry-secrets
-                  key: admin
-          ports:
-            - containerPort: 30000
-              name: http
-          volumeMounts:
-            - name: data-volume
-              mountPath: /data
+          # imagePullPolicy: Always
+          # env:
+          #   - name: FOUNDRY_PASSWORD
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: foundry-secrets
+          #         key: password
+          #   - name: FOUNDRY_USERNAME
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: foundry-secrets
+          #         key: username
+          #   - name: FOUNDRY_ADMIN_KEY
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: foundry-secrets
+          #         key: admin
+          # ports:
+          #   - containerPort: 30000
+          #     name: http
+          #volumeMounts:
+          #  - name: data-volume
+          #    mountPath: /data
       volumes:
         - name: data-volume
           persistentVolumeClaim:
