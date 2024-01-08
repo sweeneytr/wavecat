@@ -1,0 +1,121 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: "https://kubernetes.default.svc"
+  project: infra
+  sources:
+    - repoURL: "https://grafana.github.io/helm-charts"
+      chart: grafana
+      targetRevision: 7.0.19
+      helm:
+        releaseName: grafana
+        values: |-
+          image:
+            tag: 10.2.0
+          admin:
+            existingSecret: grafana-creds
+          deploymentStrategy:
+            type: Recreate
+          grafana.ini:
+            server:
+              root_url: "https://grafana.wavecat.net"
+            feature_toggles:
+              enable: accessTokenExpirationCheck
+            users:
+              viewers_can_edit: true
+            snapshots:
+              external_enabled: false
+          imageRenderer:
+            enabled: true
+          networkPolicy:
+            enabled: true
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt
+            hosts:
+              - grafana.wavecat.net
+            tls:
+              - secretName: grafana-tls
+                hosts:
+                  - grafana.wavecat.net
+          persistence:
+            enabled: true
+            storageClassName: wavecat
+          serviceMonitor:
+            enabled: true
+          plugins:
+            - grafana-github-datasource
+            - redis-datasource
+            - redis-app
+    - repoURL: "https://grafana.github.io/helm-charts"
+      chart: grafana-agent
+      targetRevision: 0.30.0
+      helm:
+        releaseName: grafana-agent
+        values: |
+          controller:
+            volumes:
+              extra:
+                - name: proc
+                  hostPath:
+                    path: /proc
+                - name: sys
+                  hostPath:
+                    path: /sys
+                - name: run
+                  hostPath:
+                    path: /run
+          agent:
+            clustering:
+              enabled: true
+            listenPort: 8080
+            enableReporting: false
+            extraPorts:
+              - name: otlp-grpc
+                port: 4317
+                targetPort: 4317
+              - name: otlp-http
+                port: 4318
+                targetPort: 4318
+            mounts:
+              varlog: true
+              extra:
+                - name: proc
+                  mountPath: /host/proc
+                  readOnly: true
+                - name: sys
+                  mountPath: /host/sys
+                  readOnly: true
+                - name: run
+                  mountPath: /host/run
+                  readOnly: true
+            securityContext:
+              privileged: true
+              runAsUser: 0
+            configMap:
+              create: false
+              name: grafana-agent
+              key: '.'
+          configReloader:
+            resources:
+              requests:
+                cpu: null
+                memory: null
+    - repoURL: "https://open-telemetry.github.io/opentelemetry-helm-charts"
+      chart: opentelemetry-operator
+      targetRevision: 0.44.3
+      helm:
+        releaseName: opentelemetry-operator
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
