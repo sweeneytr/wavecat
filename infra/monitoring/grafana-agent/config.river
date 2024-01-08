@@ -1,0 +1,30 @@
+logging {
+  level = "info"
+}
+
+loki.write "primary" {
+  endpoint {
+    url       = "http://loki/loki/api/v1/push"
+    tenant_id = "vanguard"
+  }
+}
+
+prometheus.remote_write "primary" {
+  endpoint {
+    url     = "http://mimir/api/v1/push"
+    headers = {
+      "X-Scope-OrgID" = "vanguard",
+    }
+  }
+}
+
+otelcol.exporter.otlp "primary" {
+  client {
+    endpoint = "tempo:4317"
+
+    tls {
+      insecure             = true
+      insecure_skip_verify = true
+    }
+  }
+}
