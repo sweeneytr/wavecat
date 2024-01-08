@@ -42,7 +42,7 @@ spec:
           #volumeMounts:
           #  - name: data-volume
           #    mountPath: /data
-      volumes:
-        - name: data-volume
-          persistentVolumeClaim:
-            claimName: foundry-data-pvc
+      #volumes:
+      #  - name: data-volume
+      #    persistentVolumeClaim:
+      #      claimName: foundry-data-pvc
