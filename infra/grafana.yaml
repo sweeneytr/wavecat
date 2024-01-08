@@ -47,8 +47,6 @@ spec:
           persistence:
             enabled: true
             storageClassName: wavecat
-          serviceMonitor:
-            enabled: true
           plugins:
             - grafana-github-datasource
             - redis-datasource
