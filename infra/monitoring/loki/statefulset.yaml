@@ -22,7 +22,7 @@ spec:
         runAsUser: 10001
       containers:
         - name: loki
-          image: docker.io/grafana/loki:2.9.3@sha256:eb92f1a439171542fd718f929fad38c917b3cad15ec830ba4742e2ba5ab03313
+          image: docker.io/grafana/loki:2.9.4@sha256:f379a20ce9dd815884ed6446aad8819b81a8ba4d36b548ca14be8cecbc6cbca0
           args:
             - -config.file=/config/loki.yaml
             # Usefule for troubleshooting
