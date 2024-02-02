@@ -9,3 +9,5 @@ configMapGenerator:
         app.kubernetes.io/name: grafana-agent
     files:
       - config.river
+      - logs.river
+      - pods.river
