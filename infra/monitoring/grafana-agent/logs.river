@@ -1,0 +1,88 @@
+// Ship all pod logs to loki (except from 'monitoring' namespace)
+// This should avoid a write-amplification problem
+discovery.relabel "pod_logs" {
+  targets = discovery.relabel.pods.output
+
+  rule {
+    source_labels = ["__meta_kubernetes_namespace"]
+    regex         = "monitoring"
+    action        = "drop"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+    target_label  = "__path__"
+    separator     = "/"
+    replacement   = "/var/log/pods/*$1/*.log"
+  }
+}
+
+local.file_match "pod_logs" {
+  path_targets = discovery.relabel.pod_logs.output
+}
+
+loki.source.file "pod_logs" {
+  targets    = local.file_match.pod_logs.targets
+  forward_to = [loki.process.pod_logs.receiver]
+}
+
+loki.process "pod_logs" {
+  forward_to = [loki.write.primary.receiver]
+  stage.cri {}
+  stage.drop {
+    older_than = "4h"
+    drop_counter_reason = "too old"
+  }
+  stage.drop {
+    longer_than = "8KB"
+    drop_counter_reason = "too long"
+  }
+  stage.structured_metadata {
+    values = {
+      k8s_container_id = "k8s_container_id",
+      k8s_container_image = "k8s_container_image",
+      k8s_container_init = "k8s_container_init",
+      k8s_container_name = "k8s_container_name",
+      k8s_node_ip = "k8s_node_ip",
+      k8s_node_name = "k8s_node_name",
+      k8s_pod_controller_kind = "k8s_pod_controller_kind",
+      k8s_pod_controller_name = "k8s_pod_controller_name",
+      k8s_pod_ip = "k8s_pod_ip",
+      k8s_pod_name = "k8s_pod_name",
+      k8s_pod_phase = "k8s_pod_phase",
+      k8s_pod_ready = "k8s_pod_ready",
+      k8s_pod_uid = "k8s_pod_uid",
+      stream = "stream",
+    }
+  }
+  stage.label_keep {
+    values = [
+      "k8s_namespace",
+      "k8s_app_component",
+      "k8s_app_instance",
+      "k8s_app_name",
+    ]
+  }
+  stage.static_labels {
+    values = {
+      "job" = "loki.source.file/pod_logs",
+    }
+  }
+}
+
+loki.source.kubernetes_events "primary" {
+  forward_to = [loki.relabel.events.receiver]
+}
+
+loki.relabel "events" {
+  forward_to = [loki.write.primary.receiver]
+
+  rule {
+    source_labels = ["namespace"]
+    target_label = "k8s_namespace"
+  }
+  rule {
+    regex = "(namespace|instance)"
+    action = "labeldrop"
+  }
+}
