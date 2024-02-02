@@ -3,6 +3,8 @@ usage_stats:
 
 limits:
   compactor_blocks_retention_period: 1y
+  max_label_names_per_series: 50
+  max_global_exemplars_per_user: 100000
 
 blocks_storage:
   bucket_store:
