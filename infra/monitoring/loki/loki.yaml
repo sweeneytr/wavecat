@@ -12,6 +12,9 @@ common:
     kvstore:
       store: inmemory
 
+server:
+  grpc_server_max_recv_msg_size: 16777216
+
 compactor:
   retention_enabled: true
 
@@ -22,12 +25,25 @@ limits_config:
   allow_structured_metadata: true
   unordered_writes: true
 
+# performance suggestion from: https://grafana.com/docs/loki/latest/operations/storage/filesystem/#scaling
+ingester:
+  max_chunk_age: 24h
+  chunk_idle_period: 24h
+
+# performance suggestion from: https://github.com/grafana/loki/blob/main/cmd/loki/loki-local-config.yaml
+query_range:
+  results_cache:
+    cache:
+      embedded_cache:
+        enabled: true
+        max_size_mb: 100
+
 schema_config:
   configs:
-    - from: 2020-01-01
-      store: boltdb-shipper
+    - from: 2023-10-25
+      store: tsdb
       object_store: filesystem
-      schema: v11
+      schema: v13
       index:
         prefix: index_
         period: 24h
