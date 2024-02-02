@@ -11,4 +11,5 @@ configMapGenerator:
       - config.river
       - logs.river
       - pods.river
+      - kube_state_metrics.river
       - pod_metrics.river

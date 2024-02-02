@@ -1,0 +1,82 @@
+// Scrape kube-state-metrics specifically
+prometheus.scrape "kube_state_metrics" {
+  targets    = [{"__address__" = "kube-state-metrics"}]
+  forward_to = [prometheus.relabel.kube_state_metrics.receiver]
+
+  clustering {
+    enabled = true
+  }
+}
+
+// normalize labels from kube-state-metrics
+prometheus.relabel "kube_state_metrics" {
+  forward_to = [prometheus.remote_write.primary.receiver]
+
+  rule {
+    source_labels = ["container_id"]
+    target_label  = "k8s_container_id"
+    regex         = "containerd:..([a-z0-9]*)"
+    action        = "replace"
+  }
+
+  rule {
+    regex       = "uid"
+    replacement = "k8s_pod_uid"
+    action      = "labelmap"
+  }
+  rule {
+    regex  = "uid"
+    action = "labeldrop"
+  }
+
+  rule {
+    regex       = "(job_name|namespace|pod_ip|service_name|service_port)"
+    replacement = "k8s_${1}"
+    action      = "labelmap"
+  }
+  rule {
+    regex  = "job_name|namespace|pod_ip|service_name|service_port"
+    action = "labeldrop"
+  }
+
+  rule {
+    regex       = "(port_name|port_number)"
+    replacement = "k8s_endpoint_${1}"
+    action      = "labelmap"
+  }
+  rule {
+    regex  = "port_name|port_number"
+    action = "labeldrop"
+  }
+
+  rule {
+    regex       = "(cluster_ip|external_name|load_balancer_ip)"
+    replacement = "k8s_service_${1}"
+    action      = "labelmap"
+  }
+  rule {
+    regex  = "cluster_ip|external_name|load_balancer_ip"
+    action = "labeldrop"
+  }
+
+  rule {
+    regex       = "(container|cronjob|daemonset|deployment|endpoint|ingress|node|pod|replicaset|service)"
+    replacement = "k8s_${1}_name"
+    action      = "labelmap"
+  }
+  rule {
+    regex  = "container|cronjob|daemonset|deployment|endpoint|ingress|node|pod|replicaset|service"
+    action = "labeldrop"
+  }
+
+  // k8s resource labels, you want them, we got them
+  rule {
+    regex       = "label_app_kubernetes_io_(component|instance|name)"
+    replacement = "k8s_app_${1}"
+    action      = "labelmap"
+  }
+  rule {
+    regex  = "label_app_kubernetes_io_.*"
+    action = "labeldrop"
+  }
+}
