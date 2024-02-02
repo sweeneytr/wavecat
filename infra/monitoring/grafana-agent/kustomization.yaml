@@ -11,3 +11,4 @@ configMapGenerator:
       - config.river
       - logs.river
       - pods.river
+      - pod_metrics.river

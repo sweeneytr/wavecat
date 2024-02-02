@@ -1,0 +1,35 @@
+// Create a list of target ports with "metrics" in the name
+discovery.relabel "pod_metrics" {
+  targets = discovery.relabel.pods.output
+
+  // We need to remove kube-state-metrics as it needs a specific set of relabel rules
+  rule {
+    source_labels = ["__meta_kubernetes_pod_container_name"]
+    regex         = "kube-state-metrics|kube-rbac-proxy"
+    action        = "drop"
+  }
+
+  // don't bother trying to scrape pods that aren't running
+  rule {
+    source_labels = ["__meta_kubernetes_pod_phase"]
+    regex         = "Succeeded|Failed"
+    action        = "drop"
+  }
+
+  // only keep targets where the port name contains "metrics"
+  rule {
+    source_labels = ["__meta_kubernetes_pod_container_port_name"]
+    regex         = ".*metrics.*"
+    action        = "keep"
+  }
+}
+
+// Scrape all the metrics ports
+prometheus.scrape "pod_metrics" {
+  targets    = discovery.relabel.pod_metrics.output
+  forward_to = [prometheus.remote_write.primary.receiver]
+
+  clustering {
+    enabled = true
+  }
+}
