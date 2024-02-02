@@ -6,4 +6,5 @@ resources:
   - loki
   - mimir
   - tempo
+  - kube-state-metrics
   - secret-grafana.yaml
