@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashy
+  strategy:
+    type: Recreate # This makes sure only one instance is running at a time
+  template:
+    metadata:
+      labels:
+        app: dashy
+    spec:
+      containers:
+        - name: dashy
+          image: lissy93/dashy:2.1.1
+          ports:
+            - containerPort: 8080
+              name: http
+          volumeMounts:
+            - name: config
+              mountPath: /app/public/conf.yml
+              subPath: dashy.yaml
+      volumes:
+        - name: config
+          configMap:
+            name: dashy
+
