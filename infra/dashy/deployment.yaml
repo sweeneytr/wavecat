@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         app: dashy
+        app.kubernetes.io/name: dashy
     spec:
       containers:
         - name: dashy
