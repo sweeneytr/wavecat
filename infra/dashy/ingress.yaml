@@ -16,7 +16,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: foundry
+            name: dashy
             port:
               name: http
   tls:
