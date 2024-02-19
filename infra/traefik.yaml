@@ -16,7 +16,7 @@ spec:
     namespace: infra
   sources:
     - repoURL: https://helm.traefik.io/traefik
-      targetRevision: 26.0.0
+      targetRevision: 26.1.0
       chart: traefik
       helm:
         releaseName: traefik
