@@ -27,6 +27,20 @@ spec:
           ports:
             - containerPort: 32400
               name: http
+            - containerPort: 1900
+              protocol: UDP
+            - containerPort: 32469
+            - containerPort: 5353
+              protocol: UDP
+            - containerPort: 8324
+            - containerPort: 32410
+              protocol: UDP
+            - containerPort: 32412
+              protocol: UDP
+            - containerPort: 32413
+              protocol: UDP
+            - containerPort: 32414
+              protocol: UDP
           volumeMounts:
             - name: config-pv
               mountPath: /config
