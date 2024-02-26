@@ -22,7 +22,7 @@ spec:
         runAsUser: 10001
       containers:
         - name: tempo
-          image: docker.io/grafana/tempo:2.3.1@sha256:1c6fb7c74831474f82c9bde218c84b61e5269b676e6505e7dc3c1862dae9b5cc
+          image: docker.io/grafana/tempo:2.4.0@sha256:50fec6c2cf621141218edee9e23e8860b6158088d18fac54cf0c29df7fdf29db
           args:
             - -config.file=/config/tempo.yaml
             - -mem-ballast-size-mbs=1024
