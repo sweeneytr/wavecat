@@ -53,7 +53,7 @@ spec:
             - redis-app
     - repoURL: "https://grafana.github.io/helm-charts"
       chart: grafana-agent
-      targetRevision: 0.31.1
+      targetRevision: 0.36.0
       helm:
         releaseName: grafana-agent
         values: |
