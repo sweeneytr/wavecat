@@ -45,7 +45,7 @@ spec:
               mountPath: /config
       containers:
         - name: readarr
-          image: lscr.io/linuxserver/readarr:0.3.20-nightly
+          image: lscr.io/linuxserver/readarr:0.3.21-nightly
           env:
             - name: PUID
               value: "100"
