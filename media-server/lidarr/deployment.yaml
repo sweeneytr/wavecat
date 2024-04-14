@@ -45,7 +45,7 @@ spec:
               mountPath: /config
       containers:
         - name: lidarr
-          image: lscr.io/linuxserver/lidarr:2.1.7
+          image: lscr.io/linuxserver/lidarr:2.2.5
           env:
             - name: PUID
               value: "100"
