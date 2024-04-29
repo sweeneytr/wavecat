@@ -45,7 +45,7 @@ spec:
               mountPath: /config
       containers:
         - name: prowlarr
-          image: lscr.io/linuxserver/prowlarr:1.8.1259
+          image: lscr.io/linuxserver/prowlarr:1.16.2
           env:
             - name: PUID
               value: "100"
