@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: mariadb
-        image: lscr.io/linuxserver/mariadb:10.11.6
+        image: lscr.io/linuxserver/mariadb:10.11.8
         env:
         - name: PUID
           value: '1000'
