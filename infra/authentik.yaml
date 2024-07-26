@@ -93,7 +93,7 @@ spec:
                 drop:
                   - ALL
     - path: infra/authentik
-    - repoURL: https://github.com/sweeneytr/wavecat.git
+      repoURL: https://github.com/sweeneytr/wavecat.git
   syncPolicy:
     automated:
       selfHeal: true
