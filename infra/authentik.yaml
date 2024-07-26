@@ -15,8 +15,6 @@ spec:
       helm:
         releaseName: authentik
         values: |
-          # annotations:
-          #   secret-generator.v1.mittwald.de/autogenerate: AUTHENTIK_SECRET_KEY,AUTHENTIK_EMAIL__PASSWORD
           global:
             env:
               - name: AUTHENTIK_POSTGRESQL__HOST
@@ -35,6 +33,11 @@ spec:
                   secretKeyRef:
                     name: authentik-owner.authentik-cluster.credentials.postgresql.acid.zalan.do
                     key: password
+              - name: AUTHENTIK_SECRET_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: authentik-secret
+                    key: secret
             securityContext:
               runAsNonRoot: true
               fsGroup: 1000

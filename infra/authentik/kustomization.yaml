@@ -5,3 +5,4 @@ resources:
   # - redis
   # - network-policy.yaml
   - postgres.yaml
+  - secret.yaml
