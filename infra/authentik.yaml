@@ -66,8 +66,8 @@ spec:
             #   user: ""
             #   password: ""
             #   port: ""
-            # redis:
-            #   host: authentik-redis
+            redis:
+              host: authentik-redis
           server:
             ingress:
               enabled: true

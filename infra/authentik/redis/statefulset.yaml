@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/component: cache
+  name: redis
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+      app.kubernetes.io/component: cache
+  serviceName: redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redis
+        app.kubernetes.io/component: cache
+    spec:
+      containers:
+        - name: redis
+          image: bitnami/redis:7.2.5-debian-12-r0
+          command:
+            - "/opt/bitnami/redis/bin/redis-server"
+            - "/opt/bitnami/redis/etc/redis.conf"
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+          ports:
+            - name: redis
+              containerPort: 6379
+          securityContext:
+            runAsUser: 1001
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: config
+              mountPath: /opt/bitnami/redis/etc
+            - name: data
+              mountPath: /opt/bitnami/redis/data
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: config
+          configMap:
+            name: redis
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+            storageClassName: wavecat
