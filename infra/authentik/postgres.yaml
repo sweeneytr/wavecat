@@ -1,0 +1,20 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: authentik-cluster
+  namespace: authentik
+spec:
+  teamId: "authentik"
+  volume:
+    size: 1Gi
+    storageClass: wavecat
+  numberOfInstances: 1
+  users:
+    authentik_owner:
+    - superuser
+    - createdb
+
+  databases:
+    authentik: authentik_owner
+  postgresql:
+    version: "15"

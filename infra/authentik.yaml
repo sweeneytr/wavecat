@@ -1,0 +1,98 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: authentik
+spec:
+  destination:
+    namespace: authentik
+    server: "https://kubernetes.default.svc"
+  project: infra
+  sources:
+    - repoURL: "https://charts.goauthentik.io"
+      chart: authentik
+      targetRevision: 2024.6.1
+      helm:
+        releaseName: authentik
+        values: |
+          # annotations:
+          #   secret-generator.v1.mittwald.de/autogenerate: AUTHENTIK_SECRET_KEY,AUTHENTIK_EMAIL__PASSWORD
+          global:
+            env:
+              - name: AUTHENTIK_POSTGRESQL__HOST
+                value: 'authentik-cluster'
+              - name: AUTHENTIK_POSTGRESQL__NAME
+                value: authentik
+              - name: AUTHENTIK_POSTGRESQL__PORT
+                value: '5432'
+              - name: AUTHENTIK_POSTGRESQL__USER
+                valueFrom:
+                  secretKeyRef:
+                    name: authentik-owner.authentik-cluster.credentials.postgresql.acid.zalan.do
+                    key: username
+              - name: AUTHENTIK_POSTGRESQL__PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: authentik-owner.authentik-cluster.credentials.postgresql.acid.zalan.do
+                    key: password
+            securityContext:
+              runAsNonRoot: true
+              fsGroup: 1000
+              seccompProfile:
+                type: RuntimeDefault
+            volumes:
+              - name: certs
+                secret:
+                  secretName: authentik.wavecat.net
+            volumeMounts:
+              - name: certs
+                mountPath: /certs
+          authentik:
+            # Setting to empty string removes the field from the secret created by helm, so that autogenerate will make one
+            # secret_key: ""
+            # email:
+            #   host: "mail.cosmoknots.space"
+            #  port: 465
+            #  username: "authentik@cosmoknots.space"
+            #  # Let autogenerate make the password
+            #  password: ""
+            #  use_ssl: true
+            #  from: "authentik <authentik@cosmoknots.space>"
+            # Setting all the fields to an empty string to remove them
+            # postgresql:
+            #   host: ""
+            #   name: ""
+            #   user: ""
+            #   password: ""
+            #   port: ""
+            # redis:
+            #   host: authentik-redis
+          server:
+            ingress:
+              enabled: true
+              ingressClassName: traefik
+              annotations:
+                cert-manager.io/cluster-issuer: letsencrypt
+              hosts:
+                - authentik.wavecat.net
+              tls:
+                - secretName: authentik.wavecat.net
+                  hosts:
+                    - authentik.wavecat.net
+            containerSecurityContext:
+              runAsUser: 1000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+          worker:
+            containerSecurityContext:
+              runAsUser: 1000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+    - path: infra/authentik
+      repoURL: git@github.com:sweeneytr/wavecat.git
+  syncPolicy:
+    automated:
+      selfHeal: true
