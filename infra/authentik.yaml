@@ -51,8 +51,6 @@ spec:
               - name: certs
                 mountPath: /certs
           authentik:
-            # Setting to empty string removes the field from the secret created by helm, so that autogenerate will make one
-            # secret_key: ""
             # email:
             #   host: "mail.cosmoknots.space"
             #  port: 465
