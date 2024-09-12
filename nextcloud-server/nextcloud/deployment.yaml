@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: nextcloud
-        image: lscr.io/linuxserver/nextcloud:28.0.4
+        image: lscr.io/linuxserver/nextcloud:29.0.7
         env:
         - name: PUID
           value: '1000'
