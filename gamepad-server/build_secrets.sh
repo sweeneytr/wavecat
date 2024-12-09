@@ -22,4 +22,5 @@ kubectl create secret generic \
     --from-file=.dockerconfigjson=./ghcr.secret \
     --dry-run=client -o json \
 | kubeseal \
+    --namespace gamepad \
     > ghcr-secret.json
