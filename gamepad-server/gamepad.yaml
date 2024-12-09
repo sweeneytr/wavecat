@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gamepad
+  namespace: argocd
+spec:
+  destination:
+    namespace: gamepad-server
+    server: https://kubernetes.default.svc
+  project: gamepad-server
+  source:
+    path: gamepad-server/gamepad
+    repoURL: https://github.com/sweeneytr/wavecat.git
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
