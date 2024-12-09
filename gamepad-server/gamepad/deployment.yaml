@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gamepad
+  namespace: gamepad-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gamepad
+  template:
+    metadata:
+      labels:
+        app: gamepad
+    spec:
+      securityContext:
+        fsGroup: 8675
+      containers:
+        - name: gamepad
+          image: ghcr.io/sweeneytr/gamepad:main
+          imagePullPolicy: Always
+          env:
+            # Needed to construct DB_URL below
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: gamepad-owner.gamepad-cluster.credentials.postgresql.acid.zalan.do
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gamepad-owner.gamepad-cluster.credentials.postgresql.acid.zalan.do
+                  key: password
+            - name: DB_URL
+              value: postgresql://$(DATABASE_USER):$(DATABASE_PASSWORD)@gamepad-cluster:5432/gamepad
+
+          ports:
+            - containerPort: 8080
+              name: http
