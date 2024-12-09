@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ghcr
+  namespace: argocd
+spec:
+  destination:
+    server: "https://kubernetes.default.svc"
+  project: infra
+  sources:
+    - repoURL: https://github.com/sweeneytr/wavecat.git
+      path: infra/ghcr
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
