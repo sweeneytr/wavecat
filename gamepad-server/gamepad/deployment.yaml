@@ -15,12 +15,12 @@ spec:
     spec:
       securityContext:
         fsGroup: 8675
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: gamepad
           image: ghcr.io/sweeneytr/gamepad:latest
           imagePullPolicy: Always
-          imagePullSecrets:
-            - name: ghcr-secret
           env:
             # Needed to construct DB_URL below
             - name: DATABASE_USER
