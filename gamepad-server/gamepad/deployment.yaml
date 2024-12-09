@@ -37,5 +37,5 @@ spec:
               value: postgresql://$(DATABASE_USER):$(DATABASE_PASSWORD)@gamepad-cluster:5432/gamepad
 
           ports:
-            - containerPort: 8080
+            - containerPort: 3000
               name: http
