@@ -33,7 +33,7 @@ spec:
                 secretKeyRef:
                   name: gamepad-owner.gamepad-cluster.credentials.postgresql.acid.zalan.do
                   key: password
-            - name: DB_URL
+            - name: DATABASE_URL
               value: postgresql://$(DATABASE_USER):$(DATABASE_PASSWORD)@gamepad-cluster:5432/gamepad
 
           ports:
