@@ -19,7 +19,7 @@ EOF
 
 kubectl create secret generic \
     ghcr-secret \
-    --from-file=.dockerconfigjson=./ghcr.secret \
+    --from-file=dockerconfig.json=./ghcr.secret \
     --dry-run=client -o json \
 | kubeseal \
     --namespace gamepad-server \
