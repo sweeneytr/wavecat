@@ -17,7 +17,7 @@ spec:
         fsGroup: 8675
       containers:
         - name: gamepad
-          image: ghcr.io/sweeneytr/gamepad:main
+          image: ghcr.io/sweeneytr/gamepad:latest
           imagePullPolicy: Always
           env:
             # Needed to construct DB_URL below
