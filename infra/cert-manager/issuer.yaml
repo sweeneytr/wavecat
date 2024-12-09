@@ -11,13 +11,13 @@ spec:
     privateKeySecretRef:
       name: issuer-account-key
     solvers:
-    - selector:
-        dnsZones:
-          - "wavecat.net"
-      dns01:
-        route53:
-          region: eu-east-1
-          accessKeyID: AKIA4N3G6C6LXIP4CQGW
-          secretAccessKeySecretRef:
-            name: route53-credentials-secret
-            key: secret-access-key
+      - selector:
+          dnsZones:
+            - "wavecat.net"
+        dns01:
+          route53:
+            region: eu-east-1
+            accessKeyID: AKIA4N3G6C6L6DMXZSN7
+            secretAccessKeySecretRef:
+              name: route53-credentials-secret
+              key: secret-access-key
