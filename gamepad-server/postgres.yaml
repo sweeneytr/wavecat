@@ -1,0 +1,22 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: gamepad-cluster
+  namespace: gamepad-server
+spec:
+  teamId: "gamepad"
+  volume:
+    size: 1Gi
+    storageClass: wavecat
+  numberOfInstances: 1
+  users:
+    gamepad_owner:
+      - superuser
+      - createdb
+
+    gamepad_user:
+
+  databases:
+    gamepad: gamepad_owner
+  postgresql:
+    version: "15"
