@@ -10,18 +10,6 @@ if [ -z "$2" ]
     echo "No argument supplied"
 fi
 
-cat << EOF > ghcr.secret
-{
-    "auths":
-    {
-        "ghcr.io":
-            {
-                "auth":"$(echo $1 | base64)"
-            }
-    }
-}
-EOF
-
 kubectl create secret docker-registry \
     ghcr-secret --docker-server=https://ghcr.io \
     --namespace gamepad-server \
