@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: bitnami/redis:7.2.5-debian-12-r0
+          image: bitnami/redis:7.4.3-debian-12-r0
           command:
             - "/opt/bitnami/redis/bin/redis-server"
             - "/opt/bitnami/redis/etc/redis.conf"
