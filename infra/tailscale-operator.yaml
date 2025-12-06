@@ -20,5 +20,8 @@ spec:
       chart: tailscale-operator
       helm:
         releaseName: tailscale-operator
+        values: |-
+          apiServerProxyConfig:
+            mode: noauth
     - repoURL: https://github.com/sweeneytr/wavecat.git
       path: infra/tailscale
