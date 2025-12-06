@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-operator
+  namespace: argocd
+spec:
+  project: infra
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: tailscale
+  sources:
+    - repoURL: https://pkgs.tailscale.com/helmcharts
+      targetRevision: 1.90.9
+      chart: tailscale-operator
+      helm:
+        releaseName: tailscale-operator
+    - repoURL: https://github.com/sweeneytr/wavecat.git
+      path: infra/tailscale
