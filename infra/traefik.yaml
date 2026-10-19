@@ -16,16 +16,21 @@ spec:
     namespace: infra
   sources:
     - repoURL: https://helm.traefik.io/traefik
-      targetRevision: 27.0.2
+      targetRevision: 42.0.0
       chart: traefik
       helm:
         releaseName: traefik
         values: |-
-          dashboard:
-            enabled: true
-            domain: traefik.wavecat.net
           rbac:
             enabled: true
+
+          # Keep the v2 router rule syntax while IngressRoutes still use v2 matchers (Headers()).
+          core:
+            defaultRuleSyntax: v2
+
+          ingressRoute:
+            dashboard:
+              enabled: true
 
           providers:
             kubernetesCRD:
