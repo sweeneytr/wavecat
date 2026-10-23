@@ -69,6 +69,9 @@ spec:
                 - name: run
                   hostPath:
                     path: /run
+                - name: root
+                  hostPath:
+                    path: /
           agent:
             clustering:
               enabled: true
@@ -93,6 +96,10 @@ spec:
                 - name: run
                   mountPath: /host/run
                   readOnly: true
+                - name: root
+                  mountPath: /host/root
+                  readOnly: true
+                  mountPropagation: HostToContainer
             securityContext:
               privileged: true
               runAsUser: 0

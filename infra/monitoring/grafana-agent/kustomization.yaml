@@ -13,3 +13,5 @@ configMapGenerator:
       - pods.river
       - kube_state_metrics.river
       - pod_metrics.river
+      - host_metrics.river
+      - kube_metrics.river

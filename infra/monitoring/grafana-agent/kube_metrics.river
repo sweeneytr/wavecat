@@ -1,0 +1,143 @@
+// Kubernetes stack metrics: kubelet, cAdvisor (per-container CPU/memory/network/disk),
+// the API server and Argo CD. Kubelet and API server are scraped through the API server
+// using the agent's service account (it already has nodes/proxy and nodes/metrics).
+
+discovery.kubernetes "nodes" {
+  role = "node"
+}
+
+discovery.relabel "kubelet" {
+  targets = discovery.kubernetes.nodes.targets
+
+  rule {
+    target_label = "__address__"
+    replacement  = "kubernetes.default.svc:443"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_node_name"]
+    regex         = "(.+)"
+    target_label  = "__metrics_path__"
+    replacement   = "/api/v1/nodes/${1}/proxy/metrics"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_node_name"]
+    target_label  = "node"
+  }
+}
+
+discovery.relabel "cadvisor" {
+  targets = discovery.kubernetes.nodes.targets
+
+  rule {
+    target_label = "__address__"
+    replacement  = "kubernetes.default.svc:443"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_node_name"]
+    regex         = "(.+)"
+    target_label  = "__metrics_path__"
+    replacement   = "/api/v1/nodes/${1}/proxy/metrics/cadvisor"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_node_name"]
+    target_label  = "node"
+  }
+}
+
+prometheus.scrape "kubelet" {
+  targets           = discovery.relabel.kubelet.output
+  forward_to        = [prometheus.relabel.kubelet.receiver]
+  job_name          = "kubelet"
+  scheme            = "https"
+  scrape_interval   = "30s"
+  bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+  tls_config {
+    ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+  }
+}
+
+prometheus.scrape "cadvisor" {
+  targets           = discovery.relabel.cadvisor.output
+  forward_to        = [prometheus.relabel.cadvisor.receiver]
+  job_name          = "cadvisor"
+  scheme            = "https"
+  scrape_interval   = "30s"
+  bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+  tls_config {
+    ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+  }
+}
+
+// Keep only what the dashboards use.
+prometheus.relabel "kubelet" {
+  forward_to = [prometheus.remote_write.primary.receiver]
+
+  rule {
+    source_labels = ["__name__"]
+    regex         = "up|kubelet_volume_stats_.*|kubelet_running_(pods|containers)|kubelet_node_name|kubelet_pleg_relist_duration_seconds_(sum|count)|kubelet_runtime_operations_errors_total|kubelet_started_(pods|containers)_errors_total"
+    action        = "keep"
+  }
+}
+
+prometheus.relabel "cadvisor" {
+  forward_to = [prometheus.remote_write.primary.receiver]
+
+  rule {
+    source_labels = ["__name__"]
+    regex         = "up|container_(cpu_usage_seconds_total|cpu_cfs_periods_total|cpu_cfs_throttled_periods_total|memory_working_set_bytes|memory_rss|memory_cache|network_(receive|transmit)_(bytes|errors|packets_dropped)_total|fs_(reads|writes)_bytes_total|oom_events_total)"
+    action        = "keep"
+  }
+
+  // Drop host-level cgroups (no pod): the node exporter covers the host.
+  rule {
+    source_labels = ["pod"]
+    regex         = ".+"
+    action        = "keep"
+  }
+
+  rule {
+    regex  = "id|name"
+    action = "labeldrop"
+  }
+}
+
+prometheus.scrape "apiserver" {
+  targets           = [{"__address__" = "kubernetes.default.svc:443"}]
+  forward_to        = [prometheus.relabel.apiserver.receiver]
+  job_name          = "apiserver"
+  scheme            = "https"
+  scrape_interval   = "30s"
+  bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+  tls_config {
+    ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+  }
+}
+
+prometheus.relabel "apiserver" {
+  forward_to = [prometheus.remote_write.primary.receiver]
+
+  rule {
+    source_labels = ["__name__"]
+    regex         = "up|apiserver_request_total|apiserver_request_duration_seconds_(sum|count)|apiserver_current_inflight_requests|apiserver_storage_.*size.*|apiserver_storage_objects"
+    action        = "keep"
+  }
+}
+
+// Argo CD exposes its application sync/health metrics on unnamed ports, so scrape the services.
+prometheus.scrape "argocd" {
+  targets = [
+    {"__address__" = "argocd-metrics.argocd.svc:8082", "argocd_component" = "application-controller"},
+    {"__address__" = "argocd-server-metrics.argocd.svc:8083", "argocd_component" = "server"},
+    {"__address__" = "argocd-repo-server.argocd.svc:8084", "argocd_component" = "repo-server"},
+  ]
+  forward_to      = [prometheus.remote_write.primary.receiver]
+  job_name        = "argocd"
+  scrape_interval = "30s"
+}

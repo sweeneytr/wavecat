@@ -1,0 +1,923 @@
+{
+  "uid": "wc-apps",
+  "title": "Apps (k3s workloads)",
+  "description": "Per-namespace view of workloads: replicas, restarts, why containers stopped, logs and events.",
+  "tags": [
+    "wavecat"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "graphTooltip": 1,
+  "refresh": "1m",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "row",
+      "title": "Workloads",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "panels": []
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Pods",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "count(kube_pod_info{k8s_namespace=~\"$namespace\"})",
+          "legendFormat": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Running",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(kube_pod_status_phase{k8s_namespace=~\"$namespace\",phase=\"Running\"})",
+          "legendFormat": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Not running",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(kube_pod_status_phase{k8s_namespace=~\"$namespace\",phase=~\"Pending|Failed|Unknown\"})",
+          "legendFormat": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              }
+            ]
+          },
+          "mappings": [],
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "Restarts (1h)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "round(sum(increase(kube_pod_container_status_restarts_total{k8s_namespace=~\"$namespace\"}[1h])))",
+          "legendFormat": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 3
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          },
+          "mappings": [],
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "Ready containers",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(kube_pod_container_status_ready{k8s_namespace=~\"$namespace\"})",
+          "legendFormat": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 7,
+      "type": "stat",
+      "title": "Not ready",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "count(kube_pod_container_status_ready{k8s_namespace=~\"$namespace\"} == 0) or vector(0)",
+          "legendFormat": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              }
+            ]
+          },
+          "mappings": [],
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Deployment replicas available vs desired",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (k8s_deployment_name) (kube_deployment_status_replicas_available{k8s_namespace=~\"$namespace\"})",
+          "legendFormat": "{{k8s_deployment_name}} available",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        },
+        {
+          "refId": "B",
+          "expr": "sum by (k8s_deployment_name) (kube_deployment_spec_replicas{k8s_namespace=~\"$namespace\"})",
+          "legendFormat": "{{k8s_deployment_name}} desired",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Container restarts",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 5
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (k8s_pod_name, k8s_container_name) (increase(kube_pod_container_status_restarts_total{k8s_namespace=~\"$namespace\"}[5m]))",
+          "legendFormat": "{{k8s_pod_name}} / {{k8s_container_name}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 30,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "type": "table",
+      "title": "Pods",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 14,
+        "x": 0,
+        "y": 13
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "kube_pod_info{k8s_namespace=~\"$namespace\"} * on (k8s_pod_uid) group_left(phase) (kube_pod_status_phase{k8s_namespace=~\"$namespace\"} == 1)",
+          "legendFormat": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          },
+          "instant": true,
+          "range": false,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Value": true,
+              "instance": true,
+              "job": true,
+              "k8s_pod_uid": true,
+              "host_ip": true,
+              "host_network": true,
+              "Value #A": true,
+              "Value #B": true,
+              "Time": true
+            },
+            "renameByName": {
+              "k8s_namespace": "Namespace",
+              "k8s_pod_name": "Pod",
+              "k8s_node_name": "Node",
+              "phase": "Phase",
+              "created_by_kind": "Owner kind",
+              "created_by_name": "Owner",
+              "k8s_pod_ip": "Pod IP"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "table",
+      "title": "Why containers last stopped",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 10,
+        "x": 14,
+        "y": 13
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "kube_pod_container_status_last_terminated_reason{k8s_namespace=~\"$namespace\"} == 1",
+          "legendFormat": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          },
+          "instant": true,
+          "range": false,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Value": true,
+              "instance": true,
+              "job": true,
+              "k8s_pod_uid": true,
+              "Time": true
+            },
+            "renameByName": {
+              "k8s_namespace": "Namespace",
+              "k8s_pod_name": "Pod",
+              "k8s_container_name": "Container",
+              "reason": "Reason"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "row",
+      "title": "Resources requested",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "panels": []
+    },
+    {
+      "id": 13,
+      "type": "timeseries",
+      "title": "CPU requests by pod (cores)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (k8s_pod_name) (kube_pod_container_resource_requests{k8s_namespace=~\"$namespace\",resource=\"cpu\"})",
+          "legendFormat": "{{k8s_pod_name}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 30,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 14,
+      "type": "timeseries",
+      "title": "Memory requests by pod",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (k8s_pod_name) (kube_pod_container_resource_requests{k8s_namespace=~\"$namespace\",resource=\"memory\"})",
+          "legendFormat": "{{k8s_pod_name}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 30,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 15,
+      "type": "row",
+      "title": "Logs and events",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "panels": []
+    },
+    {
+      "id": 16,
+      "type": "logs",
+      "title": "Pod logs",
+      "description": "Pod logs for the selected namespace(s). Type in 'Log filter' to narrow (regex, case-insensitive).",
+      "datasource": {
+        "type": "loki",
+        "uid": "fcaeeb5a-765a-47a7-9ecb-61c844f29aad"
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "{k8s_namespace=~\"$namespace\"} |~ \"(?i)$search\"",
+          "queryType": "range",
+          "datasource": {
+            "type": "loki",
+            "uid": "fcaeeb5a-765a-47a7-9ecb-61c844f29aad"
+          },
+          "maxLines": 200
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "showTime": true,
+        "wrapLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none",
+        "prettifyLogMessage": false
+      }
+    },
+    {
+      "id": 17,
+      "type": "logs",
+      "title": "Kubernetes events",
+      "description": "Cluster events collected by the agent.",
+      "datasource": {
+        "type": "loki",
+        "uid": "fcaeeb5a-765a-47a7-9ecb-61c844f29aad"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 43
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "{job=~\".*kubernetes_events.*\"} |~ \"$namespace\"",
+          "queryType": "range",
+          "datasource": {
+            "type": "loki",
+            "uid": "fcaeeb5a-765a-47a7-9ecb-61c844f29aad"
+          },
+          "maxLines": 200
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "showTime": true,
+        "wrapLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none",
+        "prettifyLogMessage": false
+      }
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "namespace",
+        "label": "Namespace",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+        },
+        "query": {
+          "query": "label_values(kube_pod_info, k8s_namespace)",
+          "refId": "var-namespace",
+          "qryType": 1
+        },
+        "definition": "label_values(kube_pod_info, k8s_namespace)",
+        "refresh": 2,
+        "sort": 1,
+        "includeAll": true,
+        "multi": true,
+        "allValue": ".+",
+        "regex": "",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        }
+      },
+      {
+        "name": "search",
+        "label": "Log filter",
+        "type": "textbox",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        }
+      }
+    ]
+  },
+  "annotations": {
+    "list": []
+  }
+}

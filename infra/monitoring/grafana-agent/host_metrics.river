@@ -1,0 +1,41 @@
+// Host (node) metrics from the agent's embedded node_exporter.
+// Needs the host's /proc, /sys, /run and / mounted at /host/proc, /host/sys, /host/run
+// and /host/root (see the grafana-agent mounts in infra/grafana.yaml).
+prometheus.exporter.unix "host" {
+  procfs_path    = "/host/proc"
+  sysfs_path     = "/host/sys"
+  rootfs_path    = "/host/root"
+  udev_data_path = "/host/run/udev/data"
+
+  // Skip pseudo and container-runtime filesystems. Per-volume usage comes from the kubelet instead.
+  filesystem {
+    mount_points_exclude = "^/(dev|proc|run/credentials/.+|sys|var/lib/docker/.+|var/lib/containers/storage/.+|var/lib/kubelet/.+|var/lib/rancher/.+)($|/)"
+    fs_types_exclude     = "^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$"
+  }
+
+  // Container and overlay network interfaces are covered by cAdvisor.
+  netdev {
+    device_exclude = "^(veth.*|cali.*|flannel.*|cni.*|docker.*|br-.*)$"
+  }
+}
+
+discovery.relabel "host" {
+  targets = prometheus.exporter.unix.host.targets
+
+  rule {
+    target_label = "job"
+    replacement  = "node-exporter"
+  }
+
+  rule {
+    target_label = "instance"
+    replacement  = "openmediavault"
+  }
+}
+
+prometheus.scrape "host" {
+  targets         = discovery.relabel.host.output
+  forward_to      = [prometheus.remote_write.primary.receiver]
+  job_name        = "node-exporter"
+  scrape_interval = "30s"
+}
