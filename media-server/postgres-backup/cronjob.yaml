@@ -1,0 +1,77 @@
+# Nightly logical dump of every database on media-server-cluster (Prowlarr, Radarr, Lidarr, Readarr, ...)
+# into the ZFS dataset wavecat/db-backups/media on the host (owned by uid 999). Keeps 14 days.
+# This is a stopgap: the Zalando operator's own backup needs S3/GCS/Azure. See docs/backlog.md (CNPG).
+# Restore a database with: pg_restore --clean --if-exists -d <db> <db>-<stamp>.dump
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup
+  namespace: media-server
+spec:
+  schedule: "17 3 * * *"
+  timeZone: America/New_York
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 1800
+      template:
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 999
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: dump
+              image: postgres:15.19
+              command: ["/bin/bash", "-euo", "pipefail", "-c"]
+              args:
+                - |
+                  export PGHOST=media-server-cluster PGUSER=postgres
+                  stamp=$(date -u +%Y%m%d-%H%M%S)
+                  cd /backups
+                  pg_dumpall --globals-only > "globals-$stamp.sql.tmp"
+                  mv "globals-$stamp.sql.tmp" "globals-$stamp.sql"
+                  for db in $(psql -d postgres -Atc "select datname from pg_database where not datistemplate and datname <> 'postgres'"); do
+                    pg_dump -Fc -f "$db-$stamp.dump.tmp" "$db"
+                    pg_restore --list "$db-$stamp.dump.tmp" > /dev/null
+                    mv "$db-$stamp.dump.tmp" "$db-$stamp.dump"
+                  done
+                  find . -maxdepth 1 \( -name '*.dump' -o -name 'globals-*.sql' \) -mtime +14 -delete
+                  ls -l
+              env:
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres.media-server-cluster.credentials.postgresql.acid.zalan.do
+                      key: password
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  memory: 512Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+              volumeMounts:
+                - name: backups
+                  mountPath: /backups
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: backups
+              hostPath:
+                path: /wavecat/db-backups/media
+                type: Directory
+            - name: tmp
+              emptyDir: {}
