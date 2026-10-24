@@ -1,0 +1,64 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: oauth2-proxy
+  namespace: argocd
+spec:
+  destination:
+    namespace: auth
+    server: "https://kubernetes.default.svc"
+  project: infra
+  source:
+    repoURL: "https://oauth2-proxy.github.io/manifests"
+    chart: oauth2-proxy
+    targetRevision: 10.7.0
+    helm:
+      releaseName: oauth2-proxy
+      values: |-
+        # Used as a Traefik forwardAuth target (see infra/auth/middleware.yaml). Unauthenticated requests get a
+        # redirect to Dex; authenticated ones get the static 202 below, which forwardAuth treats as success.
+        config:
+          existingSecret: oauth2-proxy-secrets
+          configFile: |-
+            provider = "oidc"
+            oidc_issuer_url = "https://dex.wavecat.net"
+            redirect_url = "https://auth.wavecat.net/oauth2/callback"
+            upstreams = ["static://202"]
+            # Access is the email list below; an email domain match would bypass it.
+            email_domains = []
+            cookie_domains = [".wavecat.net"]
+            whitelist_domains = [".wavecat.net"]
+            cookie_secure = true
+            cookie_expire = "168h"
+            reverse_proxy = true
+            set_xauthrequest = true
+            skip_provider_button = true
+            code_challenge_method = "S256"
+        authenticatedEmailsFile:
+          enabled: true
+          restricted_access: |-
+            sweeneytri@gmail.com
+        ingress:
+          enabled: true
+          className: traefik
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt
+          hosts:
+            - auth.wavecat.net
+          tls:
+            - secretName: auth.wavecat.net
+              hosts:
+                - auth.wavecat.net
+        securityContext:
+          enabled: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          capabilities:
+            drop:
+              - ALL
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,75 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dex
+  namespace: argocd
+spec:
+  destination:
+    namespace: auth
+    server: "https://kubernetes.default.svc"
+  project: infra
+  sources:
+    - repoURL: "https://charts.dexidp.io"
+      chart: dex
+      targetRevision: 0.25.2
+      helm:
+        releaseName: dex
+        values: |-
+          # Dex only federates: users sign in with Google, apps and oauth2-proxy see Dex as their OIDC provider.
+          # Secrets (Google client + oauth2-proxy client secret) come from the dex-secrets SealedSecret.
+          envFrom:
+            - secretRef:
+                name: dex-secrets
+          config:
+            issuer: https://dex.wavecat.net
+            storage:
+              type: kubernetes
+              config:
+                inCluster: true
+            web:
+              http: 0.0.0.0:5556
+            oauth2:
+              skipApprovalScreen: true
+            enablePasswordDB: false
+            connectors:
+              - type: google
+                id: google
+                name: Google
+                config:
+                  clientID: $GOOGLE_CLIENT_ID
+                  clientSecret: $GOOGLE_CLIENT_SECRET
+                  redirectURI: https://dex.wavecat.net/callback
+            staticClients:
+              - id: oauth2-proxy
+                name: oauth2-proxy
+                secretEnv: OAUTH2_PROXY_CLIENT_SECRET
+                redirectURIs:
+                  - https://auth.wavecat.net/oauth2/callback
+          ingress:
+            enabled: true
+            className: traefik
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt
+            hosts:
+              - host: dex.wavecat.net
+                paths:
+                  - path: /
+                    pathType: Prefix
+            tls:
+              - secretName: dex.wavecat.net
+                hosts:
+                  - dex.wavecat.net
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+    - repoURL: https://github.com/sweeneytr/wavecat.git
+      path: infra/auth
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
