@@ -173,7 +173,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "node_load5{job=\"node-exporter\"} / count(count by (cpu) (node_cpu_seconds_total{job=\"node-exporter\"}))",
+          "expr": "node_load5{job=\"node-exporter\"} / scalar(count(count by (cpu) (node_cpu_seconds_total{job=\"node-exporter\"})))",
           "legendFormat": "",
           "datasource": {
             "type": "prometheus",
@@ -596,7 +596,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (mode) (rate(node_cpu_seconds_total{job=\"node-exporter\",mode!=\"idle\"}[5m])) / count(count by (cpu) (node_cpu_seconds_total{job=\"node-exporter\"}))",
+          "expr": "sum by (mode) (rate(node_cpu_seconds_total{job=\"node-exporter\",mode!=\"idle\"}[5m])) / scalar(count(count by (cpu) (node_cpu_seconds_total{job=\"node-exporter\"})))",
           "legendFormat": "{{mode}}",
           "datasource": {
             "type": "prometheus",

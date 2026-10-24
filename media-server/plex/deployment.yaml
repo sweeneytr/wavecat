@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: plex
-          image: lscr.io/linuxserver/plex:1.40.3
+          image: lscr.io/linuxserver/plex:1.43.5.11029-6bf8af3f0-ls329
           env:
             - name: PUID
               value: "100"

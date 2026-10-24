@@ -96,8 +96,9 @@ prometheus.relabel "cadvisor" {
 
   // Drop host-level cgroups (no pod): the node exporter covers the host.
   rule {
-    source_labels = ["pod"]
-    regex         = ".+"
+    source_labels = ["__name__", "pod"]
+    separator     = ";"
+    regex         = "up;.*|container_.*;.+"
     action        = "keep"
   }
 

@@ -393,7 +393,7 @@ def host():
         (d.stat("Uptime", f'time() - node_boot_time_seconds{{{N}}}', unit="s"), 3),
         (d.stat("CPU", f'1 - avg(rate(node_cpu_seconds_total{{{N},mode="idle"}}[5m]))', unit="percentunit",
                 thresholds=[G, {"color": "orange", "value": 0.7}, {"color": "red", "value": 0.9}]), 3),
-        (d.stat("Load / core", f'node_load5{{{N}}} / count(count by (cpu) (node_cpu_seconds_total{{{N}}}))', unit="short",
+        (d.stat("Load / core", f'node_load5{{{N}}} / scalar(count(count by (cpu) (node_cpu_seconds_total{{{N}}})))', unit="short",
                 thresholds=[G, {"color": "orange", "value": 0.8}, {"color": "red", "value": 1.5}]), 3),
         (d.stat("Memory used", f'1 - node_memory_MemAvailable_bytes{{{N}}} / node_memory_MemTotal_bytes{{{N}}}', unit="percentunit",
                 thresholds=[G, {"color": "orange", "value": 0.8}, {"color": "red", "value": 0.92}]), 3),
@@ -412,7 +412,7 @@ def host():
     d.row("CPU and memory")
     d.place([
         (d.ts("CPU usage by mode",
-              [(f'sum by (mode) (rate(node_cpu_seconds_total{{{N},mode!="idle"}}[5m])) / count(count by (cpu) (node_cpu_seconds_total{{{N}}}))', "{{mode}}")],
+              [(f'sum by (mode) (rate(node_cpu_seconds_total{{{N},mode!="idle"}}[5m])) / scalar(count(count by (cpu) (node_cpu_seconds_total{{{N}}})))', "{{mode}}")],
               unit="percentunit", stack=True, fill=40, maxv=1), 12),
         (d.ts("Load average",
               [(f'node_load1{{{N}}}', "1m"), (f'node_load5{{{N}}}', "5m"), (f'node_load15{{{N}}}', "15m"),
