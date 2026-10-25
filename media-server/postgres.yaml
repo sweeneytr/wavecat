@@ -16,12 +16,6 @@ spec:
     lidarr_owner:
     - superuser
     - createdb
-    readarr_owner:
-    - superuser
-    - createdb
-    readarr_audio_owner:
-    - superuser
-    - createdb
     prowlarr_owner:
     - superuser
     - createdb
@@ -36,12 +30,6 @@ spec:
     radarr_log: radarr_owner
     lidarr_main: lidarr_owner
     lidarr_log: lidarr_owner
-    readarr_main: readarr_owner
-    readarr_log: readarr_owner
-    readarr_cache: readarr_owner
-    readarr_audio_main: readarr_audio_owner
-    readarr_audio_log: readarr_audio_owner
-    readarr_audio_cache: readarr_audio_owner
     prowlarr_main: prowlarr_owner
     prowlarr_log: prowlarr_owner
   postgresql:
