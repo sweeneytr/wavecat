@@ -60,26 +60,6 @@ spec:
             - name: UN_SONARR_1_URL
               value: "http://sonarr-anime"
 
-            - name: UN_READARR_0_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: readarr-apikey
-                  key: apikey
-            - name: UN_READARR_0_PATHS_0
-              value: /data/downloads/readarr/
-            - name: UN_READARR_0_URL
-              value: "http://readarr"
-              
-            - name: UN_READARR_1_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: readarr-audio-apikey
-                  key: apikey
-            - name: UN_READARR_1_PATHS_0
-              value: /data/downloads/readarr-audio/
-            - name: UN_READARR_1_URL
-              value: "http://readarr-audio"
-              
             - name: UN_LIDARR_0_API_KEY
               valueFrom:
                 secretKeyRef:

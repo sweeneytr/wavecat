@@ -1,7 +1,7 @@
 {
   "uid": "wc-platform",
   "title": "Platform services",
-  "description": "cert-manager, Argo CD, CoreDNS, sealed-secrets, Authentik and the observability stack itself.",
+  "description": "cert-manager, Argo CD, CoreDNS, sealed-secrets and the observability stack itself.",
   "tags": [
     "wavecat"
   ],
@@ -1248,116 +1248,6 @@
     {
       "id": 24,
       "type": "timeseries",
-      "title": "Authentik requests / s",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 0,
-        "y": 36
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "expr": "sum(rate(authentik_main_request_duration_seconds_count[5m]))",
-          "legendFormat": "requests",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
-          }
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "reqps",
-          "custom": {
-            "drawStyle": "line",
-            "lineWidth": 1,
-            "fillOpacity": 10,
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "mode": "none",
-              "group": "A"
-            }
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "calcs": []
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      }
-    },
-    {
-      "id": 25,
-      "type": "timeseries",
-      "title": "Authentik p95 latency",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 8,
-        "y": 36
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(authentik_main_request_duration_seconds_bucket[5m])))",
-          "legendFormat": "p95",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
-          }
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "custom": {
-            "drawStyle": "line",
-            "lineWidth": 1,
-            "fillOpacity": 10,
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "mode": "none",
-              "group": "A"
-            }
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "calcs": []
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      }
-    },
-    {
-      "id": 26,
-      "type": "timeseries",
       "title": "Sealed-secrets unseal requests",
       "description": "",
       "datasource": {
@@ -1366,8 +1256,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 16,
+        "w": 24,
+        "x": 0,
         "y": 36
       },
       "targets": [
@@ -1411,7 +1301,7 @@
       }
     },
     {
-      "id": 27,
+      "id": 25,
       "type": "row",
       "title": "Observability stack",
       "collapsed": false,
@@ -1424,7 +1314,7 @@
       "panels": []
     },
     {
-      "id": 28,
+      "id": 26,
       "type": "timeseries",
       "title": "Agent running components",
       "description": "",
@@ -1491,7 +1381,7 @@
       }
     },
     {
-      "id": 29,
+      "id": 27,
       "type": "timeseries",
       "title": "Loki dropped lines (agent processing)",
       "description": "",
@@ -1546,7 +1436,7 @@
       }
     },
     {
-      "id": 30,
+      "id": 28,
       "type": "timeseries",
       "title": "Controller workqueue depth",
       "description": "",
@@ -1601,7 +1491,7 @@
       }
     },
     {
-      "id": 31,
+      "id": 29,
       "type": "logs",
       "title": "Platform error logs",
       "description": "",
@@ -1618,7 +1508,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "{k8s_namespace=~\"argocd|cert-manager|monitoring|infra|authentik|kube-system|secret-generator|metallb-system|tailscale\"} |~ \"(?i)(error|fatal|panic)\" !~ \"(?i)level=(info|debug)\"",
+          "expr": "{k8s_namespace=~\"argocd|cert-manager|monitoring|infra|kube-system|secret-generator|metallb-system|tailscale\"} |~ \"(?i)(error|fatal|panic)\" !~ \"(?i)level=(info|debug)\"",
           "queryType": "range",
           "datasource": {
             "type": "loki",

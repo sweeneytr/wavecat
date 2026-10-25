@@ -304,7 +304,7 @@ def ingress():
 
 def platform():
     d = Dash("wc-platform", "Platform services",
-             "cert-manager, Argo CD, CoreDNS, sealed-secrets, Authentik and the observability stack itself.")
+             "cert-manager, Argo CD, CoreDNS, sealed-secrets and the observability stack itself.")
     d.row("Certificates (cert-manager)")
     d.place([
         (d.stat("Ready", 'sum(certmanager_certificate_ready_status{condition="True"})'), 4),
@@ -359,12 +359,8 @@ def platform():
 
     d.row("Identity and secrets")
     d.place([
-        (d.ts("Authentik requests / s",
-              [('sum(rate(authentik_main_request_duration_seconds_count[5m]))', "requests")], unit="reqps"), 8),
-        (d.ts("Authentik p95 latency",
-              [('histogram_quantile(0.95, sum by (le) (rate(authentik_main_request_duration_seconds_bucket[5m])))', "p95")], unit="s"), 8),
         (d.ts("Sealed-secrets unseal requests",
-              [('sum by (status) (rate(sealed_secrets_controller_unseal_requests_total[15m]))', "{{status}}")], unit="ops"), 8),
+              [('sum by (status) (rate(sealed_secrets_controller_unseal_requests_total[15m]))', "{{status}}")], unit="ops"), 24),
     ], 8)
 
     d.row("Observability stack")
@@ -378,7 +374,7 @@ def platform():
               [('sum by (name) (workqueue_depth)', "{{name}}")], stack=True, fill=30), 8),
     ], 8)
     d.place([(d.logs("Platform error logs",
-                     '{k8s_namespace=~"argocd|cert-manager|monitoring|infra|authentik|kube-system|secret-generator|metallb-system|tailscale"} '
+                     '{k8s_namespace=~"argocd|cert-manager|monitoring|infra|kube-system|secret-generator|metallb-system|tailscale"} '
                      '|~ "(?i)(error|fatal|panic)" !~ "(?i)level=(info|debug)"'), 24)], 10)
     return d
 
