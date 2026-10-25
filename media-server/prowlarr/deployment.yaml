@@ -14,10 +14,19 @@ spec:
       labels:
         app: prowlarr
     spec:
+      # Prowlarr never talks to the Kubernetes API.
+      automountServiceAccountToken: false
       initContainers:
         - name: init-config
-          image: dibi/envsubst:1
+          image: dibi/envsubst:1@sha256:6f1938ec2114e98406b9dcc638929fcbe68add3d94eb8629e0cbed03b72f09f8
           command: ['sh', '-c', "envsubst < /tmp/config/config.template.xml > /config/config.xml"]
+          # Same user as Prowlarr (PUID/PGID below), so it owns config.xml and needs no capabilities.
+          securityContext:
+            runAsUser: 100
+            runAsGroup: 100
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           env:
             - name: POSTGRES_HOST
               value: 'media-server-cluster'
@@ -56,6 +65,19 @@ spec:
           ports:
             - containerPort: 8080
               name: http
+          # The linuxserver image starts as root (s6) and drops to PUID/PGID, so it keeps just the
+          # capabilities s6 needs to chown /config, switch user and supervise the service.
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+              add: ["CHOWN", "DAC_OVERRIDE", "FOWNER", "KILL", "SETGID", "SETUID"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
           volumeMounts:
             - name: config-pv
               mountPath: /config
