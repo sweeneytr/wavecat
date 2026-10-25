@@ -14,7 +14,9 @@ data:
 
       <UrlBase />
       <ApiKey>${API_KEY}</ApiKey>
-      <AuthenticationMethod>None</AuthenticationMethod>
+      <!-- Login is handled by oauth2-proxy at the Traefik ingress (infra/auth). -->
+      <AuthenticationMethod>External</AuthenticationMethod>
+      <AuthenticationRequired>Enabled</AuthenticationRequired>
       <Port>8080</Port>
       <BindAddress>*</BindAddress>
 
