@@ -29,7 +29,7 @@ spec:
               name: http
           volumeMounts:
             - name: config-pv
-              mountPath: /config
+              mountPath: /kavita/config
             - name: data-pv
               subPath: Books
               mountPath: /books
