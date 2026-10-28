@@ -119,7 +119,7 @@ spec:
                 memory: null
     - repoURL: "https://open-telemetry.github.io/opentelemetry-helm-charts"
       chart: opentelemetry-operator
-      targetRevision: 0.56.1
+      targetRevision: 0.128.0
       helm:
         releaseName: opentelemetry-operator
         values: |
