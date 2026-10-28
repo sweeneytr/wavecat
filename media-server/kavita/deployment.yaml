@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: kavita
-          image: kizaing/kavita:latest
+          image: jvmilazz0/kavita:0.9.1
           env:
             - name: PUID
               value: "100"
