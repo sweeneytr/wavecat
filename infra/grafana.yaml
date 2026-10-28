@@ -58,6 +58,10 @@ spec:
         releaseName: grafana-agent
         values: |
           controller:
+            # Host network so node-exporter (host_metrics.river) reads the host's /proc/net/dev. Otherwise /host/proc/net is
+            # the pod's own network namespace and the host NIC is missing from the Host dashboard.
+            hostNetwork: true
+            dnsPolicy: ClusterFirstWithHostNet
             volumes:
               extra:
                 - name: proc
@@ -75,7 +79,8 @@ spec:
           agent:
             clustering:
               enabled: true
-            listenPort: 8080
+            # 8080 is taken by nginx on the host, and the pod now shares the host's ports.
+            listenPort: 12345
             enableReporting: false
             extraPorts:
               - name: otlp-grpc
