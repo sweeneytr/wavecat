@@ -556,7 +556,104 @@ def resources():
     return d
 
 
-BUILDERS = [cluster_overview, apps, ingress, platform, host, resources]
+def storage():
+    d = Dash("wc-storage", "Storage health",
+             "ZFS pool, vdev and scrub health plus per-disk SMART. Source: textfile metrics written on the host "
+             "(smartmon.prom, zfs_health.prom, zfs_zpool.prom); see docs/zfs-observability.md. "
+             "ZFS vdev error counters reset on reboot; the SMART counters do not.", span="now-7d")
+    # Label every SMART series with the disk's model and serial number.
+    def smart(metric):
+        return f'{metric} * on (disk) group_left (serial_number, device_model) smartmon_device_info'
+
+    d.row("At a glance")
+    d.place([
+        (d.stat("Worst pending sectors", 'max(smartmon_current_pending_sector_raw_value)',
+                thresholds=[G, {"color": "red", "value": 1}],
+                desc="Sectors the drive could not read and has not yet remapped. Any value above 0 means a disk is failing."), 3),
+        (d.stat("Worst uncorrectable", 'max(smartmon_offline_uncorrectable_raw_value)',
+                thresholds=[G, {"color": "red", "value": 1}]), 3),
+        (d.stat("Reallocated sectors (max)", 'max(smartmon_reallocated_sector_ct_raw_value)',
+                thresholds=[G, {"color": "orange", "value": 1}, {"color": "red", "value": 50}]), 3),
+        (d.stat("Pool state", 'min(zfs_pool_healthy)',
+                thresholds=[{"color": "red", "value": None}, {"color": "green", "value": 1}],
+                mappings=[{"type": "value", "options": {"1": {"text": "ONLINE"}, "0": {"text": "NOT ONLINE"}}}]), 3),
+        (d.stat("Days since last scrub", '(time() - max(zfs_pool_scan_last_end_timestamp_seconds{function="scrub"})) / 86400',
+                unit="d", thresholds=[G, {"color": "orange", "value": 35}, {"color": "red", "value": 50}],
+                desc="Debian scrubs on the 2nd Sunday of each month. Over 35 days means a scrub was skipped."), 3),
+        (d.stat("Scrub running", 'max(zfs_pool_scan_in_progress{function="scrub"})',
+                mappings=[{"type": "value", "options": {"1": {"text": "RUNNING"}, "0": {"text": "idle"}}}]), 3),
+        (d.stat("Pool used", '100 * (1 - max(zfs_zpool_free_bytes) / max(zfs_zpool_size_bytes))', unit="percent",
+                thresholds=[G, {"color": "orange", "value": 70}, {"color": "red", "value": 85}]), 3),
+        (d.stat("Hottest drive", 'max(smartmon_temperature_celsius_raw_value)', unit="celsius",
+                thresholds=[G, {"color": "orange", "value": 50}, {"color": "red", "value": 55}]), 3),
+    ], 4)
+
+    d.row("Disks (SMART)")
+    d.place([
+        (d.bargauge("Pending sectors", smart('smartmon_current_pending_sector_raw_value'),
+                    "{{disk}} {{serial_number}}", thresholds=[G, {"color": "red", "value": 1}],
+                    desc="Current_Pending_Sector (SMART 197)."), 8),
+        (d.bargauge("Offline uncorrectable", smart('smartmon_offline_uncorrectable_raw_value'),
+                    "{{disk}} {{serial_number}}", thresholds=[G, {"color": "red", "value": 1}],
+                    desc="Offline_Uncorrectable (SMART 198)."), 8),
+        (d.bargauge("Reallocated sectors", smart('smartmon_reallocated_sector_ct_raw_value'),
+                    "{{disk}} {{serial_number}}", thresholds=[G, {"color": "orange", "value": 1}, {"color": "red", "value": 50}],
+                    desc="Reallocated_Sector_Ct (SMART 5)."), 8),
+    ], 7)
+    d.place([
+        (d.ts("Pending and uncorrectable sectors over time",
+              [(smart('smartmon_current_pending_sector_raw_value'), "pending {{disk}} {{serial_number}}"),
+               (smart('smartmon_offline_uncorrectable_raw_value'), "uncorrectable {{disk}} {{serial_number}}")]), 12),
+        (d.ts("Drive temperature",
+              [(smart('smartmon_temperature_celsius_raw_value'), "{{disk}} {{serial_number}}")], unit="celsius"), 12),
+    ], 8)
+    d.place([
+        (d.table("SMART summary",
+                 smart('smartmon_power_on_hours_raw_value'),
+                 desc="Power-on hours per disk. Hover the other panels for details.",
+                 rename={"disk": "Disk", "serial_number": "Serial", "device_model": "Model", "Value": "Power-on hours"},
+                 hide=["instance", "job", "type", "smart_id", "vendor", "product", "revision", "lun_id",
+                       "model_family", "firmware_version"], sort_by="Power-on hours"), 12),
+        (d.table("UDMA CRC errors (cable or controller)",
+                 smart('smartmon_udma_crc_error_count_raw_value'),
+                 rename={"disk": "Disk", "serial_number": "Serial", "device_model": "Model", "Value": "CRC errors"},
+                 hide=["instance", "job", "type", "smart_id", "vendor", "product", "revision", "lun_id",
+                       "model_family", "firmware_version"], sort_by="CRC errors"), 12),
+    ], 7)
+
+    d.row("ZFS pool")
+    d.place([
+        (d.ts("Pool capacity used", [('100 * (1 - zfs_zpool_free_bytes / zfs_zpool_size_bytes)', "used %")],
+              unit="percent", minv=0, maxv=100), 8),
+        (d.ts("Fragmentation", [('zfs_zpool_fragmentation', "fragmentation %")], unit="percent", minv=0, maxv=100), 8),
+        (d.ts("Days since last scrub", [('(time() - zfs_pool_scan_last_end_timestamp_seconds{function="scrub"}) / 86400', "days")],
+              unit="d", minv=0), 8),
+    ], 8)
+    d.place([
+        (d.table("Vdev state and errors (since boot)",
+                 'zfs_vdev_read_errors + on (pool, vdev, type, parent, serial) zfs_vdev_write_errors '
+                 '+ on (pool, vdev, type, parent, serial) zfs_vdev_checksum_errors',
+                 desc="Sum of read, write and checksum errors per vdev. ZFS keeps these in memory: they reset on reboot or import.",
+                 rename={"vdev": "Vdev", "serial": "Serial", "type": "Type", "Value": "Errors since boot"},
+                 hide=["instance", "job", "pool", "parent"], sort_by="Errors since boot"), 12),
+        (d.table("Vdevs offline (1 = ONLINE)",
+                 'zfs_vdev_online',
+                 rename={"vdev": "Vdev", "serial": "Serial", "type": "Type", "Value": "Online"},
+                 hide=["instance", "job", "pool", "parent"], sort_by="Online"), 12),
+    ], 8)
+
+    d.row("Collectors (are the metrics fresh?)")
+    d.place([
+        (d.ts("Seconds since each collector wrote its file",
+              [('label_replace(time() - node_textfile_mtime_seconds, "file", "$1", "file", ".*/(.*)")', "{{file}}")], unit="s",
+              desc="smartmon every 15 min, zfs_health and zfs_zpool every 2 min, apt daily."), 12),
+        (d.ts("Seconds since zfs-health-textfile last ran",
+              [('time() - zfs_textfile_last_run_timestamp_seconds', "zfs_health")], unit="s"), 12),
+    ], 7)
+    return d
+
+
+BUILDERS = [cluster_overview, apps, ingress, platform, host, resources, storage]
 
 
 def write_all():
