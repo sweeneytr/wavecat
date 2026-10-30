@@ -25,7 +25,10 @@ spec:
           image: docker.io/grafana/tempo:3.1.1@sha256:64e2fbd56d9c2b3412a4b430a58ea59e91a670b1e75f920a0c702213ad145044
           args:
             - -config.file=/config/tempo.yaml
-            - -mem-ballast-size-mbs=1024
+          env:
+            # Replaces -mem-ballast-size-mbs, which Tempo 3 removed: a soft memory target for the Go GC.
+            - name: GOMEMLIMIT
+              value: 2GiB
           ports:
             - name: http
               containerPort: 8080
