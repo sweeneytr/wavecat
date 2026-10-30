@@ -21,17 +21,22 @@ PROM_UID = "a35af9d3-363d-4b66-b426-d15344c2e1a8"
 FOLDER = "wavecat"
 GROUP = "storage"
 
+def smart(expr):
+    """Attach serial_number and device_model to a SMART series so alerts name the physical disk."""
+    return "%s * on (disk) group_left (serial_number, device_model) smartmon_device_info" % expr
+
+
 # (title, expr, comparator, threshold, for, severity, noDataState, lookback seconds, summary)
 # Summaries must not render a double quote or newline: they are placed inside a JSON string for ntfy.
 RULES = [
-    ("SmartPendingSectors", "smartmon_current_pending_sector_raw_value", "gt", 0, "5m", "critical", "Alerting", 600,
+    ("SmartPendingSectors", smart("smartmon_current_pending_sector_raw_value"), "gt", 0, "5m", "critical", "Alerting", 600,
      'Disk {{ $labels.disk }} ({{ $labels.serial_number }}) has {{ printf "%.0f" $values.B.Value }} pending sectors: unreadable and not yet remapped. The drive is failing, check the pool and replace it'),
-    ("SmartOfflineUncorrectable", "smartmon_offline_uncorrectable_raw_value", "gt", 0, "5m", "critical", "OK", 600,
-     'Disk {{ $labels.disk }} has {{ printf "%.0f" $values.B.Value }} offline-uncorrectable sectors'),
-    ("SmartReallocatedRising", "increase(smartmon_reallocated_sector_ct_raw_value[1d])", "gt", 0, "0s", "warning", "OK", 90000,
-     'Disk {{ $labels.disk }} reallocated {{ printf "%.0f" $values.B.Value }} more sectors in the last day'),
-    ("SmartHealthFailed", "smartmon_device_smart_healthy", "lt", 1, "0s", "critical", "OK", 600,
-     'SMART overall health FAILED on {{ $labels.disk }}'),
+    ("SmartOfflineUncorrectable", smart("smartmon_offline_uncorrectable_raw_value"), "gt", 0, "5m", "critical", "OK", 600,
+     'Disk {{ $labels.disk }} ({{ $labels.serial_number }}) has {{ printf "%.0f" $values.B.Value }} offline-uncorrectable sectors'),
+    ("SmartReallocatedRising", smart("increase(smartmon_reallocated_sector_ct_raw_value[1d])"), "gt", 0, "0s", "warning", "OK", 90000,
+     'Disk {{ $labels.disk }} ({{ $labels.serial_number }}) reallocated {{ printf "%.0f" $values.B.Value }} more sectors in the last day'),
+    ("SmartHealthFailed", smart("smartmon_device_smart_healthy"), "lt", 1, "0s", "critical", "OK", 600,
+     'SMART overall health FAILED on {{ $labels.disk }} ({{ $labels.serial_number }})'),
     ("ZfsPoolNotOnline", "zfs_pool_healthy", "lt", 1, "2m", "critical", "Alerting", 600,
      'ZFS pool {{ $labels.pool }} is not ONLINE (degraded or faulted)'),
     ("ZfsVdevOffline", "zfs_vdev_online", "lt", 1, "2m", "critical", "OK", 600,
@@ -49,8 +54,8 @@ RULES = [
      'The last ZFS scrub found {{ printf "%.0f" $values.B.Value }} errors'),
     ("ZfsPoolFull", "100 * (1 - zfs_zpool_free_bytes / zfs_zpool_size_bytes)", "gt", 80, "30m", "warning", "OK", 600,
      'ZFS pool is {{ printf "%.0f" $values.B.Value }} percent full'),
-    ("DiskTemperatureHigh", "smartmon_temperature_celsius_raw_value", "gt", 55, "10m", "warning", "OK", 600,
-     'Disk {{ $labels.disk }} is at {{ printf "%.0f" $values.B.Value }} C'),
+    ("DiskTemperatureHigh", smart("smartmon_temperature_celsius_raw_value"), "gt", 55, "10m", "warning", "OK", 600,
+     'Disk {{ $labels.disk }} ({{ $labels.serial_number }}) is at {{ printf "%.0f" $values.B.Value }} C'),
     ("StorageCollectorStale",
      'time() - node_textfile_mtime_seconds{file=~".*/(zfs_health|zfs_zpool).prom"}', "gt", 900, "5m", "warning", "Alerting", 600,
      'The host ZFS metrics file {{ $labels.file }} has not been updated for {{ printf "%.0f" $values.B.Value }} seconds'),
