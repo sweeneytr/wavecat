@@ -642,6 +642,20 @@ def storage():
                  hide=["instance", "job", "pool", "parent"], sort_by="Online"), 12),
     ], 8)
 
+    d.row("Snapshots (daily, /usr/local/sbin/zfs-snap-auto)")
+    d.place([
+        (d.stat("Hours since last snapshot", '(time() - min(zfs_autosnap_last_success_timestamp_seconds)) / 3600', unit="h",
+                thresholds=[G, {"color": "orange", "value": 26}, {"color": "red", "value": 36}],
+                desc="Worst of the two sets. Healthy is under 24; the alert fires at 36."), 4),
+        (d.stat("Datasets covered", 'sum(zfs_autosnap_datasets)',
+                desc="Main set: every Kubernetes volume except the excluded ones, plus the dump datasets (14 days). Media set: the big media volume (3 days)."), 4),
+        (d.stat("Last run failed", 'max(zfs_autosnap_last_run_failed)',
+                thresholds=[G, {"color": "red", "value": 1}],
+                mappings=[{"type": "value", "options": {"0": {"text": "OK"}, "1": {"text": "FAILED"}}}]), 4),
+        (d.ts("Hours since last successful snapshot",
+              [('(time() - zfs_autosnap_last_success_timestamp_seconds) / 3600', "{{set}}")], unit="h", minv=0), 12),
+    ], 7)
+
     d.row("Collectors (are the metrics fresh?)")
     d.place([
         (d.ts("Seconds since each collector wrote its file",

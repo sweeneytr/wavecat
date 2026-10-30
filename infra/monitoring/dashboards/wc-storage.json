@@ -1379,7 +1379,7 @@
     {
       "id": 24,
       "type": "row",
-      "title": "Collectors (are the metrics fresh?)",
+      "title": "Snapshots (daily, /usr/local/sbin/zfs-snap-auto)",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -1391,6 +1391,276 @@
     },
     {
       "id": 25,
+      "type": "stat",
+      "title": "Hours since last snapshot",
+      "description": "Worst of the two sets. Healthy is under 24; the alert fires at 36.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 0,
+        "y": 46
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(time() - min(zfs_autosnap_last_success_timestamp_seconds)) / 3600",
+          "legendFormat": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 26
+              },
+              {
+                "color": "red",
+                "value": 36
+              }
+            ]
+          },
+          "mappings": [],
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 26,
+      "type": "stat",
+      "title": "Datasets covered",
+      "description": "Main set: every Kubernetes volume except the excluded ones, plus the dump datasets (14 days). Media set: the big media volume (3 days).",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 4,
+        "y": 46
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(zfs_autosnap_datasets)",
+          "legendFormat": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 27,
+      "type": "stat",
+      "title": "Last run failed",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 8,
+        "y": 46
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "max(zfs_autosnap_last_run_failed)",
+          "legendFormat": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "OK"
+                },
+                "1": {
+                  "text": "FAILED"
+                }
+              }
+            }
+          ],
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 28,
+      "type": "timeseries",
+      "title": "Hours since last successful snapshot",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 46
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(time() - zfs_autosnap_last_success_timestamp_seconds) / 3600",
+          "legendFormat": "{{set}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a35af9d3-363d-4b66-b426-d15344c2e1a8"
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          },
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 29,
+      "type": "row",
+      "title": "Collectors (are the metrics fresh?)",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 53
+      },
+      "panels": []
+    },
+    {
+      "id": 30,
       "type": "timeseries",
       "title": "Seconds since each collector wrote its file",
       "description": "smartmon every 15 min, zfs_health and zfs_zpool every 2 min, apt daily.",
@@ -1402,7 +1672,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 46
+        "y": 54
       },
       "targets": [
         {
@@ -1445,7 +1715,7 @@
       }
     },
     {
-      "id": 26,
+      "id": 31,
       "type": "timeseries",
       "title": "Seconds since zfs-health-textfile last ran",
       "description": "",
@@ -1457,7 +1727,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 46
+        "y": 54
       },
       "targets": [
         {
