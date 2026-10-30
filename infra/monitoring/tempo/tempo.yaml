@@ -1,8 +1,5 @@
 usage_report:
   reporting_enabled: false
-compactor:
-  compaction:
-    block_retention: 24h
 distributor:
   receivers:
     otlp:
@@ -21,6 +18,11 @@ storage:
     wal:
       path: /data/wal
 
+live_store:
+  shutdown_marker_dir: /data/live-store/shutdown-marker
+  wal:
+    path: /data/live-store/traces
+
 metrics_generator:
   storage:
     remote_write:
@@ -29,6 +31,10 @@ metrics_generator:
           X-Scope-OrgID: vanguard
 
 overrides:
-  metrics_generator_processors:
-    - service-graphs
-    - span-metrics
+  defaults:
+    compaction:
+      block_retention: 24h
+    metrics_generator:
+      processors:
+        - service-graphs
+        - span-metrics
