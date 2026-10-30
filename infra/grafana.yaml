@@ -16,7 +16,7 @@ spec:
         releaseName: grafana
         values: |-
           image:
-            tag: 11.6.16
+            tag: 13.2.5
           admin:
             existingSecret: grafana-creds
           deploymentStrategy:
@@ -47,10 +47,6 @@ spec:
           persistence:
             enabled: true
             storageClassName: wavecat
-          plugins:
-            - grafana-github-datasource
-            - redis-datasource
-            - redis-app
     - repoURL: "https://grafana.github.io/helm-charts"
       chart: grafana-agent
       targetRevision: 0.38.0
