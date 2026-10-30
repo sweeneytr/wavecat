@@ -1,0 +1,25 @@
+# The certificate Plex itself serves on 32400 for plex.wavecat.net (Plex settings: customCertificatePath, customCertificateKey, customCertificateDomain).
+# Plex only reads PKCS#12 files. The password protects a file that sits in a cluster secret anyway, so it is not a secret; Plex stores it in plain text in its own settings.
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: plex-direct
+  namespace: media-server
+  annotations:
+    # The pod mounts the secret this creates, so it must exist before the Deployment rolls out.
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  secretName: plex-direct-tls
+  dnsNames:
+    - plex.wavecat.net
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  privateKey:
+    algorithm: RSA
+    rotationPolicy: Always
+  keystores:
+    pkcs12:
+      create: true
+      profile: Modern2023
+      password: plex-keystore

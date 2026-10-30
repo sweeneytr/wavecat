@@ -46,6 +46,9 @@ spec:
               mountPath: /config
             - name: data-pv
               mountPath: /data
+            - name: plex-direct-tls
+              mountPath: /certs
+              readOnly: true
       securityContext:
         fsGroup: 100
         fsGroupChangePolicy: "OnRootMismatch"
@@ -58,3 +61,9 @@ spec:
         - name: data-pv
           persistentVolumeClaim:
             claimName: media-pvc-2
+        - name: plex-direct-tls
+          secret:
+            secretName: plex-direct-tls
+            items:
+              - key: keystore.p12
+                path: keystore.p12
