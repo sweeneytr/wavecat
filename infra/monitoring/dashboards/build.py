@@ -252,7 +252,7 @@ def apps():
     d.place([(d.logs("Pod logs", '{k8s_namespace=~"$namespace"} |~ "(?i)$search"',
                      desc="Pod logs for the selected namespace(s). Type in 'Log filter' to narrow (regex, case-insensitive)."), 24)], 11)
     d.place([(d.logs("Kubernetes events", '{job=~".*kubernetes_events.*"} |~ "$namespace"',
-                     desc="Cluster events collected by the agent."), 24)], 8)
+                     desc="Cluster events collected by Alloy."), 24)], 8)
     return d
 
 
@@ -365,10 +365,10 @@ def platform():
 
     d.row("Observability stack")
     d.place([
-        (d.ts("Agent running components",
-              [('sum(agent_component_controller_running_components)', "running"),
-               ('sum(agent_component_controller_evaluating)', "evaluating")]), 8),
-        (d.ts("Loki dropped lines (agent processing)",
+        (d.ts("Alloy running components",
+              [('sum(alloy_component_controller_running_components)', "running"),
+               ('sum(alloy_component_controller_evaluating)', "evaluating")]), 8),
+        (d.ts("Loki dropped lines (Alloy processing)",
               [('sum by (reason) (rate(loki_process_dropped_lines_total[5m]))', "{{reason}}")], unit="ops", stack=True, fill=30), 8),
         (d.ts("Controller workqueue depth",
               [('sum by (name) (workqueue_depth)', "{{name}}")], stack=True, fill=30), 8),
@@ -382,7 +382,7 @@ def platform():
 def host():
     d = Dash("wc-host", "Host hardware",
              "The k3s host (AMD Ryzen 7 7800X3D, NVMe + ZFS pool): CPU, memory, disks, ZFS, network and temperatures. "
-             "Source: node_exporter built into the Grafana agent (job node-exporter).")
+             "Source: node_exporter built into Alloy (job node-exporter).")
     N = 'job="node-exporter"'
     d.row("At a glance")
     d.place([

@@ -1,7 +1,7 @@
 {
   "uid": "wc-host",
   "title": "Host hardware",
-  "description": "The k3s host (AMD Ryzen 7 7800X3D, NVMe + ZFS pool): CPU, memory, disks, ZFS, network and temperatures. Source: node_exporter built into the Grafana agent (job node-exporter).",
+  "description": "The k3s host (AMD Ryzen 7 7800X3D, NVMe + ZFS pool): CPU, memory, disks, ZFS, network and temperatures. Source: node_exporter built into Alloy (job node-exporter).",
   "tags": [
     "wavecat"
   ],

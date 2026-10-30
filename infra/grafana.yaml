@@ -49,43 +49,22 @@ spec:
             enabled: true
             storageClassName: wavecat
     - repoURL: "https://grafana.github.io/helm-charts"
-      chart: grafana-agent
-      targetRevision: 0.38.0
+      chart: alloy
+      targetRevision: 1.15.0
       helm:
-        releaseName: grafana-agent
+        releaseName: alloy
         values: |
-          controller:
-            # Host network so node-exporter (host_metrics.river) reads the host's /proc/net/dev. Otherwise /host/proc/net is
-            # the pod's own network namespace and the host NIC is missing from the Host dashboard.
-            hostNetwork: true
-            dnsPolicy: ClusterFirstWithHostNet
-            volumes:
-              extra:
-                - name: proc
-                  hostPath:
-                    path: /proc
-                - name: sys
-                  hostPath:
-                    path: /sys
-                - name: run
-                  hostPath:
-                    path: /run
-                - name: root
-                  hostPath:
-                    path: /
-          agent:
+          # Replaces grafana-agent (end of life). Config lives in infra/monitoring/alloy; the host network gives node-exporter the real NIC.
+          # Port 12346 (not 12345) so it can run next to the old agent during the cutover.
+          alloy:
+            configMap:
+              create: false
+              name: alloy
+              key: .
             clustering:
               enabled: true
-            # 8080 is taken by nginx on the host, and the pod now shares the host's ports.
-            listenPort: 12345
+            listenPort: 12346
             enableReporting: false
-            extraPorts:
-              - name: otlp-grpc
-                port: 4317
-                targetPort: 4317
-              - name: otlp-http
-                port: 4318
-                targetPort: 4318
             mounts:
               varlog: true
               extra:
@@ -105,10 +84,41 @@ spec:
             securityContext:
               privileged: true
               runAsUser: 0
-            configMap:
-              create: false
-              name: grafana-agent
-              key: '.'
+          controller:
+            type: daemonset
+            hostNetwork: true
+            dnsPolicy: ClusterFirstWithHostNet
+            volumes:
+              extra:
+                - name: proc
+                  hostPath:
+                    path: /proc
+                - name: sys
+                  hostPath:
+                    path: /sys
+                - name: run
+                  hostPath:
+                    path: /run
+                - name: root
+                  hostPath:
+                    path: /
+          rbac:
+            clusterRules:
+              - apiGroups: [""]
+                resources: ["nodes"]
+                verbs: ["get", "list", "watch"]
+              - apiGroups: [""]
+                resources: ["nodes/pods"]
+                verbs: ["get", "list", "watch"]
+              - apiGroups: [""]
+                resources: ["nodes/metrics"]
+                verbs: ["get", "list", "watch"]
+              # Needed for the kubelet and cAdvisor scrapes, which go through the API server proxy (kube_metrics.alloy).
+              - apiGroups: [""]
+                resources: ["nodes/proxy"]
+                verbs: ["get"]
+              - nonResourceURLs: ["/metrics"]
+                verbs: ["get"]
           configReloader:
             resources:
               requests:

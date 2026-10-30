@@ -1316,7 +1316,7 @@
     {
       "id": 26,
       "type": "timeseries",
-      "title": "Agent running components",
+      "title": "Alloy running components",
       "description": "",
       "datasource": {
         "type": "prometheus",
@@ -1331,7 +1331,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(agent_component_controller_running_components)",
+          "expr": "sum(alloy_component_controller_running_components)",
           "legendFormat": "running",
           "datasource": {
             "type": "prometheus",
@@ -1340,7 +1340,7 @@
         },
         {
           "refId": "B",
-          "expr": "sum(agent_component_controller_evaluating)",
+          "expr": "sum(alloy_component_controller_evaluating)",
           "legendFormat": "evaluating",
           "datasource": {
             "type": "prometheus",
@@ -1383,7 +1383,7 @@
     {
       "id": 27,
       "type": "timeseries",
-      "title": "Loki dropped lines (agent processing)",
+      "title": "Loki dropped lines (Alloy processing)",
       "description": "",
       "datasource": {
         "type": "prometheus",

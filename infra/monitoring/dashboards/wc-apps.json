@@ -840,7 +840,7 @@
       "id": 17,
       "type": "logs",
       "title": "Kubernetes events",
-      "description": "Cluster events collected by the agent.",
+      "description": "Cluster events collected by Alloy.",
       "datasource": {
         "type": "loki",
         "uid": "fcaeeb5a-765a-47a7-9ecb-61c844f29aad"

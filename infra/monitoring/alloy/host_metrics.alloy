@@ -1,6 +1,6 @@
 // Host (node) metrics from the agent's embedded node_exporter.
 // Needs the host's /proc, /sys, /run and / mounted at /host/proc, /host/sys, /host/run
-// and /host/root (see the grafana-agent mounts in infra/grafana.yaml).
+// and /host/root (see the alloy mounts in infra/grafana.yaml).
 prometheus.exporter.unix "host" {
   procfs_path    = "/host/proc"
   sysfs_path     = "/host/sys"
