@@ -9,6 +9,13 @@ discovery.relabel "pod_metrics" {
     action        = "drop"
   }
 
+  // MetalLB 0.16 serves metrics over HTTPS with RBAC, so this plain-HTTP scrape fails. Nothing uses them.
+  rule {
+    source_labels = ["__meta_kubernetes_namespace"]
+    regex         = "metallb-system"
+    action        = "drop"
+  }
+
   // don't bother trying to scrape pods that aren't running
   rule {
     source_labels = ["__meta_kubernetes_pod_phase"]
