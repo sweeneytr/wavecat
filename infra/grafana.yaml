@@ -16,7 +16,7 @@ spec:
         releaseName: grafana
         values: |-
           image:
-            tag: 10.2.0
+            tag: 11.6.16
           admin:
             existingSecret: grafana-creds
           deploymentStrategy:
