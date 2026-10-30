@@ -1,0 +1,55 @@
+# Keeps the Route 53 A records wavecat.net (the *.wavecat.net wildcard CNAME follows it) and plex.wavecat.net on this network's public IP (qdm12/ddns-updater).
+# Its settings, including the AWS key, are the CONFIG variable of the sealed secret `ddns-updater`.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ddns-updater
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: ddns-updater
+  template:
+    metadata:
+      labels:
+        app: ddns-updater
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: ddns-updater
+          image: ghcr.io/qdm12/ddns-updater:v2.10.0@sha256:3e2aa558946b5a293def4d73008fa4651c072b2c12932cecd02126fb23979831
+          env:
+            - name: PERIOD
+              value: 5m
+            # Compare against public DNS, not the local resolver, so a local override of the name is not mistaken for the public record.
+            - name: RESOLVER_ADDRESS
+              value: 1.1.1.1:53
+            - name: CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: ddns-updater
+                  key: CONFIG
+          ports:
+            - name: http
+              containerPort: 8000
+          livenessProbe:
+            exec:
+              command: ["/updater/ddns-updater", "healthcheck"]
+            initialDelaySeconds: 15
+            periodSeconds: 60
+            timeoutSeconds: 5
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {memory: 128Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]

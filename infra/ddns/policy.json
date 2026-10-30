@@ -1,0 +1,17 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "route53:ChangeResourceRecordSets",
+      "Resource": "arn:aws:route53:::hostedzone/Z08049033LJJJVFB6R1IL",
+      "Condition": {
+        "ForAllValues:StringEquals": {
+          "route53:ChangeResourceRecordSetsNormalizedRecordNames": ["wavecat.net", "plex.wavecat.net"],
+          "route53:ChangeResourceRecordSetsRecordTypes": ["A"],
+          "route53:ChangeResourceRecordSetsActions": ["UPSERT"]
+        }
+      }
+    }
+  ]
+}
