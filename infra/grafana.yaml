@@ -30,8 +30,9 @@ spec:
               viewers_can_edit: true
             snapshots:
               external_enabled: false
+          # Off: Grafana 13 refuses to start with the renderer's default token, and nothing here renders images (no alert rules).
           imageRenderer:
-            enabled: true
+            enabled: false
           networkPolicy:
             enabled: true
           ingress:
