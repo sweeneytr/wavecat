@@ -124,15 +124,6 @@ spec:
               requests:
                 cpu: null
                 memory: null
-    - repoURL: "https://open-telemetry.github.io/opentelemetry-helm-charts"
-      chart: opentelemetry-operator
-      targetRevision: 0.56.1
-      helm:
-        releaseName: opentelemetry-operator
-        values: |
-          manager:
-            collectorImage:
-              repository: otel/opentelemetry-collector-contrib
   syncPolicy:
     automated:
       selfHeal: true
