@@ -17,6 +17,12 @@ prometheus.exporter.unix "host" {
   netdev {
     device_exclude = "^(veth.*|cali.*|flannel.*|cni.*|docker.*|br-.*)$"
   }
+
+  // Metrics written on the host by systemd timers: SMART (smartmon.prom), ZFS pool and vdev health
+  // (zfs_health.prom, zfs_zpool.prom) and apt (apt.prom). See docs/zfs-observability.md.
+  textfile {
+    directory = "/host/root/var/lib/prometheus/node-exporter"
+  }
 }
 
 discovery.relabel "host" {
