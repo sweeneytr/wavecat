@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: plex
   namespace: media-server
+  annotations:
+    # Plex reads its certificate only at startup; Reloader restarts it when cert-manager renews the secret.
+    secret.reloader.stakater.com/reload: plex-direct-tls
 spec:
   selector:
     matchLabels:

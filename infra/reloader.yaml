@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: reloader
+  namespace: argocd
+spec:
+  destination:
+    namespace: media-server
+    server: "https://kubernetes.default.svc"
+  project: infra
+  sources:
+    - repoURL: "https://stakater.github.io/stakater-charts"
+      chart: reloader
+      targetRevision: 2.2.18
+      helm:
+        releaseName: reloader
+        values: |-
+          # Restarts a workload when a secret or configmap it names in a reloader.stakater.com annotation changes
+          # (Plex re-reads its certificate only at startup). Installed in media-server and not watching globally,
+          # so it only gets permissions inside that namespace instead of reading every secret in the cluster.
+          reloader:
+            watchGlobally: false
+            readOnlyRootFileSystem: true
+            enableHA: false
+            deployment:
+              resources:
+                requests: {cpu: 10m, memory: 64Mi}
+                limits: {memory: 256Mi}
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
