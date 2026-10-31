@@ -8,8 +8,9 @@ appConfig:
   statusCheck: true
   statusCheckInterval: 60
   defaultOpeningMethod: newtab
-  # Dashy 4.8.0 sizes the workspace frame as 100% minus the header height even when the header is hidden, leaving a gap.
-  customCss: '.web-content iframe{height:100%!important}'
+  # Dashy 4.8.0 workspace view with the header hidden: the frame is sized 100% minus the header height, an empty 16px <header>
+  # strip still takes space at the top, and the page has a -3px top margin, so the frame overshoots (page scrollbar) or stops short.
+  customCss: '.web-content iframe{height:100%!important} body:has(.work-space) header{display:none} html:has(.work-space){margin:0}'
 sections:
 - name: Media
   items:
