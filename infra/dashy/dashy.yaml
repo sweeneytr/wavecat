@@ -8,6 +8,8 @@ appConfig:
   statusCheck: true
   statusCheckInterval: 60
   defaultOpeningMethod: newtab
+  # Dashy 4.8.0 sizes the workspace frame as 100% minus the header height even when the header is hidden, leaving a gap.
+  customCss: '.web-content iframe{height:100%!important}'
 sections:
 - name: Media
   items:
