@@ -119,15 +119,6 @@ sections:
     url: https://foundry.wavecat.net/
     target: workspace
     statusCheckUrl: http://foundry.foundry-server.svc.cluster.local
-  - title: Gamepad
-    icon: mdi-gamepad-variant
-    url: https://gamepad.wavecat.net/
-    target: newtab
-  - title: Polymer
-    icon: mdi-application
-    url: https://polymer.wavecat.net/
-    target: workspace
-    statusCheckUrl: http://polymer-web.vandam-server.svc.cluster.local
   - title: Vandam
     icon: mdi-application
     url: https://vandam.wavecat.net/
