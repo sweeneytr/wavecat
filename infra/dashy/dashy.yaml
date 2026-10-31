@@ -98,7 +98,7 @@ sections:
     description: Audiobooks
     icon: hl-booksonic
     url: https://booksonic-air.wavecat.net/
-    target: workspace
+    target: newtab
     statusCheckUrl: http://booksonic-air.media-server.svc.cluster.local
 - name: Apps and infrastructure
   items:

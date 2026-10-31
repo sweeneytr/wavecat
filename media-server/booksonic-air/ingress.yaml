@@ -8,7 +8,6 @@ metadata:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/router.middlewares: dashy-embed-dashy@kubernetescrd
 spec:
   rules:
   - host: booksonic-air.wavecat.net
