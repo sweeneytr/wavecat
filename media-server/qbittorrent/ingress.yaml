@@ -6,6 +6,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: dashy-embed-dashy-qbittorrent@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:

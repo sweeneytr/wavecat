@@ -66,7 +66,7 @@ sections:
     description: Downloads
     icon: hl-qbittorrent
     url: https://qbittorrent.wavecat.net/
-    target: newtab
+    target: workspace
     statusCheckUrl: http://qbittorrent-svc.media-server.svc.cluster.local
 - name: Books and comics
   items:
@@ -80,13 +80,13 @@ sections:
     description: Read and browse books
     icon: hl-calibre-web
     url: https://calibre-web.wavecat.net/
-    target: newtab
+    target: workspace
     statusCheckUrl: http://calibre-web.media-server.svc.cluster.local
   - title: Kavita
     description: Comics and manga
     icon: hl-kavita
     url: https://kavita.wavecat.net/
-    target: newtab
+    target: workspace
     statusCheckUrl: http://kavita.media-server.svc.cluster.local
   - title: Mylar
     description: Comic downloads
@@ -98,7 +98,7 @@ sections:
     description: Audiobooks
     icon: hl-booksonic
     url: https://booksonic-air.wavecat.net/
-    target: newtab
+    target: workspace
     statusCheckUrl: http://booksonic-air.media-server.svc.cluster.local
 - name: Apps and infrastructure
   items:
@@ -111,13 +111,13 @@ sections:
     description: Metrics, logs and alerts
     icon: hl-grafana
     url: https://grafana.wavecat.net/
-    target: newtab
+    target: workspace
     statusCheckUrl: http://grafana.monitoring.svc.cluster.local/api/health
   - title: Foundry VTT
     description: Tabletop
     icon: hl-foundry-vtt
     url: https://foundry.wavecat.net/
-    target: newtab
+    target: workspace
     statusCheckUrl: http://foundry.foundry-server.svc.cluster.local
   - title: Gamepad
     icon: mdi-gamepad-variant

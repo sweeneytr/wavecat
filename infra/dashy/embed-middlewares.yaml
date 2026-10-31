@@ -1,0 +1,34 @@
+# Lets Dashy (and only Dashy) show these apps inside its workspace view. Attach to an Ingress with
+#   traefik.ingress.kubernetes.io/router.middlewares: <existing>,dashy-embed-dashy@kubernetescrd
+# X-Frame-Options is removed because it cannot name another origin; CSP frame-ancestors names Dashy and takes precedence in current
+# browsers. Traefik replaces a header whole, so the *-calibre-web and *-qbittorrent variants repeat that app's own CSP with only
+# frame-ancestors changed. If an app changes its CSP, update the copy.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: embed-dashy
+spec:
+  headers:
+    customResponseHeaders:
+      X-Frame-Options: ""
+      Content-Security-Policy: "frame-ancestors https://dashy.wavecat.net"
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: embed-dashy-calibre-web
+spec:
+  headers:
+    customResponseHeaders:
+      X-Frame-Options: ""
+      Content-Security-Policy: "default-src 'self' 'unsafe-inline' 'unsafe-eval'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; frame-ancestors https://dashy.wavecat.net"
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: embed-dashy-qbittorrent
+spec:
+  headers:
+    customResponseHeaders:
+      X-Frame-Options: ""
+      Content-Security-Policy: "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; object-src 'none'; form-action 'self'; frame-ancestors https://dashy.wavecat.net"

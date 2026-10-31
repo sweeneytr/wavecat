@@ -5,6 +5,7 @@ resources:
   - ingress.yaml
   - service.yaml
   - deployment.yaml
+  - embed-middlewares.yaml
 
 configMapGenerator:
   - name: dashy

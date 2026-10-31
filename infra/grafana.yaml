@@ -39,6 +39,7 @@ spec:
             enabled: true
             annotations:
               cert-manager.io/cluster-issuer: letsencrypt
+              traefik.ingress.kubernetes.io/router.middlewares: dashy-embed-dashy@kubernetescrd
             hosts:
               - grafana.wavecat.net
             tls:
