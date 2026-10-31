@@ -1,17 +1,140 @@
 pageInfo:
-  title: Home Lab
-sections: # An array of sections
-- name: Example Section
-  icon: far fa-rocket
+  title: Wavecat
+  description: Home lab
+# Opening method per item: workspace shows the app inside Dashy (works when the app allows framing),
+# newtab for apps that send X-Frame-Options / frame-ancestors headers (see docs/todo.md item 27).
+appConfig:
+  theme: dark
+  statusCheck: true
+  statusCheckInterval: 60
+  defaultOpeningMethod: newtab
+sections:
+- name: Media
   items:
-  - title: GitHub
-    description: Dashy source code and docs
-    icon: fab fa-github
-    url: https://github.com/Lissy93/dashy
-  - title: Issues
-    description: View open issues, or raise a new one
-    icon: fas fa-bug
-    url: https://github.com/Lissy93/dashy/issues
+  - title: Plex
+    description: Watch
+    icon: hl-plex
+    url: https://plex.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://plex.media-server.svc.cluster.local:32400/identity
+  - title: Overseerr
+    description: Request movies and shows
+    icon: hl-overseerr
+    url: https://overseerr.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://overseerr.media-server.svc.cluster.local
+  - title: Radarr
+    description: Movies
+    icon: hl-radarr
+    url: https://radarr.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://radarr.media-server.svc.cluster.local
+  - title: Sonarr
+    description: TV
+    icon: hl-sonarr
+    url: https://sonarr.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://sonarr.media-server.svc.cluster.local
+  - title: Sonarr Anime
+    description: Anime
+    icon: hl-sonarr
+    url: https://sonarr-anime.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://sonarr-anime.media-server.svc.cluster.local
+  - title: Lidarr
+    description: Music
+    icon: hl-lidarr
+    url: https://lidarr.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://lidarr.media-server.svc.cluster.local
+  - title: Whisparr
+    description: Adult
+    icon: hl-whisparr
+    url: https://whisparr.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://whisparr.media-server.svc.cluster.local
+  - title: Prowlarr
+    description: Indexers
+    icon: hl-prowlarr
+    url: https://prowlarr.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://prowlarr.media-server.svc.cluster.local
+  - title: qBittorrent
+    description: Downloads
+    icon: hl-qbittorrent
+    url: https://qbittorrent.wavecat.net/
+    target: newtab
+    statusCheckUrl: http://qbittorrent-svc.media-server.svc.cluster.local
+- name: Books and comics
+  items:
+  - title: Calibre
+    description: Library management
+    icon: hl-calibre
+    url: https://calibre.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://calibre.media-server.svc.cluster.local
+  - title: Calibre-Web
+    description: Read and browse books
+    icon: hl-calibre-web
+    url: https://calibre-web.wavecat.net/
+    target: newtab
+    statusCheckUrl: http://calibre-web.media-server.svc.cluster.local
+  - title: Kavita
+    description: Comics and manga
+    icon: hl-kavita
+    url: https://kavita.wavecat.net/
+    target: newtab
+    statusCheckUrl: http://kavita.media-server.svc.cluster.local
+  - title: Mylar
+    description: Comic downloads
+    icon: hl-mylar
+    url: https://mylar.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://mylar.media-server.svc.cluster.local
+  - title: Booksonic
+    description: Audiobooks
+    icon: hl-booksonic
+    url: https://booksonic-air.wavecat.net/
+    target: newtab
+    statusCheckUrl: http://booksonic-air.media-server.svc.cluster.local
+- name: Apps and infrastructure
+  items:
+  - title: Nextcloud
+    description: Files
+    icon: hl-nextcloud
+    url: https://nextcloud.wavecat.net/
+    target: newtab
+  - title: Grafana
+    description: Metrics, logs and alerts
+    icon: hl-grafana
+    url: https://grafana.wavecat.net/
+    target: newtab
+    statusCheckUrl: http://grafana.monitoring.svc.cluster.local/api/health
+  - title: Foundry VTT
+    description: Tabletop
+    icon: hl-foundry-vtt
+    url: https://foundry.wavecat.net/
+    target: newtab
+    statusCheckUrl: http://foundry.foundry-server.svc.cluster.local
+  - title: Gamepad
+    icon: mdi-gamepad-variant
+    url: https://gamepad.wavecat.net/
+    target: newtab
+  - title: Polymer
+    icon: mdi-application
+    url: https://polymer.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://polymer-web.vandam-server.svc.cluster.local
+  - title: Vandam
+    icon: mdi-application
+    url: https://vandam.wavecat.net/
+    target: workspace
+    statusCheckUrl: http://vandam.vandam-server.svc.cluster.local
+  - title: Traefik
+    description: Ingress dashboard
+    icon: hl-traefik
+    url: https://traefik.wavecat.net/
+    target: newtab
 - name: Local Services
   items:
   - title: Firewall
