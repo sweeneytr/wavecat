@@ -15,15 +15,28 @@ spec:
         app: dashy
         app.kubernetes.io/name: dashy
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: dashy
-          image: lissy93/dashy:2.1.2
+          image: lissy93/dashy:4.8.0@sha256:ae6a2b94c375438fd49ab1a923eb1c5ffc55e5053cd6561b7e080525ea34a82a
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
           volumeMounts:
             - name: config
-              mountPath: /app/public/conf.yml
+              mountPath: /app/user-data/conf.yml
               subPath: dashy.yaml
       volumes:
         - name: config
