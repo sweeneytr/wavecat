@@ -16,7 +16,9 @@ spec:
             - "wavecat.net"
         dns01:
           route53:
-            region: eu-east-1
+            region: us-east-1
+            # Naming the zone means cert-manager does not need route53:ListHostedZonesByName (see policy.json).
+            hostedZoneID: Z08049033LJJJVFB6R1IL
             accessKeyID: AKIA4N3G6C6L6DMXZSN7
             secretAccessKeySecretRef:
               name: route53-credentials-secret
