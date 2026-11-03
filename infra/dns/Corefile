@@ -10,7 +10,7 @@ wavecat.net:5353 {
 
     # names the router (UniFi policy table) points at the Pi, 192.168.128.1 (Home Assistant, Nginx Proxy Manager, ...)
     template IN AAAA {
-        match "^(wavecat|pi\.lan\.wavecat|homeassistant\.wavecat|vault\.wavecat|amp\.wavecat|proxy-manager\.wavecat|unifi\.wavecat)\.net\.$"
+        match "^(wavecat|pi\.lan\.wavecat|homeassistant\.wavecat|vault\.wavecat|proxy-manager\.wavecat|unifi\.wavecat)\.net\.$"
         answer "{{ .Name }} 60 IN AAAA fd7a:115c:a1e0:b1a:0:1:c0a8:8001"
         fallthrough
     }
