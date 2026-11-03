@@ -1,0 +1,14 @@
+# Reachable on the home network at 192.168.129.53 (inside the MetalLB pool and the range the Tailscale connector advertises).
+apiVersion: v1
+kind: Service
+metadata:
+  name: coredns-tailnet
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.129.53
+spec:
+  type: LoadBalancer
+  selector:
+    app: coredns-tailnet
+  ports:
+    - {name: dns-udp, port: 53, targetPort: dns-udp, protocol: UDP}
+    - {name: dns-tcp, port: 53, targetPort: dns-tcp, protocol: TCP}

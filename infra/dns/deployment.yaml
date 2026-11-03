@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coredns-tailnet
+  labels:
+    app: coredns-tailnet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coredns-tailnet
+  template:
+    metadata:
+      labels:
+        app: coredns-tailnet
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: coredns
+          image: coredns/coredns:1.14.7@sha256:7efd3c635b03efd68c4e8398fc45f0d993d0e9ab016f72c1cefb0fd6d01aa286
+          args: ["-conf", "/etc/coredns/Corefile"]
+          ports:
+            - {name: dns-udp, containerPort: 5353, protocol: UDP}
+            - {name: dns-tcp, containerPort: 5353, protocol: TCP}
+            - {name: ready, containerPort: 8181, protocol: TCP}
+          readinessProbe:
+            httpGet: {path: /ready, port: ready}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /ready, port: ready}
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests: {cpu: 10m, memory: 16Mi}
+            limits: {memory: 64Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - {name: config, mountPath: /etc/coredns, readOnly: true}
+      volumes:
+        - name: config
+          configMap:
+            name: coredns-tailnet

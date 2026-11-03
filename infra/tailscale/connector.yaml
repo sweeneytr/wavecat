@@ -1,9 +1,9 @@
-# Subnet router: gives devices on the tailnet access to the servers' part of the home network: 192.168.128.0/22 covers the host
-# and the Pi that does split DNS for wavecat.net (128.x), the MetalLB addresses (129.x: 192.168.129.0 Traefik, .1 Plex, .8 Samba)
-# and the game server (130.x). Deliberately not the whole 192.168.0.0/16: the common home/hotel ranges 192.168.0.x and 192.168.1.x
-# would collide with the network a travelling device is on. Add a /32 for any single device in those ranges that is needed.
-# The routes must be approved in the Tailscale admin console, or auto-approved for tag:k8s in the ACL (autoApprovers).
-# Limit who can reach what with ACLs: a subnet route exposes every address in it to every allowed tailnet device.
+# Subnet router for the home network, as a Tailscale 4via6 route (site 1). Tailnet devices reach the home IPv4 range
+# 192.168.128.0/22 (host and Pi 128.x, MetalLB 129.x: Traefik .0, Plex .1, Samba .8, DNS .53; game server 130.x) through IPv6 addresses:
+#   192.168.A.B  ->  fd7a:115c:a1e0:b1a:0:1:c0a8:<A in hex><B in hex>   (see `tailscale debug via 1 <cidr>` in the connector pod)
+# Because the route is IPv6 it never overrides or collides with an IPv4 network a device is on, at home or away.
+# Names come from infra/dns (CoreDNS), set as the Split DNS nameserver for wavecat.net in the Tailscale admin console.
+# Auto-approved by the tailnet policy (autoApprovers for tag:k8s); access is limited by grants in the tailnet policy.
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
@@ -12,4 +12,4 @@ spec:
   hostname: wavecat-router
   subnetRouter:
     advertiseRoutes:
-      - 192.168.128.0/22
+      - fd7a:115c:a1e0:b1a:0:1:c0a8:8000/118

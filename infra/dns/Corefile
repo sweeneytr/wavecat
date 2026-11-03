@@ -1,0 +1,25 @@
+# Split DNS for tailnet devices (Tailscale admin console: DNS -> Nameservers -> custom, restricted to wavecat.net, address
+# fd7a:115c:a1e0:b1a:0:1:c0a8:8135 = this server's 192.168.129.53 reached through the 4via6 route, site 1).
+# Names answer only with AAAA addresses in the 4via6 form of the home addresses: IPv4 192.168.A.B -> fd7a:115c:a1e0:b1a:0:1:c0a8:<A in hex><B in hex>.
+# A queries get an empty answer on purpose, so clients never try an IPv4 address that is unreachable away from home.
+wavecat.net:5353 {
+    errors
+    ready :8181
+
+    # the apex goes to the Pi at 192.168.128.1 (as on the router)
+    template IN AAAA {
+        match "^wavecat\.net\.$"
+        answer "{{ .Name }} 60 IN AAAA fd7a:115c:a1e0:b1a:0:1:c0a8:8001"
+    }
+    # every other name goes to Traefik at 192.168.129.0
+    template IN AAAA {
+        answer "{{ .Name }} 60 IN AAAA fd7a:115c:a1e0:b1a:0:1:c0a8:8100"
+    }
+    template IN A {
+        rcode NOERROR
+    }
+    # empty, valid answers for everything else (HTTPS, TXT, ...) instead of an error
+    template ANY ANY {
+        rcode NOERROR
+    }
+}
