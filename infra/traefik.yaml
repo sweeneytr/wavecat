@@ -49,6 +49,14 @@ spec:
               metallb.universe.tf/loadBalancerIPs: 192.168.129.0
               metallb.universe.tf/ip-allocated-from-pool: first-pool
 
+          # Trust the X-Forwarded-* headers from Nginx Proxy Manager (the Pi, 192.168.128.1) only. Without this Traefik replaces
+          # X-Forwarded-For with NPM's own address, so apps behind it (Nextcloud brute-force protection, logs) never see the real client.
+          ports:
+            websecure:
+              forwardedHeaders:
+                trustedIPs:
+                  - 192.168.128.1/32
+
           additionalArguments: 
             - --serversTransport.insecureSkipVerify=true
     - repoURL: https://github.com/sweeneytr/wavecat.git
