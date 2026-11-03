@@ -1,0 +1,13 @@
+# Subnet router: gives devices on the tailnet access to the whole home network, including the MetalLB addresses
+# (192.168.129.0 Traefik, .1 Plex, .8 Samba) and the Pi that does split DNS for wavecat.net (192.168.128.1).
+# The routes must be approved in the Tailscale admin console, or auto-approved for tag:k8s in the ACL (autoApprovers).
+# Limit who can reach what with ACLs: a subnet route exposes every address in it to every allowed tailnet device.
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: wavecat-router
+spec:
+  hostname: wavecat-router
+  subnetRouter:
+    advertiseRoutes:
+      - 192.168.0.0/16
