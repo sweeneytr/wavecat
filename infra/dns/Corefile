@@ -1,5 +1,6 @@
 # Split DNS for tailnet devices (Tailscale admin console: DNS -> Nameservers -> custom, restricted to wavecat.net, address
 # fd7a:115c:a1e0:b1a:0:1:c0a8:8135 = this server's 192.168.129.53 reached through the 4via6 route, site 1).
+# The records mirror the router's local DNS records (UniFi Settings -> Policy Table): keep them in step when those change.
 # Names answer only with AAAA addresses in the 4via6 form of the home addresses: IPv4 192.168.A.B -> fd7a:115c:a1e0:b1a:0:1:c0a8:<A in hex><B in hex>.
 # A queries get an empty answer on purpose, so clients never try an IPv4 address that is unreachable away from home.
 wavecat.net:5353 {
@@ -7,13 +8,20 @@ wavecat.net:5353 {
     ready :8181
     # every template needs an explicit match: without one the later blocks did not answer (tested on CoreDNS 1.14.7)
 
-    # the apex goes to the Pi at 192.168.128.1 (as on the router)
+    # names the router (UniFi policy table) points at the Pi, 192.168.128.1 (Home Assistant, Nginx Proxy Manager, ...)
     template IN AAAA {
-        match "^wavecat\.net\.$"
+        match "^(wavecat|pi\.lan\.wavecat|homeassistant\.wavecat|vault\.wavecat|amp\.wavecat|proxy-manager\.wavecat|unifi\.wavecat)\.net\.$"
         answer "{{ .Name }} 60 IN AAAA fd7a:115c:a1e0:b1a:0:1:c0a8:8001"
         fallthrough
     }
-    # every other name goes to Traefik at 192.168.129.0
+    # names the router points at the host, 192.168.128.2
+    template IN AAAA {
+        match "^omv\.lan\.wavecat\.net\.$"
+        match "^(.+\.)openmediavault\.lan\.wavecat\.net\.$"
+        answer "{{ .Name }} 60 IN AAAA fd7a:115c:a1e0:b1a:0:1:c0a8:8002"
+        fallthrough
+    }
+    # every other name goes to Traefik at 192.168.129.0 (the router's *.wavecat.net)
     template IN AAAA {
         match ".*"
         answer "{{ .Name }} 60 IN AAAA fd7a:115c:a1e0:b1a:0:1:c0a8:8100"
