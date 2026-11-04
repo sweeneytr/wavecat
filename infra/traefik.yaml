@@ -48,6 +48,11 @@ spec:
             annotations:
               metallb.universe.tf/loadBalancerIPs: 192.168.129.0
               metallb.universe.tf/ip-allocated-from-pool: first-pool
+            spec:
+              # Local keeps the real source address: with the default Cluster policy kube-proxy masquerades traffic that arrives on the
+              # load balancer address, so Traefik saw every client (including NPM) as the node's bridge 10.42.0.1 and could not
+              # trust NPM's X-Forwarded-For below. Safe with one node.
+              externalTrafficPolicy: Local
 
           # Trust the X-Forwarded-* headers from Nginx Proxy Manager (the Pi, 192.168.128.1) only. Without this Traefik replaces
           # X-Forwarded-For with NPM's own address, so apps behind it (Nextcloud brute-force protection, logs) never see the real client.
