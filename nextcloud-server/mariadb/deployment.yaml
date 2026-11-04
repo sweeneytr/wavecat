@@ -25,14 +25,21 @@ spec:
           value: '100'
         - name: TZ
           value: America/New_York
+        # Read only when the database is first created; the live passwords are changed with ALTER USER (and in Nextcloud's config.php).
         - name: MYSQL_ROOT_PASSWORD
-          value: criscross
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-credentials
+              key: MYSQL_ROOT_PASSWORD
         - name: MYSQL_DATABASE
           value: nextcloud
         - name: MYSQL_USER
           value: nextcloud
         - name: MYSQL_PASSWORD
-          value: applesauce
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-credentials
+              key: MYSQL_PASSWORD
         ports:
         - containerPort: 3306
           name: mysql
