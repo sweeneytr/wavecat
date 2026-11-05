@@ -15,6 +15,31 @@ spec:
         app: qbittorrent
         istio-ignore: 'yes'
     spec:
+      initContainers:
+      # The SSO login (oauth2-proxy on the ingress) is the only gate: skip qBittorrent's own
+      # password for clients on the pod network (Traefik is one). The image has no env var for
+      # this and qBittorrent rewrites its config file, so patch the file before each start.
+      - name: webui-auth-subnet
+        image: busybox:1.37.0@sha256:a7dbc319b1438115a207e11930dc4bb3e643dcb3ec0bdd694bb36cd8fad289ec
+        command:
+        - sh
+        - -c
+        - |
+          F=/config/qBittorrent/qBittorrent.conf
+          [ -f "$F" ] || exit 0
+          grep -v '^WebUI\\AuthSubnetWhitelist' "$F" | awk '{print} /^\[Preferences\]/{print "WebUI\\AuthSubnetWhitelistEnabled=true"; print "WebUI\\AuthSubnetWhitelist=10.42.0.0/16"}' > "$F.new"
+          cat "$F.new" > "$F" && rm "$F.new"
+        securityContext:
+          runAsUser: 100
+          runAsGroup: 100
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: [ALL]
+        volumeMounts:
+        - name: config-pv
+          mountPath: /config
       containers:
       - name: qbittorrent
         image: dyonr/qbittorrentvpn
