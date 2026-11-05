@@ -25,7 +25,7 @@ spec:
         - sh
         - -c
         - |
-          F=/config/qBittorrent/qBittorrent.conf
+          F=/config/qBittorrent/config/qBittorrent.conf
           [ -f "$F" ] || exit 0
           grep -v '^WebUI\\AuthSubnetWhitelist' "$F" | awk '{print} /^\[Preferences\]/{print "WebUI\\AuthSubnetWhitelistEnabled=true"; print "WebUI\\AuthSubnetWhitelist=10.42.0.0/16"}' > "$F.new"
           cat "$F.new" > "$F" && rm "$F.new"
