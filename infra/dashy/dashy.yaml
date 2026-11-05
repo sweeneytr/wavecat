@@ -50,12 +50,6 @@ sections:
     url: https://lidarr.wavecat.net/
     target: workspace
     statusCheckUrl: http://lidarr.media-server.svc.cluster.local
-  - title: Whisparr
-    description: Adult
-    icon: hl-whisparr
-    url: https://whisparr.wavecat.net/
-    target: workspace
-    statusCheckUrl: http://whisparr.media-server.svc.cluster.local
   - title: Prowlarr
     description: Indexers
     icon: hl-prowlarr
