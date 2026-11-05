@@ -14,24 +14,55 @@ spec:
       labels:
         app: overseerr
     spec:
+      # This runs Seerr (the merged Overseerr/Jellyseerr project); the names stay "overseerr"
+      # so the hostname, Service and config volume do not change. Seerr migrates the Overseerr
+      # data on first start. Rollback: revert the image and `zfs rollback` the config volume to
+      # @pre-seerr-2026-11-05 (the database schema only moves forward).
+      initContainers:
+      # The volume was written by the linuxserver image as uid 100; Seerr runs as uid 1000.
+      - name: chown-config
+        image: busybox:1.37.0@sha256:a7dbc319b1438115a207e11930dc4bb3e643dcb3ec0bdd694bb36cd8fad289ec
+        command: [sh, -c, "chown -R 1000:1000 /app/config"]
+        securityContext:
+          runAsUser: 0
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: [ALL]
+            add: [CHOWN]
+        volumeMounts:
+        - name: config-pv
+          mountPath: /app/config
       containers:
         - name: overseerr
-          image: lscr.io/linuxserver/overseerr:v1.35.0-ls159
+          image: ghcr.io/seerr-team/seerr:v3.5.1@sha256:d8fab675b55ad293ded98fd71efcfd46054cbad9746534ae1cc4794a88c0b3be
           env:
-            - name: PUID
-              value: "100"
-            - name: PGID
-              value: "100"
             - name: TZ
               value: America/New_York
           ports:
             - containerPort: 5055
               name: http
+          readinessProbe:
+            httpGet:
+              path: /api/v1/settings/public
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 20
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop: [ALL]
           volumeMounts:
             - name: config-pv
-              mountPath: /config
+              mountPath: /app/config
       securityContext:
-        fsGroup: 100
+        fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
         seccompProfile:
           type: RuntimeDefault
