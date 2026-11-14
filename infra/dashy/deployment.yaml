@@ -21,7 +21,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: dashy
-          image: lissy93/dashy:4.8.0@sha256:ae6a2b94c375438fd49ab1a923eb1c5ffc55e5053cd6561b7e080525ea34a82a
+          image: lissy93/dashy:4.9.18@sha256:4549ee87a34db28693062184589ca5e82277bed9025b3a0b542003608361023c
           ports:
             - containerPort: 8080
               name: http
