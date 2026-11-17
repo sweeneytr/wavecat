@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  namespace: media-server
+spec:
+  selector:
+    matchLabels:
+      app: jellyfin
+  strategy:
+    type: Recreate # This makes sure only one instance is running at a time
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+        - name: jellyfin
+          image: lscr.io/linuxserver/jellyfin:12.4ubu2604-ls59@sha256:2f708001387aa9853e744a4a4d572d9970927c479c56d6c9e199f789c5173535
+          env:
+            - name: PUID
+              value: "100"
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: America/New_York
+            - name: JELLYFIN_PublishedServerUrl
+              value: https://jellyfin.wavecat.net
+          ports:
+            - containerPort: 8096
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            failureThreshold: 20
+          volumeMounts:
+            - name: config-pv
+              mountPath: /config
+            # Jellyfin only reads the libraries Plex also uses (same files, no second copy).
+            # Mounting just the library folders keeps it out of downloads/ and the book folders.
+            - name: data-pv
+              subPath: Movies
+              mountPath: /data/Movies
+              readOnly: true
+            - name: data-pv
+              subPath: TV
+              mountPath: /data/TV
+              readOnly: true
+            - name: data-pv
+              subPath: Anime
+              mountPath: /data/Anime
+              readOnly: true
+            - name: data-pv
+              subPath: Music
+              mountPath: /data/Music
+              readOnly: true
+      securityContext:
+        fsGroup: 100
+        fsGroupChangePolicy: "OnRootMismatch"
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: config-pv
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: data-pv
+          persistentVolumeClaim:
+            claimName: media-pvc-2

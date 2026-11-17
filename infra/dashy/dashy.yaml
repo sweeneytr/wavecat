@@ -20,6 +20,12 @@ sections:
     url: https://plex.wavecat.net/
     target: workspace
     statusCheckUrl: http://plex.media-server.svc.cluster.local:32400/identity
+  - title: Jellyfin
+    description: Watch (alternative to Plex)
+    icon: hl-jellyfin
+    url: https://jellyfin.wavecat.net/
+    target: newtab
+    statusCheckUrl: http://jellyfin.media-server.svc.cluster.local
   - title: Overseerr
     description: Request movies and shows
     icon: hl-overseerr
