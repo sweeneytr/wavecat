@@ -8,6 +8,8 @@ metadata:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.tls: "true"
+    # Calibre's web desktop has no login of its own: the SSO login is the only gate.
+    traefik.ingress.kubernetes.io/router.middlewares: auth-oauth2-proxy@kubernetescrd
 spec:
   rules:
   - host: calibre.wavecat.net
@@ -22,5 +24,5 @@ spec:
               name: http
   tls:
   - hosts:
-    - calibre-web.wavecat.net
-    secretName: calibre-web.wavecat.net
+    - calibre.wavecat.net
+    secretName: calibre.wavecat.net
