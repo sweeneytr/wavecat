@@ -11,6 +11,11 @@ spec:
     - name: http
       port: 32400
       targetPort: http
+    # The same web app and API on 443, so plex.wavecat.net can point at this address (192.168.129.1) for both 443 and 32400.
+    # Plex serves its own certificate for plex.wavecat.net on this port (see certificate.yaml), so TLS ends at Plex.
+    - name: https
+      port: 443
+      targetPort: http
     - name: plex-dlna
       port: 32469
       targetPort: 32469
