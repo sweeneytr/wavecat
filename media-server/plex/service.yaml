@@ -7,11 +7,6 @@ spec:
   selector:
     app: plex
   type: LoadBalancer
-  # Keep the real client address. With the default (Cluster) every LAN client reaches Plex as 10.42.0.1, Plex registers
-  # remote-control "players" at that address, and its Companion proxy then calls itself on 127.0.0.1:32400 in a loop
-  # (bursts of about 4,000 requests every ~33 minutes that stall the server). Traefik uses Local for the same reason.
-  # Single node and MetalLB in ARP mode, so Local is safe here. Revert if Plex starts labelling LAN clients as remote.
-  externalTrafficPolicy: Local
   ports:
     - name: http
       port: 32400
