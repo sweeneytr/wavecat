@@ -3,6 +3,7 @@
 # X-Frame-Options is removed because it cannot name another origin; CSP frame-ancestors names Dashy and takes precedence in current
 # browsers. Traefik replaces a header whole, so the *-calibre-web and *-qbittorrent variants repeat that app's own CSP with only
 # frame-ancestors changed. If an app changes its CSP, update the copy.
+# qBittorrent's own dialogs (Add torrent, Options) are iframes of its own address, so its variant also allows 'self'.
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
@@ -31,4 +32,4 @@ spec:
   headers:
     customResponseHeaders:
       X-Frame-Options: ""
-      Content-Security-Policy: "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; object-src 'none'; form-action 'self'; frame-ancestors https://dashy.wavecat.net"
+      Content-Security-Policy: "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; object-src 'none'; form-action 'self'; frame-ancestors 'self' https://dashy.wavecat.net"
