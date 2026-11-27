@@ -17,8 +17,9 @@ spec:
     spec:
       initContainers:
       # The SSO login (oauth2-proxy on the ingress) is the only gate: skip qBittorrent's own
-      # password for clients on the pod network (Traefik is one). The image has no env var for
-      # this and qBittorrent rewrites its config file, so patch the file before each start.
+      # password for clients on the pod network (Traefik is one) and for loopback (gluetun, in this
+      # same pod, tells qBittorrent the forwarded port). The image has no env var for this and
+      # qBittorrent rewrites its config file, so patch the file before each start.
       - name: webui-auth-subnet
         image: busybox:1.37.0@sha256:a7dbc319b1438115a207e11930dc4bb3e643dcb3ec0bdd694bb36cd8fad289ec
         command:
@@ -27,7 +28,7 @@ spec:
         - |
           F=/config/qBittorrent/config/qBittorrent.conf
           [ -f "$F" ] || exit 0
-          grep -v '^WebUI\\AuthSubnetWhitelist' "$F" | awk '{print} /^\[Preferences\]/{print "WebUI\\AuthSubnetWhitelistEnabled=true"; print "WebUI\\AuthSubnetWhitelist=10.42.0.0/16"}' > "$F.new"
+          grep -v '^WebUI\\AuthSubnetWhitelist' "$F" | awk '{print} /^\[Preferences\]/{print "WebUI\\AuthSubnetWhitelistEnabled=true"; print "WebUI\\AuthSubnetWhitelist=10.42.0.0/16, 127.0.0.1/32"}' > "$F.new"
           cat "$F.new" > "$F" && rm "$F.new"
         securityContext:
           runAsUser: 100
@@ -40,6 +41,60 @@ spec:
         volumeMounts:
         - name: config-pv
           mountPath: /config
+      # The VPN. A sidecar that starts first and must be healthy before qBittorrent starts, so qBittorrent
+      # never runs without the tunnel. Everything in the pod (qBittorrent shares this network namespace)
+      # can only leave through the tunnel; gluetun's firewall drops the rest.
+      # PIA only forwards ports on non-US servers, so the regions are Canadian.
+      - name: gluetun
+        image: qmcgaw/gluetun:v3.41.3@sha256:fa19cc76b2af13d57a8d3dc3066f2ada061b1c761b8aecf989b3877c0486e027
+        restartPolicy: Always
+        env:
+        - name: VPN_SERVICE_PROVIDER
+          value: private internet access
+        - name: VPN_TYPE
+          value: openvpn
+        - name: OPENVPN_USER
+          valueFrom:
+            secretKeyRef:
+              name: pia-credentials
+              key: OPENVPN_USER
+        - name: OPENVPN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pia-credentials
+              key: OPENVPN_PASSWORD
+        - name: SERVER_REGIONS
+          value: CA Montreal,CA Ontario,CA Toronto
+        - name: PORT_FORWARD_ONLY
+          value: 'true'
+        - name: VPN_PORT_FORWARDING
+          value: 'on'
+        # Each time the forwarded port is (re)assigned, point qBittorrent at it and bind it to the tunnel interface.
+        - name: VPN_PORT_FORWARDING_UP_COMMAND
+          value: |-
+            /bin/sh -c 'wget -O- -nv --retry-connrefused --post-data "json={\"listen_port\":{{PORT}},\"current_network_interface\":\"{{VPN_INTERFACE}}\",\"random_port\":false,\"upnp\":false}" http://127.0.0.1:8080/api/v2/app/setPreferences'
+        - name: VPN_PORT_FORWARDING_DOWN_COMMAND
+          value: |-
+            /bin/sh -c 'wget -O- -nv --retry-connrefused --post-data "json={\"listen_port\":0,\"current_network_interface\":\"lo\"}" http://127.0.0.1:8080/api/v2/app/setPreferences'
+        # Traefik (and the *arr apps) reach the web UI on 8080 from the pod and service networks, and from the LAN.
+        - name: FIREWALL_INPUT_PORTS
+          value: '8080'
+        - name: FIREWALL_OUTBOUND_SUBNETS
+          value: 10.42.0.0/16,10.43.0.0/16,192.168.0.0/26
+        - name: TZ
+          value: America/New_York
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+        startupProbe:
+          exec:
+            command: ["/gluetun-entrypoint", "healthcheck"]
+          periodSeconds: 5
+          failureThreshold: 36
+        volumeMounts:
+        - name: tun
+          mountPath: /dev/net/tun
       containers:
       - name: qbittorrent
         image: dyonr/qbittorrentvpn
@@ -48,16 +103,9 @@ spec:
           value: "100"
         - name: PGID
           value: '100'
+        # The VPN is gluetun's job now; this image's own VPN is off.
         - name: VPN_ENABLED
-          value: 'yes'
-        - name: VPN_TYPE
-          value: wireguard
-        - name: LAN_NETWORK
-          value: 192.168.0.0/26
-        securityContext:
-          capabilities:
-            add:
-              - NET_ADMIN
+          value: 'no'
         ports:
         - containerPort: 8080
           name: http
@@ -66,8 +114,6 @@ spec:
           mountPath: /config
         - name: data-pv
           mountPath: /data
-        - name: wireguard-config
-          mountPath: /config/wireguard
       securityContext:
         fsGroup: 100
         fsGroupChangePolicy: "OnRootMismatch"
@@ -80,6 +126,7 @@ spec:
       - name: data-pv
         persistentVolumeClaim:
           claimName: media-pvc-2
-      - name: wireguard-config
-        secret:
-          secretName: wireguard-config-secret
+      - name: tun
+        hostPath:
+          path: /dev/net/tun
+          type: CharDevice
