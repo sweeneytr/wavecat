@@ -13,6 +13,10 @@ stty -echo
 read -r P
 stty echo
 echo
+# Drop carriage returns and spaces a paste can bring along (PIA logins have neither), and show the lengths so a mismatch is visible.
+U=$(printf '%s' "$U" | tr -d '\r\n' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
+P=$(printf '%s' "$P" | tr -d '\r\n' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
+echo "username: ${#U} characters, password: ${#P} characters"
 
 # curl reads its settings from stdin, so the password is not in the process list. Backslashes and quotes are escaped for that format.
 esc() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }
